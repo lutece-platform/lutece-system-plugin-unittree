@@ -1,0 +1,72 @@
+<div id="left" >
+    <div class="content-box">
+    	<h2>#i18n{unittree.manageUnits.labelUnits}</h2>
+    	${unitTree!}
+    	<table>
+    		<tr>
+                <th width="20%">#i18n{unittree.manageUnits.labelActions}</th>
+            </tr>
+            <tr>
+                <td>
+                    <a href="jsp/admin/plugins/unittree/CreateUnit.jsp?idParent=${idCurrentUnit}">
+                        <img src="images/admin/skin/plugins/unittree/actions/new_unit.png" alt="#i18n{unittree.manageUnits.btnNewUnit}" title="#i18n{unittree.manageUnits.btnNewUnit}" />
+                    </a>
+                </td>
+            </tr>
+    	</table>
+	</div>
+</div>
+<div id="right">
+	<div class="content-box">
+		<h2>#i18n{unittree.manageUnits.labelListUsers}</h2>
+		<table>
+			<tr>
+				<th>#i18n{unittree.manageUnits.labelLastName}</th>
+				<th>#i18n{unittree.manageUnits.labelFirstName}</th>
+				<th>#i18n{unittree.manageUnits.labelProfile}</th>
+				<th>#i18n{unittree.manageUnits.labelActions}</th>
+			</tr>
+		</table>
+		<form method="post" action="jsp/admin/plugins/unittree/AddUserToUnit.Jsp">
+			<p>
+				<input type="submit" value="#i18n{unittree.manageUnits.btnAddUser}" class="button" />
+			</p>
+		</form>
+		<h2>#i18n{unittree.manageUnits.labelListSubUnits}</h2>
+		<ul>
+			<li>test</li>
+		</ul>
+	</div>
+</div>
+
+<script type="text/javascript"> 
+jQuery(function($) {
+// Set space_id
+var idcurrentunit = ${idCurrentUnit};
+// Get space_id from url parameter
+var loc = location.search;
+if ( idcurrentunit != loc ) {
+	if ( loc.indexOf("idUnit") > 0 ){ 
+		// Set space_id from url parameter if exists
+		idcurrentunit =  loc.slice( loc.lastIndexOf("=") + 1 );
+	} 
+}
+
+// Set the cookie of jstree
+$.cookie("jstree_select", "#node-" + spaceid );
+$("#tree").jstree({
+	"ui" : {
+		"select_limit" : 1,
+	},
+	"themes" : {
+		"theme" : "classic",
+		"icons" : false
+	},
+	"cookies" : {
+		"save_opened" : false,
+	},
+	"core" : { "initially_open" : [ "node-0" ] },
+	"plugins" : [ "themes", "html_data", "cookies", "ui" ]
+	});
+});
+</script> 
