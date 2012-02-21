@@ -31,18 +31,24 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.unittree.service;
+package fr.paris.lutece.plugins.unittree.service.unit;
 
-import fr.paris.lutece.plugins.unittree.business.Unit;
-import fr.paris.lutece.plugins.unittree.business.UnitFilter;
-import fr.paris.lutece.plugins.unittree.business.UnitHome;
+import fr.paris.lutece.plugins.unittree.business.unit.Unit;
+import fr.paris.lutece.plugins.unittree.business.unit.UnitFilter;
+import fr.paris.lutece.plugins.unittree.business.unit.UnitHome;
+import fr.paris.lutece.portal.business.user.AdminUser;
+import fr.paris.lutece.portal.business.user.AdminUserHome;
+import fr.paris.lutece.portal.business.workgroup.AdminWorkgroupHome;
 import fr.paris.lutece.portal.service.util.AppPathService;
+import fr.paris.lutece.util.ReferenceItem;
+import fr.paris.lutece.util.ReferenceList;
 import fr.paris.lutece.util.xml.XmlUtil;
 
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.FileInputStream;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.transform.Source;
@@ -164,6 +170,68 @@ public class UnitService implements IUnitService
         return new StreamSource( fis );
     }
 
+    public List<AdminUser> getUsers( int nIdUnit )
+    {
+        List<AdminUser> listUsers = new ArrayList<AdminUser>(  );
+        List<Integer> listIdUsers = UnitHome.findIdUsers( nIdUnit );
+
+        if ( ( listIdUsers != null ) && !listIdUsers.isEmpty(  ) )
+        {
+            for ( int nIdUser : listIdUsers )
+            {
+                AdminUser user = AdminUserHome.findByPrimaryKey( nIdUser );
+
+                if ( user != null )
+                {
+                    listUsers.add( user );
+                }
+            }
+        }
+
+        return listUsers;
+    }
+
+    public List<AdminUser> getUsers( AdminUser currentUser )
+    {
+        List<AdminUser> listUsers = new ArrayList<AdminUser>(  );
+
+        for ( AdminUser user : AdminUserHome.findUserList(  ) )
+        {
+            if ( currentUser.isAdmin(  ) ||
+                    ( ( user.getUserId(  ) == currentUser.getUserId(  ) ) &&
+                    ( currentUser.isParent( user ) &&
+                    ( ( haveCommonWorkgroups( currentUser, user ) ) ||
+                    ( !AdminWorkgroupHome.checkUserHasWorkgroup( user.getUserId(  ) ) ) ) ) ) )
+            {
+                listUsers.add( user );
+            }
+        }
+
+        return listUsers;
+    }
+
+    // CHECKS
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean hasSubUnits( int nIdUnit )
+    {
+        List<Unit> listUnits = getSubUnits( nIdUnit );
+
+        return ( listUnits != null ) && !listUnits.isEmpty(  );
+    }
+
+    /**
+         * {@inheritDoc}
+         */
+    @Override
+    public boolean isUserInAnUnit( int nIdUser )
+    {
+        return UnitHome.isUserInAnUnit( nIdUser );
+    }
+
     // CRUD OPERATIONS
 
     /**
@@ -188,7 +256,12 @@ public class UnitService implements IUnitService
     @Transactional( "unittree.transactionManager" )
     public void removeUnit( int nIdUnit )
     {
-        UnitHome.remove( nIdUnit );
+        if ( nIdUnit != Unit.ID_ROOT )
+        {
+            // Remove users
+            UnitHome.removeUsersByIdUnit( nIdUnit );
+            UnitHome.remove( nIdUnit );
+        }
     }
 
     /**
@@ -198,9 +271,64 @@ public class UnitService implements IUnitService
     @Transactional( "unittree.transactionManager" )
     public void updateUnit( Unit unit )
     {
-        if ( unit != null )
+        if ( ( unit != null ) && ( unit.getIdUnit(  ) != Unit.ID_ROOT ) )
         {
             UnitHome.update( unit );
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional( "unittree.transactionManager" )
+    public boolean addUserToUnit( int nIdUnit, int nIdUser )
+    {
+        if ( !isUserInAnUnit( nIdUser ) )
+        {
+            UnitHome.addUserToUnit( nIdUnit, nIdUser );
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+         * {@inheritDoc}
+         */
+    @Override
+    @Transactional( "unittree.transactionManager" )
+    public void removeUserFromUnit( int nIdUser )
+    {
+        UnitHome.removeUser( nIdUser );
+    }
+
+    // PRIVATE METHODS
+
+    /**
+    * Tell if 2 users have groups in common
+    * @param user1 User1
+    * @param user2 User2
+    * @return true or false
+    */
+    private boolean haveCommonWorkgroups( AdminUser user1, AdminUser user2 )
+    {
+        ReferenceList workgroups = AdminWorkgroupHome.getUserWorkgroups( user1 );
+
+        if ( workgroups.size(  ) == 0 )
+        {
+            return true;
+        }
+
+        for ( ReferenceItem item : workgroups )
+        {
+            if ( AdminWorkgroupHome.isUserInWorkgroup( user2, item.getCode(  ) ) )
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

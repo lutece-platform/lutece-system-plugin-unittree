@@ -31,82 +31,53 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.unittree.business;
+package fr.paris.lutece.plugins.unittree.business.action;
 
-import fr.paris.lutece.plugins.unittree.service.UnitTreePlugin;
 import fr.paris.lutece.portal.service.plugin.Plugin;
-import fr.paris.lutece.portal.service.plugin.PluginService;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
+import fr.paris.lutece.util.sql.DAOUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 /**
  *
- * UnitHome
+ * ActionDAO
  *
  */
-public final class UnitHome
+public class ActionDAO implements IActionDAO
 {
-    private static final String BEAN_UNIT_DAO = "unittree.unitDAO";
-    private static Plugin _plugin = PluginService.getPlugin( UnitTreePlugin.PLUGIN_NAME );
-    private static IUnitDAO _dao = (IUnitDAO) SpringContextService.getBean( BEAN_UNIT_DAO );
+    private static final String SQL_QUERY_SELECT_ACTIONS = "SELECT id_action, name_key, description_key, action_url, icon_url, action_permission, resource_type " +
+        " FROM unittree_action WHERE resource_type = ? ";
 
     /**
-     * Private constructor
+     * Load the list of actions for a document
+     * @return The Collection of actions
      */
-    private UnitHome(  )
+    public List<IAction> selectActions( String strResourceType, Plugin plugin )
     {
-    }
+        List<IAction> listActions = new ArrayList<IAction>(  );
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ACTIONS, plugin );
+        daoUtil.setString( 1, strResourceType );
+        daoUtil.executeQuery(  );
 
-    /**
-     * Load the unit
-     * @param nIdUnit the id unit
-     * @return an instance of {@link Unit}
-     */
-    public static Unit findByPrimaryKey( int nIdUnit )
-    {
-        return _dao.load( nIdUnit, _plugin );
-    }
+        while ( daoUtil.next(  ) )
+        {
+            int nIndex = 1;
+            IAction action = new Action(  );
+            action.setIdAction( daoUtil.getInt( nIndex++ ) );
+            action.setNameKey( daoUtil.getString( nIndex++ ) );
+            action.setDescriptionKey( daoUtil.getString( nIndex++ ) );
+            action.setUrl( daoUtil.getString( nIndex++ ) );
+            action.setIconUrl( daoUtil.getString( nIndex++ ) );
+            action.setPermission( daoUtil.getString( nIndex++ ) );
+            action.setResourceType( daoUtil.getString( nIndex++ ) );
 
-    public static List<Unit> findByFilter( UnitFilter uFilter )
-    {
-        return _dao.selectByFilter( uFilter, _plugin );
-    }
+            listActions.add( action );
+        }
 
-    /**
-     * Select all units
-     * @return a list of {@link Unit}
-     */
-    public static List<Unit> findAll(  )
-    {
-        return _dao.selectAll( _plugin );
-    }
+        daoUtil.free(  );
 
-    /**
-     * Insert a new unit
-     * @param unit the unit
-     */
-    public static int create( Unit unit )
-    {
-        return _dao.insert( unit, _plugin );
-    }
-
-    /**
-     * Remove a unit
-     * @param nIdUnit the id unit
-     */
-    public static void remove( int nIdUnit )
-    {
-        _dao.remove( nIdUnit, _plugin );
-    }
-
-    /**
-     * Update a unit
-     * @param unit the unit
-     */
-    public static void update( Unit unit )
-    {
-        _dao.update( unit, _plugin );
+        return listActions;
     }
 }

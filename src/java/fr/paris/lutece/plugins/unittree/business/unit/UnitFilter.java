@@ -31,7 +31,7 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.unittree.business;
+package fr.paris.lutece.plugins.unittree.business.unit;
 
 import org.apache.commons.lang.StringUtils;
 

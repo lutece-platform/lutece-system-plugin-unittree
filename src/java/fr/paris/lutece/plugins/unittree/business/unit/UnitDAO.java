@@ -31,7 +31,7 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.unittree.business;
+package fr.paris.lutece.plugins.unittree.business.unit;
 
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.util.sql.DAOUtil;
@@ -52,6 +52,11 @@ public class UnitDAO implements IUnitDAO
     private static final String SQL_QUERY_SELECT_ALL = " SELECT id_unit, id_parent, label, description FROM unittree_unit ";
     private static final String SQL_QUERY_DELETE = " DELETE FROM unittree_unit WHERE id_unit = ? ";
     private static final String SQL_QUERY_UPDATE = " UPDATE unittree_unit SET label = ?, description = ? WHERE id_unit = ? ";
+    private static final String SQL_QUERY_ADD_USER_TO_UNIT = " INSERT INTO unittree_unit_user ( id_unit, id_user ) VALUES ( ?, ? ) ";
+    private static final String SQL_QUERY_SELECT_ID_USERS = " SELECT id_user FROM unittree_unit_user WHERE id_unit = ? ";
+    private static final String SQL_QUERY_REMOVE_USER = " DELETE FROM unittree_unit_user WHERE id_user = ? ";
+    private static final String SQL_QUERY_REMOVE_USERS_BY_ID_UNIT = " DELETE FROM unittree_unit_user WHERE id_unit = ? ";
+    private static final String SQL_QUERY_CHECK_USER = " SELECT id_unit FROM unittree_unit_user WHERE id_user = ? ";
     private static final String SQL_WHERE = " WHERE ";
     private static final String SQL_AND = " AND ";
     private static final String SQL_OR = " OR ";
@@ -171,6 +176,30 @@ public class UnitDAO implements IUnitDAO
     }
 
     /**
+         * {@inheritDoc}
+         */
+    @Override
+    public void removeUser( int nIdUser, Plugin plugin )
+    {
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_REMOVE_USER, plugin );
+        daoUtil.setInt( 1, nIdUser );
+        daoUtil.executeUpdate(  );
+        daoUtil.free(  );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void removeUsersByIdUnit( int nIdUnit, Plugin plugin )
+    {
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_REMOVE_USERS_BY_ID_UNIT, plugin );
+        daoUtil.setInt( 1, nIdUnit );
+        daoUtil.executeUpdate(  );
+        daoUtil.free(  );
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -214,6 +243,64 @@ public class UnitDAO implements IUnitDAO
         daoUtil.free(  );
 
         return listUnits;
+    }
+
+    /**
+         * {@inheritDoc}
+         */
+    @Override
+    public List<Integer> selectIdUsers( int nIdUnit, Plugin plugin )
+    {
+        List<Integer> listIdUsers = new ArrayList<Integer>(  );
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ID_USERS, plugin );
+        daoUtil.setInt( 1, nIdUnit );
+        daoUtil.executeQuery(  );
+
+        while ( daoUtil.next(  ) )
+        {
+            listIdUsers.add( daoUtil.getInt( 1 ) );
+        }
+
+        daoUtil.free(  );
+
+        return listIdUsers;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public synchronized void addUserToUnit( int nIdUnit, int nIdUser, Plugin plugin )
+    {
+        int nIndex = 1;
+
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_ADD_USER_TO_UNIT, plugin );
+        daoUtil.setInt( nIndex++, nIdUnit );
+        daoUtil.setInt( nIndex++, nIdUser );
+
+        daoUtil.executeUpdate(  );
+        daoUtil.free(  );
+    }
+
+    /**
+         * {@inheritDoc}
+         */
+    @Override
+    public boolean isUserInAnUnit( int nIdUser, Plugin plugin )
+    {
+        boolean bIsUserInAnUnit = false;
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_CHECK_USER, plugin );
+        daoUtil.setInt( 1, nIdUser );
+        daoUtil.executeQuery(  );
+
+        if ( daoUtil.next(  ) )
+        {
+            bIsUserInAnUnit = true;
+        }
+
+        daoUtil.free(  );
+
+        return bIsUserInAnUnit;
     }
 
     /**

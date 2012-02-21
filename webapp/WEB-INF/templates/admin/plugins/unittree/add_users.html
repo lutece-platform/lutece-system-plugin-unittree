@@ -1,0 +1,52 @@
+<div id="left">
+	<div class="content-box">
+		<h2>#i18n{unittree.addUsers.labelUnit}</h2>
+		<table>
+			<tr>
+				<th>#i18n{unittree.addUsers.labelLabel}</th>
+			</tr>
+			<tr>
+				<td>${unit.label!}</td>
+			</tr>
+			<tr>
+				<th>#i18n{unittree.addUsers.labelDescription}</th>
+			</tr>
+			<tr>
+				<td>${unit.description!}</td>
+			</tr>
+		</table>
+	</div>
+</div>
+<div id="right">
+	<div class="content-box">
+		<h2>#i18n{unittree.addUsers.labelUsers}</h2>
+		<div class="highlight-box">
+			SEARCH USER FORM HERE
+		</div>
+		<form method="post" action="jsp/admin/plugins/unittree/DoAddUsers.jsp">
+			<#if listUsers?? && listUsers?has_content>
+				<table>
+					<tr>
+						<td>&nbsp;</td>
+						<th>#i18n{unittree.addUsers.labelFirstName}</th>
+						<th>#i18n{unittree.addUsers.labelLastName}</th>
+						<th>#i18n{unittree.addUsers.labelAccessCode}</th>
+					</tr>
+					<#list listUsers as user>
+						<tr>
+							<td><input type="checkbox" name="idUsers" value="${user.userId!}" /></td>
+							<td>${user.firstName!}</td>
+							<td>${user.lastName!}</td>
+							<td>${user.accessCode!}</td>
+						</tr>
+					</#list>
+				</table>
+				<p>
+					<input type="hidden" name="idUnit" value="${unit.idUnit!}" />
+					<input type="submit" name="addUsers" value="#i18n{unittree.addUsers.btnAdd}" class="button" />
+					<input type="submit" name="cancel" value="#i18n{portal.util.labelCancel}" class="button" />
+				</p>
+			</#if>
+		</form>
+	</div>
+</div>

@@ -14,9 +14,13 @@
 	<bean id="unittree.transactionManager"  class="fr.paris.lutece.portal.service.database.DAOUtilTransactionManager">
 		<property name="pluginName" value="unittree" />
 	</bean>
-	<bean id="unittree.unitDAO" class="fr.paris.lutece.plugins.unittree.business.UnitDAO" />
+	<bean id="unittree.unitDAO" class="fr.paris.lutece.plugins.unittree.business.unit.UnitDAO" />
+	<bean id="unittree.actionDAO" class="fr.paris.lutece.plugins.unittree.business.action.ActionDAO" />
 	
 	<!-- Services -->
-	<bean id="unittree.unitService" class="fr.paris.lutece.plugins.unittree.service.UnitService" />
+	<bean id="unittree.unitService" class="fr.paris.lutece.plugins.unittree.service.unit.UnitService" />
+	<bean id="unittree.actionService" class="fr.paris.lutece.plugins.unittree.service.action.ActionService" />
 	
+	<!-- Actions -->
+	<bean id="unittree.addUserUnitAction" class="fr.paris.lutece.plugins.unittree.web.action.AddUsersUnitAction" />
 </beans>

@@ -8,9 +8,13 @@
             </tr>
             <tr>
                 <td>
-                    <a href="jsp/admin/plugins/unittree/CreateUnit.jsp?idParent=${idCurrentUnit}">
-                        <img src="images/admin/skin/plugins/unittree/actions/new_unit.png" alt="#i18n{unittree.manageUnits.btnNewUnit}" title="#i18n{unittree.manageUnits.btnNewUnit}" />
-                    </a>
+                	<#if listUnitActions?? && listUnitActions?has_content>
+                		<#list listUnitActions as unitAction>
+                			<a href="${unitAction.url!}?idUnit=${idUnit}">
+                				<img src="${unitAction.iconUrl!}" alt="${unitAction.name!}" title="${unitAction.name!}" />
+                			</a>
+                		</#list>
+                	</#if>
                 </td>
             </tr>
     	</table>
@@ -19,41 +23,72 @@
 <div id="right">
 	<div class="content-box">
 		<h2>#i18n{unittree.manageUnits.labelListUsers}</h2>
-		<table>
-			<tr>
-				<th>#i18n{unittree.manageUnits.labelLastName}</th>
-				<th>#i18n{unittree.manageUnits.labelFirstName}</th>
-				<th>#i18n{unittree.manageUnits.labelProfile}</th>
-				<th>#i18n{unittree.manageUnits.labelActions}</th>
-			</tr>
-		</table>
-		<form method="post" action="jsp/admin/plugins/unittree/AddUserToUnit.Jsp">
+		<form method="post" action="jsp/admin/plugins/unittree/ManageUnits.jsp">
+			<input type="hidden" name="idUnit" value="${idUnit}" />
+			<table>
+				<tr>
+					<th>#i18n{unittree.manageUnits.labelFirstName}</th>
+					<th>#i18n{unittree.manageUnits.labelLastName}</th>
+					<th>#i18n{unittree.manageUnits.labelAccessCode}</th>
+					<th>#i18n{unittree.manageUnits.labelActions}</th>
+				</tr>
+				<#if listUsers?? && listUsers?has_content>
+					<#list listUsers as user>
+						<tr>
+							<td>${user.firstName!}</td>
+							<td>${user.lastName!}</td>
+							<td>${user.accessCode!}</td>
+							<td></td>
+						</tr>
+					</#list>
+				</#if>
+			</table>
 			<p>
-				<input type="submit" value="#i18n{unittree.manageUnits.btnAddUser}" class="button" />
+				<#list listUnitUserActions as unitUserAction>
+					<#if unitUserAction.buttonTemplate?has_content>
+						<#include unitUserAction.buttonTemplate />
+					</#if>
+				</#list>
 			</p>
 		</form>
 		<h2>#i18n{unittree.manageUnits.labelListSubUnits}</h2>
-		<ul>
-			<li>test</li>
-		</ul>
+		<#if listSubUnits?? && listSubUnits?has_content>
+			<ul>
+				<#list listSubUnits as subUnit>
+					<li>
+						<img src="images/admin/skin/plugins/unittree/units/unit.png" alt="#i18n{unittree.manageUnits.labelSubUnit}" title="#i18n{unittree.manageUnits.labelSubUnit}" />
+						<a href="jsp/admin/plugins/unittree/ManageUnits.jsp?idUnit=${subUnit.idUnit!}">
+							${subUnit.label!}
+						</a>
+						<br />
+						${subUnit.description!}
+					</li>
+				</#list>
+			</ul>
+		<#else>
+			<p>
+				#i18n{unittree.manageUnits.labelNoSubUnits}
+			</p>
+			<br />
+		</#if>
 	</div>
 </div>
 
 <script type="text/javascript"> 
 jQuery(function($) {
-// Set space_id
-var idcurrentunit = ${idCurrentUnit};
-// Get space_id from url parameter
+// Set idunit
+var idunit = ${idUnit};
+// Get idunit from url parameter
 var loc = location.search;
-if ( idcurrentunit != loc ) {
+if ( idunit != loc ) {
 	if ( loc.indexOf("idUnit") > 0 ){ 
-		// Set space_id from url parameter if exists
-		idcurrentunit =  loc.slice( loc.lastIndexOf("=") + 1 );
+		// Set idunit from url parameter if exists
+		idunit =  loc.slice( loc.lastIndexOf("=") + 1 );
 	} 
 }
 
 // Set the cookie of jstree
-$.cookie("jstree_select", "#node-" + spaceid );
+$.cookie("jstree_select", "#node-" + idunit );
 $("#tree").jstree({
 	"ui" : {
 		"select_limit" : 1,

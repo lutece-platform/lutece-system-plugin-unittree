@@ -31,60 +31,71 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.unittree.service;
+package fr.paris.lutece.plugins.unittree.business.unit;
 
-import fr.paris.lutece.plugins.unittree.business.Unit;
-
-import org.springframework.transaction.annotation.Transactional;
+import fr.paris.lutece.portal.service.plugin.Plugin;
 
 import java.util.List;
-
-import javax.xml.transform.Source;
 
 
 /**
  *
- * IUnitService
  *
  */
-public interface IUnitService
+public interface IUnitDAO
 {
-    // GET
-    Unit getUnit( int nIdUnit );
-
-    Unit getRootUnit(  );
-
-    List<Unit> getAllUnits(  );
-
-    List<Unit> getUnitsFirstLevel(  );
-
-    List<Unit> getSubUnits( int nIdUnit );
-
-    String getXMLUnits(  );
-
-    Source getTreeXsl(  );
-
-    // CRUD OPERATIONS
-
     /**
-    * Create a unit
-    * @param unit the unit
-    * @return the id unit
+    * Get new primary key
+    * @param plugin the plugin
+    * @return a new primary key
     */
-    @Transactional( "unittree.transactionManager" )
-    int createUnit( Unit unit );
+    int newPrimaryKey( Plugin plugin );
 
     /**
-     * Update the unit
-     * @param unit the unit
-     */
-    @Transactional( "unittree.transactionManager" )
-    void updateUnit( Unit unit );
-
-    /**
-     * Remove the unit
+     * Load the unit
      * @param nIdUnit the id unit
+     * @param plugin the plugin
+     * @return an instance of {@link Unit}
      */
-    @Transactional( "unittree.transactionManager" )
-    void removeUnit( int nIdUnit );
+    Unit load( int nIdUnit, Plugin plugin );
+
+    /**
+     * Select all units
+     * @param plugin the plugin
+     * @return a list of {@link Unit}
+     */
+    List<Unit> selectAll( Plugin plugin );
+
+    List<Unit> selectByFilter( UnitFilter uFilter, Plugin plugin );
+
+    List<Integer> selectIdUsers( int nIdUnit, Plugin plugin );
+
+    /**
+     * Insert a new unit
+     * @param unit the unit
+     * @param plugin the plugin
+     */
+    int insert( Unit unit, Plugin plugin );
+
+    /**
+     * Remove a unit
+     * @param nIdUnit the id unit
+     * @param plugin the plugin
+     */
+    void remove( int nIdUnit, Plugin plugin );
+
+    /**
+     * Update a unit
+     * @param unit the unit
+     * @param plugin the plugin
+     */
+    void update( Unit unit, Plugin plugin );
+
+    void addUserToUnit( int nIdUnit, int nIdUser, Plugin plugin );
+
+    boolean isUserInAnUnit( int nIdUser, Plugin plugin );
+
+    void removeUser( int nIdUser, Plugin plugin );
+
+    void removeUsersByIdUnit( int nIdUnit, Plugin plugin );
 }

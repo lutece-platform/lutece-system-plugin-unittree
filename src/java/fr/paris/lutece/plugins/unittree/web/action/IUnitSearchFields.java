@@ -31,75 +31,13 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.unittree.business;
-
-import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.NotEmpty;
+package fr.paris.lutece.plugins.unittree.web.action;
 
 
 /**
  *
  *
  */
-public class Unit
+public interface IUnitSearchFields
 {
-    public static final int ID_ROOT = 0;
-    private int _nIdUnit;
-    @NotBlank
-    private String _strLabel;
-    @NotBlank
-    private String _strDescription;
-    private int _nIdParent;
-
-    public int getIdUnit(  )
-    {
-        return _nIdUnit;
-    }
-
-    public void setIdUnit( int nIdUnit )
-    {
-        _nIdUnit = nIdUnit;
-    }
-
-    public String getLabel(  )
-    {
-        return _strLabel;
-    }
-
-    public void setLabel( String strLabel )
-    {
-        _strLabel = strLabel;
-    }
-
-    public String getDescription(  )
-    {
-        return _strDescription;
-    }
-
-    public void setDescription( String strDescription )
-    {
-        _strDescription = strDescription;
-    }
-
-    /**
-     *
-     * @param nIdParent the _nIdParent to set
-     */
-    public void setIdParent( int nIdParent )
-    {
-        this._nIdParent = nIdParent;
-    }
-
-    /**
-     * @return the _nIdParent
-     */
-    public int getIdParent(  )
-    {
-        return _nIdParent;
-    }
-
-    public boolean isRoot(  )
-    {
-        return _nIdUnit == ID_ROOT;
-    }
 }

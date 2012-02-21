@@ -31,61 +31,13 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.unittree.business;
-
-import fr.paris.lutece.portal.service.plugin.Plugin;
-
-import java.util.List;
+package fr.paris.lutece.plugins.unittree.web.action;
 
 
 /**
  *
  *
  */
-public interface IUnitDAO
+public class UnitSearchFields implements IUnitSearchFields
 {
-    /**
-    * Get new primary key
-    * @param plugin the plugin
-    * @return a new primary key
-    */
-    int newPrimaryKey( Plugin plugin );
-
-    /**
-     * Load the unit
-     * @param nIdUnit the id unit
-     * @param plugin the plugin
-     * @return an instance of {@link Unit}
-     */
-    Unit load( int nIdUnit, Plugin plugin );
-
-    /**
-     * Select all units
-     * @param plugin the plugin
-     * @return a list of {@link Unit}
-     */
-    List<Unit> selectAll( Plugin plugin );
-
-    List<Unit> selectByFilter( UnitFilter uFilter, Plugin plugin );
-
-    /**
-     * Insert a new unit
-     * @param unit the unit
-     * @param plugin the plugin
-     */
-    int insert( Unit unit, Plugin plugin );
-
-    /**
-     * Remove a unit
-     * @param nIdUnit the id unit
-     * @param plugin the plugin
-     */
-    void remove( int nIdUnit, Plugin plugin );
-
-    /**
-     * Update a unit
-     * @param unit the unit
-     * @param plugin the plugin
-     */
-    void update( Unit unit, Plugin plugin );
 }
