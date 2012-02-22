@@ -31,6 +31,6 @@ CREATE TABLE unittree_action (
 	action_url VARCHAR(255) DEFAULT NULL,
 	icon_url VARCHAR(255) DEFAULT NULL,
 	action_permission VARCHAR(50) DEFAULT NULL,
-	resource_type VARCHAR(50) DEFAULT NULL,
+	action_type VARCHAR(50) DEFAULT NULL,
 	PRIMARY KEY (id_action)
 );

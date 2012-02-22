@@ -48,5 +48,5 @@ public interface IActionDAO
      * @param plugin the plugin
      * @return The Collection of actions
      */
-    List<IAction> selectActions( String strResourceType, Plugin plugin );
+    List<IAction> selectActions( String strActionType, Plugin plugin );
 }

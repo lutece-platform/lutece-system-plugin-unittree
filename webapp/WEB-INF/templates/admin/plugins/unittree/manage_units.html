@@ -2,22 +2,23 @@
     <div class="content-box">
     	<h2>#i18n{unittree.manageUnits.labelUnits}</h2>
     	${unitTree!}
-    	<table>
-    		<tr>
-                <th width="20%">#i18n{unittree.manageUnits.labelActions}</th>
-            </tr>
-            <tr>
-                <td>
-                	<#if listUnitActions?? && listUnitActions?has_content>
+        <#if listUnitActions?? && listUnitActions?has_content>
+	    	<table>
+	    		<tr>
+	                <th width="20%">#i18n{unittree.manageUnits.labelActions}</th>
+	            </tr>
+	            <tr>
+	                <td>
                 		<#list listUnitActions as unitAction>
                 			<a href="${unitAction.url!}?idUnit=${unit.idUnit!}">
                 				<img src="${unitAction.iconUrl!}" alt="${unitAction.name!}" title="${unitAction.name!}" />
                 			</a>
                 		</#list>
-                	</#if>
-                </td>
-            </tr>
-    	</table>
+	                </td>
+	            </tr>
+	    	</table>
+		</#if>
+		<br />
 	</div>
 </div>
 <div id="right">
@@ -53,17 +54,27 @@
 							<td>${user.firstName!}</td>
 							<td>${user.lastName!}</td>
 							<td>${user.accessCode!}</td>
-							<td></td>
+							<td>
+								<#if listUnitUserActions?? && listUnitUserActions?has_content>
+									<#list listUnitUserActions as unitUserAction>
+										<a href="${unitUserAction.url!}?idUnit=${unit.idUnit!}&amp;idUser=${user.userId!}">
+			                				<img src="${unitUserAction.iconUrl!}" alt="${unitUserAction.name!}" title="${unitUserAction.name!}" />
+			                			</a>
+									</#list>
+								</#if>
+							</td>
 						</tr>
 					</#list>
 				</#if>
 			</table>
 			<p>
-				<#list listUnitUserActions as unitUserAction>
-					<#if unitUserAction.buttonTemplate?has_content>
-						<#include unitUserAction.buttonTemplate />
-					</#if>
-				</#list>
+				<#if listUnitUserPluginActions?? && listUnitUserPluginActions?has_content>
+					<#list listUnitUserPluginActions as unitUserPluginAction>
+						<#if unitUserPluginAction.buttonTemplate?has_content>
+							<#include unitUserPluginAction.buttonTemplate />
+						</#if>
+					</#list>
+				</#if>
 			</p>
 		</form>
 		<@paginationAdmin paginator=paginator />

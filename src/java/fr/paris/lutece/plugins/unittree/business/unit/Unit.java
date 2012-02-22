@@ -48,6 +48,7 @@ public class Unit implements RBACResource
 {
     public static final String RESOURCE_TYPE = "UNIT_TYPE";
     public static final int ID_ROOT = 0;
+    public static final int ID_NULL = -1;
     private int _nIdUnit;
     @NotNull
     private int _nIdParent;

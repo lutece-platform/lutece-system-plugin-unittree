@@ -133,7 +133,7 @@ public interface IAction extends Localizable, RBACAction
      */
     void setPermission( String strPermission );
 
-    String getResourceType(  );
+    String getActionType(  );
 
-    void setResourceType( String strResourceType );
+    void setActionType( String strResourceType );
 }

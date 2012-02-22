@@ -10,6 +10,8 @@
        http://www.springframework.org/schema/tx
        http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
 
+	<context:annotation-config />
+	
 	<!-- DAO -->
 	<bean id="unittree.transactionManager"  class="fr.paris.lutece.portal.service.database.DAOUtilTransactionManager">
 		<property name="pluginName" value="unittree" />
@@ -18,10 +20,13 @@
 	<bean id="unittree.actionDAO" class="fr.paris.lutece.plugins.unittree.business.action.ActionDAO" />
 	
 	<!-- Services -->
+	<bean id="unittree.actionFactory" class="fr.paris.lutece.plugins.unittree.business.action.ActionFactory" />
 	<bean id="unittree.unitService" class="fr.paris.lutece.plugins.unittree.service.unit.UnitService" />
 	<bean id="unittree.unitUserService" class="fr.paris.lutece.plugins.unittree.service.unit.UnitUserService" />
 	<bean id="unittree.actionService" class="fr.paris.lutece.plugins.unittree.service.action.ActionService" />
 	
 	<!-- Actions -->
-	<bean id="unittree.addUserUnitAction" class="fr.paris.lutece.plugins.unittree.web.action.AddUsersUnitAction" />
+	<bean id="unittree.unitAction" class="fr.paris.lutece.plugins.unittree.business.action.UnitAction" scope="prototype" />
+	<bean id="unittree.unitUserAction" class="fr.paris.lutece.plugins.unittree.business.action.UnitUserAction" scope="prototype" />
+	<bean id="unittree.addUnitUserPluginAction" class="fr.paris.lutece.plugins.unittree.web.action.AddUnitUsersPluginAction" />
 </beans>

@@ -1,0 +1,22 @@
+<div class="content-box" >
+    <h2>#i18n{unittree.moveUser.pageTitle}</h2>
+    <div class="content-box-content">
+    	<form method="post" action="jsp/admin/plugins/unittree/DoMoveUser.jsp">
+    		<p>
+    			<label>#i18n{unittree.moveUser.labelUser} : </label>
+    			<strong>${user.accessCode!}</strong>
+    		</p>
+    		<p>
+    			<label>#i18n{unittree.moveUser.labelUnit} : </label>
+   				<@combo name="idSelectedUnit" default_value=unit.idUnit! items=listSubUnits />
+   				<input type="submit" name="selectSubUnits" class="button" value="#i18n{unittree.moveUser.btnSelectSubUnits}" />
+    		</p>
+    		<p>
+    			<input type="hidden" name="idUnit" value="${unit.idUnit!}" />
+    			<input type="hidden" name="idUser" value="${user.userId!}" />
+   				<input type="submit" name="create" class="button" value="#i18n{unittree.moveUser.btnMove}" />
+    			<input type="submit" name="cancel" class="button" value="#i18n{portal.util.labelCancel}" />
+    		</p>
+    	</form>
+	</div>
+</div>

@@ -39,6 +39,8 @@ import fr.paris.lutece.util.sql.DAOUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 
 /**
  *
@@ -47,31 +49,33 @@ import java.util.List;
  */
 public class ActionDAO implements IActionDAO
 {
-    private static final String SQL_QUERY_SELECT_ACTIONS = "SELECT id_action, name_key, description_key, action_url, icon_url, action_permission, resource_type " +
-        " FROM unittree_action WHERE resource_type = ? ";
+    private static final String SQL_QUERY_SELECT_ACTIONS = "SELECT id_action, name_key, description_key, action_url, icon_url, action_permission, action_type " +
+        " FROM unittree_action WHERE action_type = ? ";
+    @Inject
+    private ActionFactory _actionFactory;
 
     /**
      * Load the list of actions for a document
      * @return The Collection of actions
      */
-    public List<IAction> selectActions( String strResourceType, Plugin plugin )
+    public List<IAction> selectActions( String strActionType, Plugin plugin )
     {
         List<IAction> listActions = new ArrayList<IAction>(  );
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ACTIONS, plugin );
-        daoUtil.setString( 1, strResourceType );
+        daoUtil.setString( 1, strActionType );
         daoUtil.executeQuery(  );
 
         while ( daoUtil.next(  ) )
         {
             int nIndex = 1;
-            IAction action = new Action(  );
+            IAction action = _actionFactory.newAction( strActionType );
             action.setIdAction( daoUtil.getInt( nIndex++ ) );
             action.setNameKey( daoUtil.getString( nIndex++ ) );
             action.setDescriptionKey( daoUtil.getString( nIndex++ ) );
             action.setUrl( daoUtil.getString( nIndex++ ) );
             action.setIconUrl( daoUtil.getString( nIndex++ ) );
             action.setPermission( daoUtil.getString( nIndex++ ) );
-            action.setResourceType( daoUtil.getString( nIndex++ ) );
+            action.setActionType( daoUtil.getString( nIndex++ ) );
 
             listActions.add( action );
         }

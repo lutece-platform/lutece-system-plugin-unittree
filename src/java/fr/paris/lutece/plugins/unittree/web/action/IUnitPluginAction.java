@@ -40,6 +40,6 @@ import fr.paris.lutece.portal.web.pluginaction.IPluginAction;
  *
  *
  */
-public interface IUnitAction extends IPluginAction<IUnitSearchFields>
+public interface IUnitPluginAction extends IPluginAction<IUnitSearchFields>
 {
 }

@@ -56,7 +56,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  *
  */
-public class AddUsersUnitAction extends AbstractPluginAction<IUnitSearchFields> implements IUnitAction
+public class AddUnitUsersPluginAction extends AbstractPluginAction<IUnitSearchFields> implements IUnitPluginAction
 {
     private static final String ACTION_NAME = "Add users to the unit";
 

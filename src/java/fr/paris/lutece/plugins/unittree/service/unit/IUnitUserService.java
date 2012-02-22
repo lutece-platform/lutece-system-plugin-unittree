@@ -39,13 +39,24 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 
 public interface IUnitUserService
 {
     // GET
+    AdminUser getUser( int nIdUser );
+
     List<AdminUser> getUsers( int nIdUnit );
 
     List<AdminUser> getAvailableUsers( AdminUser currentUser );
+
+    // PROCESS
+    void doAddUser( int nIdUser, HttpServletRequest request );
+
+    void doModifyUser( int nIdUser, HttpServletRequest request );
+
+    void doRemoveUser( int nIdUser, HttpServletRequest request );
 
     // CHECKS
     boolean isUserInUnit( int nIdUser );

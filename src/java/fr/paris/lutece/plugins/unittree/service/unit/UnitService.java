@@ -36,11 +36,8 @@ package fr.paris.lutece.plugins.unittree.service.unit;
 import fr.paris.lutece.plugins.unittree.business.unit.Unit;
 import fr.paris.lutece.plugins.unittree.business.unit.UnitFilter;
 import fr.paris.lutece.plugins.unittree.business.unit.UnitHome;
-import fr.paris.lutece.portal.business.user.AdminUser;
-import fr.paris.lutece.portal.business.user.AdminUserHome;
-import fr.paris.lutece.portal.business.workgroup.AdminWorkgroupHome;
+import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.service.util.AppPathService;
-import fr.paris.lutece.util.ReferenceItem;
 import fr.paris.lutece.util.ReferenceList;
 import fr.paris.lutece.util.xml.XmlUtil;
 
@@ -50,6 +47,7 @@ import java.io.FileInputStream;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
@@ -68,6 +66,13 @@ public class UnitService implements IUnitService
     private static final String TAG_LABEL = "label";
     private static final String TAG_DESCRIPTION = "description";
     private static final String TAG_UNIT_CHILDREN = "unit-children";
+
+    // PROPERTIES
+    private static final String PROPERTY_LABEL_PARENT_UNIT = "unittree.moveUser.labelParentUnit";
+
+    // CONSTANTS
+    private static final String ATTRIBUTE_ID_UNIT = "idUnit";
+    private static final String ATTRIBUTE_LABEL = "label";
 
     // XSL
     private static final String PATH_XSL = "/WEB-INF/plugins/unittree/xsl/";
@@ -112,15 +117,55 @@ public class UnitService implements IUnitService
     }
 
     /**
-         * {@inheritDoc}
-         */
+     * {@inheritDoc}
+     */
     @Override
     public List<Unit> getSubUnits( int nIdUnit )
     {
+        // If the ID unit == -1, then only return the root unit
+        if ( nIdUnit == Unit.ID_NULL )
+        {
+            List<Unit> listUnits = new ArrayList<Unit>(  );
+            listUnits.add( getRootUnit(  ) );
+
+            return listUnits;
+        }
+
         UnitFilter uFilter = new UnitFilter(  );
         uFilter.setIdParent( nIdUnit );
 
         return UnitHome.findByFilter( uFilter );
+    }
+
+    /**
+         * {@inheritDoc}
+         */
+    @Override
+    public ReferenceList getSubUnitsAsReferenceList( int nIdUnit, Locale locale )
+    {
+        // If parent id == -1, then its sub units is the root unit
+        if ( nIdUnit == Unit.ID_NULL )
+        {
+            ReferenceList listSubUnits = new ReferenceList(  );
+            listSubUnits.addItem( Unit.ID_ROOT, getRootUnit(  ).getLabel(  ) );
+
+            return listSubUnits;
+        }
+
+        // Otherwise, build the reference list
+        Unit unit = getUnit( nIdUnit );
+
+        if ( unit != null )
+        {
+            ReferenceList listSubUnits = ReferenceList.convert( getSubUnits( nIdUnit ), ATTRIBUTE_ID_UNIT,
+                    ATTRIBUTE_LABEL, true );
+            String strLabelParentUnit = I18nService.getLocalizedString( PROPERTY_LABEL_PARENT_UNIT, locale );
+            listSubUnits.addItem( unit.getIdParent(  ), strLabelParentUnit );
+
+            return listSubUnits;
+        }
+
+        return new ReferenceList(  );
     }
 
     public String getXMLUnits(  )
@@ -197,7 +242,7 @@ public class UnitService implements IUnitService
             return UnitHome.create( unit );
         }
 
-        return -1;
+        return Unit.ID_NULL;
     }
 
     /**

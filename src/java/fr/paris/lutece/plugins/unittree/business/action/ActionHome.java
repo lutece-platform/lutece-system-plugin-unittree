@@ -61,8 +61,8 @@ public final class ActionHome
      * Returns the list of allowed actions for the current document
      * @return A list of actions for the current document
      */
-    public static List<IAction> getActionsList( String strResourceType )
+    public static List<IAction> getActionsList( String strActionType )
     {
-        return _dao.selectActions( strResourceType, _plugin );
+        return _dao.selectActions( strActionType, _plugin );
     }
 }

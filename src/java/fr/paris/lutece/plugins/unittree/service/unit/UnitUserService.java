@@ -45,10 +45,17 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 
 public class UnitUserService implements IUnitUserService
 {
     // GET
+    public AdminUser getUser( int nIdUser )
+    {
+        return AdminUserHome.findByPrimaryKey( nIdUser );
+    }
+
     @Override
     public List<AdminUser> getUsers( int nIdUnit )
     {
@@ -88,6 +95,35 @@ public class UnitUserService implements IUnitUserService
         return listUsers;
     }
 
+    // PROCESS
+
+    /**
+         * {@inheritDoc}
+         */
+    @Override
+    public void doAddUser( int nIdUser, HttpServletRequest request )
+    {
+        // TODO Auto-generated method stub
+    }
+
+    /**
+         * {@inheritDoc}
+         */
+    @Override
+    public void doModifyUser( int nIdUser, HttpServletRequest request )
+    {
+        // TODO Auto-generated method stub
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void doRemoveUser( int nIdUser, HttpServletRequest request )
+    {
+        // TODO Auto-generated method stub
+    }
+
     // CHECKS
 
     /**
@@ -119,8 +155,8 @@ public class UnitUserService implements IUnitUserService
     }
 
     /**
-         * {@inheritDoc}
-         */
+     * {@inheritDoc}
+     */
     @Override
     @Transactional( "unittree.transactionManager" )
     public void removeUserFromUnit( int nIdUser )

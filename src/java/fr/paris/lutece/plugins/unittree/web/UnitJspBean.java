@@ -33,12 +33,14 @@
  */
 package fr.paris.lutece.plugins.unittree.web;
 
+import fr.paris.lutece.plugins.unittree.business.action.UnitAction;
+import fr.paris.lutece.plugins.unittree.business.action.UnitUserAction;
 import fr.paris.lutece.plugins.unittree.business.unit.Unit;
 import fr.paris.lutece.plugins.unittree.service.action.IActionService;
 import fr.paris.lutece.plugins.unittree.service.unit.IUnitService;
 import fr.paris.lutece.plugins.unittree.service.unit.IUnitUserService;
 import fr.paris.lutece.plugins.unittree.service.unit.UnitResourceIdService;
-import fr.paris.lutece.plugins.unittree.web.action.IUnitAction;
+import fr.paris.lutece.plugins.unittree.web.action.IUnitPluginAction;
 import fr.paris.lutece.plugins.unittree.web.action.IUnitSearchFields;
 import fr.paris.lutece.plugins.unittree.web.action.UnitUserSearchFields;
 import fr.paris.lutece.portal.business.user.AdminUser;
@@ -58,6 +60,7 @@ import fr.paris.lutece.portal.web.constants.Messages;
 import fr.paris.lutece.portal.web.pluginaction.DefaultPluginActionResult;
 import fr.paris.lutece.portal.web.pluginaction.IPluginActionResult;
 import fr.paris.lutece.portal.web.pluginaction.PluginActionManager;
+import fr.paris.lutece.util.ReferenceList;
 import fr.paris.lutece.util.UniqueIDGenerator;
 import fr.paris.lutece.util.beanvalidation.BeanValidationUtil;
 import fr.paris.lutece.util.html.HtmlTemplate;
@@ -93,48 +96,59 @@ public class UnitJspBean extends PluginAdminPageJspBean
 
     // PROPERTIES
     private static final String PROPERTY_MANAGE_UNITS_PAGE_TITLE = "unittree.manageUnits.pageTitle";
-    private static final String PROPERTY_ERRROR_PAGE_TITLE = "unittree.error.pageTitle";
     private static final String PROPERTY_CREATE_UNIT_PAGE_TITLE = "unittree.createUnit.pageTitle";
     private static final String PROPERTY_MODIFY_UNIT_PAGE_TITLE = "unittree.modifyUnit.pageTitle";
     private static final String PROPERTY_ADD_USERS_PAGE_TITLE = "unittree.addUsers.pageTitle";
+    private static final String PROPERTY_MODIFY_USER_PAGE_TITLE = "unittree.modifyUser.pageTitle";
+    private static final String PROPERTY_MOVE_USER_PAGE_TITLE = "unittree.moveUser.pageTitle";
 
     // MESSAGES
     private static final String MESSAGE_ERROR_GENERIC_MESSAGE = "unittree.message.error.genericMessage";
     private static final String MESSAGE_ERROR_UNIT_NOT_FOUND = "unittree.message.error.unitNotFound";
     private static final String MESSAGE_ERROR_UNIT_HAS_SUB_UNITS = "unittree.message.error.unitHasSubUnits";
     private static final String MESSAGE_ERROR_USER_ALREADY_IN_AN_UNIT = "unittree.message.error.userAlreadyInAnUnit";
+    private static final String MESSAGE_ERROR_NO_SUB_UNITS = "unittree.message.error.noSubUnits";
     private static final String MESSAGE_CONFIRM_REMOVE_UNIT = "unittree.message.removeUnit";
+    private static final String MESSAGE_CONFIRM_REMOVE_USER = "unittree.message.removeUser";
     private static final String MESSAGE_ACCESS_DENIED = "unittree.message.accessDenied";
 
     // MARKS
-    private static final String MARK_ERROR_MESSAGE = "errorMessage";
     private static final String MARK_UNIT_TREE = "unitTree";
     private static final String MARK_PARENT_UNIT = "parentUnit";
     private static final String MARK_LIST_SUB_UNITS = "listSubUnits";
     private static final String MARK_LIST_UNIT_ACTIONS = "listUnitActions";
-    private static final String MARK_LIST_UNIT_USERS_ACTIONS = "listUnitUserActions";
+    private static final String MARK_LIST_UNIT_USER_ACTIONS = "listUnitUserActions";
+    private static final String MARK_LIST_UNIT_USER_PLUGIN_ACTIONS = "listUnitUserPluginActions";
     private static final String MARK_UNIT = "unit";
+    private static final String MARK_USER = "user";
 
     // PARAMETERS
-    private static final String PARAMETER_ERROR_MESSAGE = "errorMessage";
     private static final String PARAMETER_CANCEL = "cancel";
     private static final String PARAMETER_ID_UNIT = "idUnit";
     private static final String PARAMETER_ID_PARENT = "idParent";
     private static final String PARAMETER_ID_USERS = "idUsers";
+    private static final String PARAMETER_ID_USER = "idUser";
     private static final String PARAMETER_SESSION = "session";
+    private static final String PARAMETER_SELECT_SUB_UNITS = "selectSubUnits";
+    private static final String PARAMETER_ID_SELECTED_UNIT = "idSelectedUnit";
 
     // TEMPLATES
     private static final String TEMPLATE_MANAGE_UNITS = "/admin/plugins/unittree/manage_units.html";
-    private static final String TEMPLATE_ERROR = "/admin/plugins/unittree/error.html";
     private static final String TEMPLATE_CREATE_UNIT = "/admin/plugins/unittree/create_unit.html";
     private static final String TEMPLATE_MODIFY_UNIT = "/admin/plugins/unittree/modify_unit.html";
     private static final String TEMPLATE_ADD_USERS = "/admin/plugins/unittree/add_users.html";
+    private static final String TEMPLATE_MODIFY_USER = "/admin/plugins/unittree/modify_user.html";
+    private static final String TEMPLATE_MOVE_USER = "/admin/plugins/unittree/move_user.html";
 
     // JSP
     private static final String JSP_MANAGE_UNITS = "ManageUnits.jsp";
+    private static final String JSP_MOVE_USER = "MoveUser.jsp";
+    private static final String JSP_URL_MANAGE_UNITS = "jsp/admin/plugins/unittree/ManageUnits.jsp";
     private static final String JSP_URL_DO_REMOVE_UNIT = "jsp/admin/plugins/unittree/DoRemoveUnit.jsp";
     private static final String JSP_URL_ADD_USERS = "jsp/admin/plugins/unittree/AddUsers.jsp";
-    private static final String JSP_URL_MANAGE_UNITS = "jsp/admin/plugins/unittree/ManageUnits.jsp";
+    private static final String JSP_URL_DO_REMOVE_USER = "jsp/admin/plugins/unittree/DoRemoveUser.jsp";
+
+    // XSL
     private static final String UNIT_TREE_XSL_UNIQUE_PREFIX = UniqueIDGenerator.getNewId(  ) + "SpacesTree";
     private static final String XSL_PARAMETER_ID_CURRENT_UNIT = "id-current-unit";
 
@@ -157,7 +171,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
         setPageTitleProperty( PROPERTY_MANAGE_UNITS_PAGE_TITLE );
 
         // first - see if there is an invoked action
-        IUnitAction action = PluginActionManager.getPluginAction( request, IUnitAction.class );
+        IUnitPluginAction action = PluginActionManager.getPluginAction( request, IUnitPluginAction.class );
 
         if ( action != null )
         {
@@ -210,8 +224,11 @@ public class UnitJspBean extends PluginAdminPageJspBean
 
         // Add actions in the model
         model.put( MARK_LIST_UNIT_ACTIONS,
-            _actionService.getListActions( Unit.RESOURCE_TYPE, getLocale(  ), unit, getUser(  ) ) );
-        PluginActionManager.fillModel( request, getUser(  ), model, IUnitAction.class, MARK_LIST_UNIT_USERS_ACTIONS );
+            _actionService.getListActions( UnitAction.ACTION_TYPE, getLocale(  ), unit, getUser(  ) ) );
+        model.put( MARK_LIST_UNIT_USER_ACTIONS,
+            _actionService.getListActions( UnitUserAction.ACTION_TYPE, getLocale(  ), unit, getUser(  ) ) );
+        PluginActionManager.fillModel( request, getUser(  ), model, IUnitPluginAction.class,
+            MARK_LIST_UNIT_USER_PLUGIN_ACTIONS );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MANAGE_UNITS, getLocale(  ), model );
 
@@ -294,6 +311,34 @@ public class UnitJspBean extends PluginAdminPageJspBean
         return getAdminPage( template.getHtml(  ) );
     }
 
+    /**
+     * Get confirm remove code mapping
+     * @param request the HTTP request
+     * @return the HTML code
+     */
+    public String getConfirmRemoveUnit( HttpServletRequest request )
+    {
+        String strIdUnit = request.getParameter( PARAMETER_ID_UNIT );
+
+        if ( StringUtils.isBlank( strIdUnit ) || !StringUtils.isNumeric( strIdUnit ) )
+        {
+            return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
+        }
+
+        // Check permissions
+        if ( !RBACService.isAuthorized( Unit.RESOURCE_TYPE, strIdUnit, UnitResourceIdService.PERMISSION_DELETE,
+                    getUser(  ) ) )
+        {
+            return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP );
+        }
+
+        UrlItem url = new UrlItem( JSP_URL_DO_REMOVE_UNIT );
+        url.addParameter( PARAMETER_ID_UNIT, strIdUnit );
+
+        return AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_REMOVE_UNIT, url.getUrl(  ),
+            AdminMessage.TYPE_CONFIRMATION );
+    }
+
     public String getAddUsers( HttpServletRequest request )
         throws AccessDeniedException
     {
@@ -340,31 +385,135 @@ public class UnitJspBean extends PluginAdminPageJspBean
         return getAdminPage( template.getHtml(  ) );
     }
 
+    public String getModifyUser( HttpServletRequest request )
+        throws AccessDeniedException
+    {
+        setPageTitleProperty( PROPERTY_MODIFY_USER_PAGE_TITLE );
+
+        Unit unit = null;
+        AdminUser user = null;
+        String strIdUnit = request.getParameter( PARAMETER_ID_UNIT );
+        String strIdUser = request.getParameter( PARAMETER_ID_USER );
+
+        if ( StringUtils.isNotBlank( strIdUnit ) && StringUtils.isNumeric( strIdUnit ) &&
+                StringUtils.isNotBlank( strIdUser ) && StringUtils.isNumeric( strIdUser ) )
+        {
+            int nIdUnit = Integer.parseInt( strIdUnit );
+            unit = _unitService.getUnit( nIdUnit );
+
+            int nIdUser = Integer.parseInt( strIdUser );
+            user = _unitUserService.getUser( nIdUser );
+        }
+
+        if ( ( unit == null ) || ( user == null ) )
+        {
+            throw new AppException(  );
+        }
+
+        // Check permissions
+        if ( !RBACService.isAuthorized( unit, UnitResourceIdService.PERMISSION_MODIFY_USER, getUser(  ) ) )
+        {
+            String strErrorMessage = I18nService.getLocalizedString( MESSAGE_ACCESS_DENIED, getLocale(  ) );
+            throw new AccessDeniedException( strErrorMessage );
+        }
+
+        Map<String, Object> model = new HashMap<String, Object>(  );
+        model.put( MARK_UNIT, unit );
+        model.put( MARK_USER, user );
+
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MODIFY_USER, getLocale(  ), model );
+
+        return getAdminPage( template.getHtml(  ) );
+    }
+
+    public String getMoveUser( HttpServletRequest request )
+        throws AccessDeniedException
+    {
+        setPageTitleProperty( PROPERTY_MOVE_USER_PAGE_TITLE );
+
+        Unit unit = null;
+        AdminUser user = null;
+        String strIdUnit = request.getParameter( PARAMETER_ID_UNIT );
+        String strIdUser = request.getParameter( PARAMETER_ID_USER );
+        int nIdUnit = Unit.ID_NULL;
+        int nIdUser = Unit.ID_NULL;
+
+        if ( StringUtils.isNotBlank( strIdUnit ) && StringUtils.isNumeric( strIdUnit ) &&
+                StringUtils.isNotBlank( strIdUser ) && StringUtils.isNumeric( strIdUser ) )
+        {
+            nIdUnit = Integer.parseInt( strIdUnit );
+            unit = _unitService.getUnit( nIdUnit );
+            nIdUser = Integer.parseInt( strIdUser );
+            user = _unitUserService.getUser( nIdUser );
+        }
+
+        if ( ( unit == null ) || ( user == null ) || !_unitUserService.isUserInUnit( nIdUser ) )
+        {
+            throw new AppException(  );
+        }
+
+        // Check permissions
+        if ( !RBACService.isAuthorized( unit, UnitResourceIdService.PERMISSION_MOVE_USER, getUser(  ) ) )
+        {
+            String strErrorMessage = I18nService.getLocalizedString( MESSAGE_ACCESS_DENIED, getLocale(  ) );
+            throw new AccessDeniedException( strErrorMessage );
+        }
+
+        ReferenceList listSubUnits = null;
+        String strIdSelectedUnit = request.getParameter( PARAMETER_ID_SELECTED_UNIT );
+
+        if ( StringUtils.isNotBlank( strIdSelectedUnit ) &&
+                ( StringUtils.isNumeric( strIdSelectedUnit ) ||
+                Integer.toString( Unit.ID_NULL ).equals( strIdSelectedUnit ) ) )
+        {
+            int nIdSelectedUnit = Integer.parseInt( strIdSelectedUnit );
+            listSubUnits = _unitService.getSubUnitsAsReferenceList( nIdSelectedUnit, getLocale(  ) );
+        }
+
+        if ( listSubUnits == null )
+        {
+            listSubUnits = _unitService.getSubUnitsAsReferenceList( unit.getIdParent(  ), getLocale(  ) );
+        }
+
+        Map<String, Object> model = new HashMap<String, Object>(  );
+
+        model.put( MARK_UNIT, unit );
+        model.put( MARK_USER, user );
+        model.put( MARK_LIST_SUB_UNITS, listSubUnits );
+
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MOVE_USER, getLocale(  ), model );
+
+        return getAdminPage( template.getHtml(  ) );
+    }
+
     /**
      * Get confirm remove code mapping
      * @param request the HTTP request
      * @return the HTML code
      */
-    public String getConfirmRemoveUnit( HttpServletRequest request )
+    public String getConfirmRemoveUser( HttpServletRequest request )
     {
         String strIdUnit = request.getParameter( PARAMETER_ID_UNIT );
+        String strIdUser = request.getParameter( PARAMETER_ID_USER );
 
-        if ( StringUtils.isBlank( strIdUnit ) || !StringUtils.isNumeric( strIdUnit ) )
+        if ( StringUtils.isBlank( strIdUnit ) || !StringUtils.isNumeric( strIdUnit ) ||
+                StringUtils.isBlank( strIdUser ) || !StringUtils.isNumeric( strIdUser ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
         }
 
         // Check permissions
-        if ( !RBACService.isAuthorized( Unit.RESOURCE_TYPE, strIdUnit, UnitResourceIdService.PERMISSION_DELETE,
+        if ( !RBACService.isAuthorized( Unit.RESOURCE_TYPE, strIdUnit, UnitResourceIdService.PERMISSION_REMOVE_USER,
                     getUser(  ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP );
         }
 
-        UrlItem url = new UrlItem( JSP_URL_DO_REMOVE_UNIT );
+        UrlItem url = new UrlItem( JSP_URL_DO_REMOVE_USER );
         url.addParameter( PARAMETER_ID_UNIT, strIdUnit );
+        url.addParameter( PARAMETER_ID_USER, strIdUser );
 
-        return AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_REMOVE_UNIT, url.getUrl(  ),
+        return AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_REMOVE_USER, url.getUrl(  ),
             AdminMessage.TYPE_CONFIRMATION );
     }
 
@@ -491,14 +640,16 @@ public class UnitJspBean extends PluginAdminPageJspBean
             return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
         }
 
-        int nIdUnit = Integer.parseInt( strIdUnit );
-        int nIdParent = Unit.ID_ROOT;
-        Unit unit = _unitService.getUnit( nIdUnit );
-
-        if ( !RBACService.isAuthorized( unit, UnitResourceIdService.PERMISSION_DELETE, getUser(  ) ) )
+        // Check permissions
+        if ( !RBACService.isAuthorized( Unit.RESOURCE_TYPE, strIdUnit, UnitResourceIdService.PERMISSION_DELETE,
+                    getUser(  ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP );
         }
+
+        int nIdUnit = Integer.parseInt( strIdUnit );
+        int nIdParent = Unit.ID_ROOT;
+        Unit unit = _unitService.getUnit( nIdUnit );
 
         if ( unit != null )
         {
@@ -570,6 +721,177 @@ public class UnitJspBean extends PluginAdminPageJspBean
                     return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_USER_ALREADY_IN_AN_UNIT,
                         AdminMessage.TYPE_STOP );
                 }
+                else
+                {
+                    _unitUserService.doAddUser( nIdUser, request );
+                }
+            }
+        }
+
+        UrlItem url = new UrlItem( JSP_MANAGE_UNITS );
+        url.addParameter( PARAMETER_ID_UNIT, nIdUnit );
+
+        return url.getUrl(  );
+    }
+
+    public String doModifyUser( HttpServletRequest request )
+    {
+        String strIdUnit = request.getParameter( PARAMETER_ID_UNIT );
+        String strIdUser = request.getParameter( PARAMETER_ID_USER );
+
+        if ( StringUtils.isBlank( strIdUnit ) || !StringUtils.isNumeric( strIdUnit ) ||
+                StringUtils.isBlank( strIdUser ) || !StringUtils.isNumeric( strIdUser ) )
+        {
+            return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
+        }
+
+        // Check permissions
+        if ( !RBACService.isAuthorized( Unit.RESOURCE_TYPE, strIdUnit, UnitResourceIdService.PERMISSION_MODIFY_USER,
+                    getUser(  ) ) )
+        {
+            return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP );
+        }
+
+        int nIdUnit = Integer.parseInt( strIdUnit );
+        int nIdUser = Integer.parseInt( strIdUser );
+        Unit unit = _unitService.getUnit( nIdUnit );
+        AdminUser user = _unitUserService.getUser( nIdUser );
+
+        if ( ( unit != null ) && ( user != null ) )
+        {
+            _unitUserService.doModifyUser( nIdUser, request );
+        }
+
+        UrlItem url = new UrlItem( JSP_MANAGE_UNITS );
+        url.addParameter( PARAMETER_ID_UNIT, nIdUnit );
+
+        return url.getUrl(  );
+    }
+
+    public String doMoveUser( HttpServletRequest request )
+    {
+        String strCancel = request.getParameter( PARAMETER_CANCEL );
+        String strIdUnit = request.getParameter( PARAMETER_ID_UNIT );
+        String strIdSelectedUnit = request.getParameter( PARAMETER_ID_SELECTED_UNIT );
+
+        if ( StringUtils.isNotBlank( strCancel ) )
+        {
+            UrlItem url = new UrlItem( JSP_MANAGE_UNITS );
+            url.addParameter( PARAMETER_ID_UNIT, strIdUnit );
+
+            return url.getUrl(  );
+        }
+
+        String strIdUser = request.getParameter( PARAMETER_ID_USER );
+
+        if ( StringUtils.isBlank( strIdUnit ) || !StringUtils.isNumeric( strIdUnit ) ||
+                StringUtils.isBlank( strIdSelectedUnit ) ||
+                ( !StringUtils.isNumeric( strIdSelectedUnit ) &&
+                !Integer.toString( Unit.ID_NULL ).equals( strIdSelectedUnit ) ) || StringUtils.isBlank( strIdUser ) ||
+                !StringUtils.isNumeric( strIdUser ) )
+        {
+            return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
+        }
+
+        // Check permissions
+        if ( !RBACService.isAuthorized( Unit.RESOURCE_TYPE, strIdUnit, UnitResourceIdService.PERMISSION_MOVE_USER,
+                    getUser(  ) ) )
+        {
+            return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP );
+        }
+
+        // Check if the user has clicked on "selectSubUnits" => display the same page with the sub units
+        String strSelectSubUnits = request.getParameter( PARAMETER_SELECT_SUB_UNITS );
+        int nIdSelectedUnit = Integer.parseInt( strIdSelectedUnit );
+
+        if ( StringUtils.isNotBlank( strSelectSubUnits ) )
+        {
+            // Check if the selected unit has sub units
+            List<Unit> listSubUnits = _unitService.getSubUnits( nIdSelectedUnit );
+
+            if ( ( listSubUnits == null ) || listSubUnits.isEmpty(  ) )
+            {
+                return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_NO_SUB_UNITS, AdminMessage.TYPE_STOP );
+            }
+
+            UrlItem url = new UrlItem( JSP_MOVE_USER );
+            url.addParameter( PARAMETER_ID_USER, strIdUser );
+            url.addParameter( PARAMETER_ID_UNIT, strIdUnit );
+            url.addParameter( PARAMETER_ID_SELECTED_UNIT, strIdSelectedUnit );
+
+            return url.getUrl(  );
+        }
+
+        int nIdUser = Integer.parseInt( strIdUser );
+        int nIdUnit = Integer.parseInt( strIdUnit );
+        AdminUser user = _unitUserService.getUser( nIdUser );
+        Unit unit = _unitService.getUnit( nIdUnit );
+        Unit selectedUnit = _unitService.getUnit( nIdSelectedUnit );
+
+        if ( ( user != null ) && ( unit != null ) && ( selectedUnit != null ) )
+        {
+            try
+            {
+                // Remove the user from the unit
+                _unitUserService.removeUserFromUnit( nIdUser );
+                _unitUserService.doRemoveUser( nIdUser, request );
+                // Then add the user to the new unit
+                _unitUserService.addUserToUnit( nIdSelectedUnit, nIdUser );
+                _unitUserService.doAddUser( nIdUser, request );
+            }
+            catch ( Exception ex )
+            {
+                // Something wrong happened... a database check might be needed
+                AppLogService.error( ex.getMessage(  ) + " when deleting an unit ", ex );
+
+                return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_GENERIC_MESSAGE,
+                    AdminMessage.TYPE_ERROR );
+            }
+        }
+
+        UrlItem url = new UrlItem( JSP_MANAGE_UNITS );
+        url.addParameter( PARAMETER_ID_UNIT, nIdUnit );
+
+        return url.getUrl(  );
+    }
+
+    public String doRemoveUser( HttpServletRequest request )
+    {
+        String strIdUnit = request.getParameter( PARAMETER_ID_UNIT );
+        String strIdUser = request.getParameter( PARAMETER_ID_USER );
+
+        if ( StringUtils.isBlank( strIdUnit ) || !StringUtils.isNumeric( strIdUnit ) ||
+                StringUtils.isBlank( strIdUser ) || !StringUtils.isNumeric( strIdUser ) )
+        {
+            return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
+        }
+
+        // Check permissions
+        if ( !RBACService.isAuthorized( Unit.RESOURCE_TYPE, strIdUnit, UnitResourceIdService.PERMISSION_REMOVE_USER,
+                    getUser(  ) ) )
+        {
+            return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP );
+        }
+
+        int nIdUnit = Integer.parseInt( strIdUnit );
+        int nIdUser = Integer.parseInt( strIdUser );
+        Unit unit = _unitService.getUnit( nIdUnit );
+        AdminUser user = _unitUserService.getUser( nIdUser );
+
+        if ( ( unit != null ) && ( user != null ) )
+        {
+            try
+            {
+                _unitUserService.removeUserFromUnit( nIdUser );
+                _unitUserService.doRemoveUser( nIdUser, request );
+            }
+            catch ( Exception ex )
+            {
+                // Something wrong happened... a database check might be needed
+                AppLogService.error( ex.getMessage(  ) + " when deleting an unit ", ex );
+
+                return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_GENERIC_MESSAGE,
+                    AdminMessage.TYPE_ERROR );
             }
         }
 

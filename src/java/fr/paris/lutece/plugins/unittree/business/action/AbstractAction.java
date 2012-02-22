@@ -50,7 +50,6 @@ public abstract class AbstractAction implements IAction
     private Locale _locale;
     private String _strIconUrl;
     private String _strPermission;
-    private String _strResourceType;
 
     /**
          * @param _nIdAction the _nIdAction to set
@@ -194,23 +193,5 @@ public abstract class AbstractAction implements IAction
     public void setPermission( String strPermission )
     {
         _strPermission = strPermission;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getResourceType(  )
-    {
-        return _strResourceType;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setResourceType( String strResourceType )
-    {
-        _strResourceType = strResourceType;
     }
 }

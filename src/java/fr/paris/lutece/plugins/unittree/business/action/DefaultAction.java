@@ -37,6 +37,25 @@ package fr.paris.lutece.plugins.unittree.business.action;
 /**
  * Action available on an unit
  */
-public class Action extends AbstractAction
+public class DefaultAction extends AbstractAction
 {
+    private String _strActionType;
+
+    /**
+    * {@inheritDoc}
+    */
+    @Override
+    public String getActionType(  )
+    {
+        return _strActionType;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setActionType( String strActionType )
+    {
+        _strActionType = strActionType;
+    }
 }

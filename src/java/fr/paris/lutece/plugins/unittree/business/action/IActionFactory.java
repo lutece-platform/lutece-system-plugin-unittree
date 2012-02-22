@@ -31,69 +31,14 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.unittree.service.unit;
-
-import fr.paris.lutece.plugins.unittree.business.unit.Unit;
-import fr.paris.lutece.util.ReferenceList;
-
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Locale;
-
-import javax.xml.transform.Source;
+package fr.paris.lutece.plugins.unittree.business.action;
 
 
 /**
  *
- * IUnitService
  *
  */
-public interface IUnitService
+public interface IActionFactory
 {
-    public static final String BEAN_UNIT_SERVICE = "unittree.unitService";
-
-    // GET
-    Unit getUnit( int nIdUnit );
-
-    Unit getRootUnit(  );
-
-    List<Unit> getAllUnits(  );
-
-    List<Unit> getUnitsFirstLevel(  );
-
-    List<Unit> getSubUnits( int nIdUnit );
-
-    ReferenceList getSubUnitsAsReferenceList( int nIdUnit, Locale locale );
-
-    String getXMLUnits(  );
-
-    Source getTreeXsl(  );
-
-    // CHECKS
-    boolean hasSubUnits( int nIdUnit );
-
-    // CRUD OPERATIONS
-
-    /**
-    * Create a unit
-    * @param unit the unit
-    * @return the id unit
-    */
-    @Transactional( "unittree.transactionManager" )
-    int createUnit( Unit unit );
-
-    /**
-     * Update the unit
-     * @param unit the unit
-     */
-    @Transactional( "unittree.transactionManager" )
-    void updateUnit( Unit unit );
-
-    /**
-     * Remove the unit
-     * @param nIdUnit the id unit
-     */
-    @Transactional( "unittree.transactionManager" )
-    void removeUnit( int nIdUnit );
+    IAction newAction( String strActionType );
 }

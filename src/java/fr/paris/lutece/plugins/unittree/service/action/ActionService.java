@@ -54,9 +54,9 @@ public class ActionService implements IActionService
      * {@inheritDoc}
      */
     @Override
-    public List<IAction> getListActions( String strResourceType, Locale locale, RBACResource resource, AdminUser user )
+    public List<IAction> getListActions( String strActionType, Locale locale, RBACResource resource, AdminUser user )
     {
-        List<IAction> listActions = I18nService.localizeCollection( ActionHome.getActionsList( strResourceType ), locale );
+        List<IAction> listActions = I18nService.localizeCollection( ActionHome.getActionsList( strActionType ), locale );
 
         return (List<IAction>) RBACService.getAuthorizedActionsCollection( listActions, resource, user );
     }

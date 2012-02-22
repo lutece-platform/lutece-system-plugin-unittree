@@ -31,69 +31,32 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.unittree.service.unit;
-
-import fr.paris.lutece.plugins.unittree.business.unit.Unit;
-import fr.paris.lutece.util.ReferenceList;
-
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Locale;
-
-import javax.xml.transform.Source;
+package fr.paris.lutece.plugins.unittree.business.action;
 
 
 /**
  *
- * IUnitService
  *
  */
-public interface IUnitService
+public class UnitAction extends AbstractAction
 {
-    public static final String BEAN_UNIT_SERVICE = "unittree.unitService";
-
-    // GET
-    Unit getUnit( int nIdUnit );
-
-    Unit getRootUnit(  );
-
-    List<Unit> getAllUnits(  );
-
-    List<Unit> getUnitsFirstLevel(  );
-
-    List<Unit> getSubUnits( int nIdUnit );
-
-    ReferenceList getSubUnitsAsReferenceList( int nIdUnit, Locale locale );
-
-    String getXMLUnits(  );
-
-    Source getTreeXsl(  );
-
-    // CHECKS
-    boolean hasSubUnits( int nIdUnit );
-
-    // CRUD OPERATIONS
+    public static final String ACTION_TYPE = "unittree.unitAction";
 
     /**
-    * Create a unit
-    * @param unit the unit
-    * @return the id unit
-    */
-    @Transactional( "unittree.transactionManager" )
-    int createUnit( Unit unit );
-
-    /**
-     * Update the unit
-     * @param unit the unit
+     * {@inheritDoc}
      */
-    @Transactional( "unittree.transactionManager" )
-    void updateUnit( Unit unit );
+    @Override
+    public String getActionType(  )
+    {
+        return ACTION_TYPE;
+    }
 
     /**
-     * Remove the unit
-     * @param nIdUnit the id unit
+     * {@inheritDoc}
      */
-    @Transactional( "unittree.transactionManager" )
-    void removeUnit( int nIdUnit );
+    @Override
+    public void setActionType( String strResourceType )
+    {
+        // Nothing
+    }
 }
