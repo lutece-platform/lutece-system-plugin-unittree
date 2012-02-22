@@ -54,6 +54,17 @@
 					</#list>
 				</#if>
 			</table>
+			<#if listUnitUserAttributes?? && listUnitUserAttributes?has_content>
+				<fieldset>
+					<legend>#i18n{unittree.addUsers.labelValueToAffectToUsers}</legend>
+					<#list listUnitUserAttributes as unitUserAttribute>
+						<#if unitUserAttribute.template?has_content>
+							<#include unitUserAttribute.template />
+						</#if>
+					</#list>
+				</fieldset>
+			</#if>
+			<div class="clear">&nbsp;</div>
 			<p>
 				<input type="hidden" name="idUnit" value="${unit.idUnit!}" />
 				<input type="submit" name="addUsers" value="#i18n{unittree.addUsers.btnAdd}" class="button" />

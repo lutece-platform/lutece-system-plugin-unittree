@@ -103,7 +103,10 @@ public class UnitUserService implements IUnitUserService
     @Override
     public void doAddUser( int nIdUser, HttpServletRequest request )
     {
-        // TODO Auto-generated method stub
+        for ( IUnitUserAttributeService service : UnitUserAttributeManager.getListUnitUserAttributeService(  ) )
+        {
+            service.doAddUser( nIdUser, request );
+        }
     }
 
     /**
@@ -112,7 +115,10 @@ public class UnitUserService implements IUnitUserService
     @Override
     public void doModifyUser( int nIdUser, HttpServletRequest request )
     {
-        // TODO Auto-generated method stub
+        for ( IUnitUserAttributeService service : UnitUserAttributeManager.getListUnitUserAttributeService(  ) )
+        {
+            service.doModifyUser( nIdUser, request );
+        }
     }
 
     /**
@@ -121,7 +127,10 @@ public class UnitUserService implements IUnitUserService
     @Override
     public void doRemoveUser( int nIdUser, HttpServletRequest request )
     {
-        // TODO Auto-generated method stub
+        for ( IUnitUserAttributeService service : UnitUserAttributeManager.getListUnitUserAttributeService(  ) )
+        {
+            service.doRemoveUser( nIdUser, request );
+        }
     }
 
     // CHECKS

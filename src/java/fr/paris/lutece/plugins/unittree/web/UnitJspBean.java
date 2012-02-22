@@ -40,6 +40,7 @@ import fr.paris.lutece.plugins.unittree.service.action.IActionService;
 import fr.paris.lutece.plugins.unittree.service.unit.IUnitService;
 import fr.paris.lutece.plugins.unittree.service.unit.IUnitUserService;
 import fr.paris.lutece.plugins.unittree.service.unit.UnitResourceIdService;
+import fr.paris.lutece.plugins.unittree.service.unit.UnitUserAttributeManager;
 import fr.paris.lutece.plugins.unittree.web.action.IUnitPluginAction;
 import fr.paris.lutece.plugins.unittree.web.action.IUnitSearchFields;
 import fr.paris.lutece.plugins.unittree.web.action.UnitUserSearchFields;
@@ -121,6 +122,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
     private static final String MARK_LIST_UNIT_USER_PLUGIN_ACTIONS = "listUnitUserPluginActions";
     private static final String MARK_UNIT = "unit";
     private static final String MARK_USER = "user";
+    private static final String MARK_LIST_UNIT_USER_ATTRIBUTES = "listUnitUserAttributes";
 
     // PARAMETERS
     private static final String PARAMETER_CANCEL = "cancel";
@@ -379,6 +381,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
         _unitUserSearchFields.fillModelForSearch( listAvailableUsers, strBaseUrl, request, model, unit );
 
         model.put( MARK_UNIT, unit );
+        UnitUserAttributeManager.fillModel( request, getUser(  ), model, MARK_LIST_UNIT_USER_ATTRIBUTES );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_ADD_USERS, getLocale(  ), model );
 
@@ -420,6 +423,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
         Map<String, Object> model = new HashMap<String, Object>(  );
         model.put( MARK_UNIT, unit );
         model.put( MARK_USER, user );
+        UnitUserAttributeManager.fillModel( request, getUser(  ), model, MARK_LIST_UNIT_USER_ATTRIBUTES );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MODIFY_USER, getLocale(  ), model );
 

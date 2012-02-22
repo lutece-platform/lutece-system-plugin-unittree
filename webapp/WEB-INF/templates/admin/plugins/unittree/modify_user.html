@@ -10,6 +10,14 @@
     			<label>#i18n{unittree.modifyUser.labelUnit} : </label>
    				<strong>${unit.label!}</strong>
     		</p>
+    		<#if listUnitUserAttributes?? && listUnitUserAttributes?has_content>
+				<#list listUnitUserAttributes as unitUserAttribute>
+					<#if unitUserAttribute.template?has_content>
+						<#include unitUserAttribute.template />
+					</#if>
+				</#list>
+			</#if>
+			<div class="clear">&nbsp;</div>
     		<p>
     			<input type="hidden" name="idUnit" value="${unit.idUnit!}" />
     			<input type="hidden" name="idUser" value="${user.userId!}" />
