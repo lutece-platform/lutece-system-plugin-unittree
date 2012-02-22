@@ -7,7 +7,7 @@
 	IPluginActionResult result = unit.getManageUnits( request, response );
 	if ( result.getRedirect(  ) != null )
 	{
-		response.sendRedirect(result.getRedirect(  ) );
+		response.sendRedirect( result.getRedirect(  ) );
 	}
 	else if ( result.getHtmlContent(  ) != null )
 	{

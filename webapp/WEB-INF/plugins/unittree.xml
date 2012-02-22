@@ -26,13 +26,23 @@
             <feature-id>UNITS_MANAGEMENT</feature-id>
             <feature-title>unittree.adminFeature.unitsManagement.name</feature-title>
             <feature-description>unittree.adminFeature.unitsManagement.description</feature-description>
-            <feature-level>0</feature-level>
+            <feature-level>2</feature-level>
             <feature-url>jsp/admin/plugins/unittree/ManageUnits.jsp</feature-url>
             <feature-icon-url>images/admin/skin/plugins/unittree/unittree.png</feature-icon-url>
             <feature-documentation-url></feature-documentation-url>
         </admin-feature>
     </admin-features>
     
+    <!-- RBAC Resources -->
+    <rbac-resource-types>
+        <rbac-resource-type>
+            <rbac-resource-type-class>
+                fr.paris.lutece.plugins.unittree.service.unit.UnitResourceIdService
+			</rbac-resource-type-class>
+        </rbac-resource-type>
+    </rbac-resource-types>
+    
+    <!-- Freemarker -->
     <freemarker-macro-files>
 		<freemarker-macro-file>/admin/plugins/unittree/unittree_commons.html</freemarker-macro-file>
 	</freemarker-macro-files>

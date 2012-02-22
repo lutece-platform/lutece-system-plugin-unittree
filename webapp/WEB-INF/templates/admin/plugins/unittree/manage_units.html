@@ -23,8 +23,11 @@
 <div id="right">
 	<div class="content-box">
 		<h2>#i18n{unittree.manageUnits.labelListUsers}</h2>
+		
 		<#-- SEARCH USER FORM-->
 		<@searchAdminUsersForm urlAction="jsp/admin/plugins/unittree/ManageUnits.jsp" />
+		
+		<#-- LIST ASSIGNED USERS -->
 		<form method="post" action="jsp/admin/plugins/unittree/ManageUnits.jsp">
 			<input type="hidden" name="idUnit" value="${unit.idUnit!}" />
 			<#assign additionnalAttribute = "&session=session&idUnit=" + unit.idUnit! + sort_search_attribute!>
@@ -64,6 +67,8 @@
 			</p>
 		</form>
 		<@paginationAdmin paginator=paginator />
+		
+		<#-- LIST OF SUB UNITS -->
 		<h2>#i18n{unittree.manageUnits.labelListSubUnits}</h2>
 		<#if listSubUnits?? && listSubUnits?has_content>
 			<ul>
@@ -87,6 +92,7 @@
 	</div>
 </div>
 
+<#-- JS for tree display -->
 <script type="text/javascript"> 
 	jQuery( function($) {
 		// Set idunit
@@ -109,4 +115,4 @@
 			"plugins" : [ "themes", "html_data", "cookies", "ui" ]
 		} );
 	});
-</script> 
+</script>

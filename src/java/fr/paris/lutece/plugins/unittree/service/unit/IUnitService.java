@@ -34,7 +34,6 @@
 package fr.paris.lutece.plugins.unittree.service.unit;
 
 import fr.paris.lutece.plugins.unittree.business.unit.Unit;
-import fr.paris.lutece.portal.business.user.AdminUser;
 
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,6 +49,8 @@ import javax.xml.transform.Source;
  */
 public interface IUnitService
 {
+    public static final String BEAN_UNIT_SERVICE = "unittree.unitService";
+
     // GET
     Unit getUnit( int nIdUnit );
 

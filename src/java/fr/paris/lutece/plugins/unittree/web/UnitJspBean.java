@@ -37,6 +37,7 @@ import fr.paris.lutece.plugins.unittree.business.unit.Unit;
 import fr.paris.lutece.plugins.unittree.service.action.IActionService;
 import fr.paris.lutece.plugins.unittree.service.unit.IUnitService;
 import fr.paris.lutece.plugins.unittree.service.unit.IUnitUserService;
+import fr.paris.lutece.plugins.unittree.service.unit.UnitResourceIdService;
 import fr.paris.lutece.plugins.unittree.web.action.IUnitAction;
 import fr.paris.lutece.plugins.unittree.web.action.IUnitSearchFields;
 import fr.paris.lutece.plugins.unittree.web.action.UnitUserSearchFields;
@@ -46,8 +47,10 @@ import fr.paris.lutece.portal.service.html.XmlTransformerService;
 import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.service.message.AdminMessage;
 import fr.paris.lutece.portal.service.message.AdminMessageService;
+import fr.paris.lutece.portal.service.rbac.RBACService;
 import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
+import fr.paris.lutece.portal.service.util.AppException;
 import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.web.admin.PluginAdminPageJspBean;
@@ -85,7 +88,6 @@ public class UnitJspBean extends PluginAdminPageJspBean
     public static final String RIGHT_MANAGE_UNITS = "UNITS_MANAGEMENT";
 
     // BEAN
-    private static final String BEAN_UNIT_SERVICE = "unittree.unitService";
     private static final String BEAN_UNIT_USER_SERVICE = "unittree.unitUserService";
     private static final String BEAN_ACTION_SERVICE = "unittree.actionService";
 
@@ -94,7 +96,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
     private static final String PROPERTY_ERRROR_PAGE_TITLE = "unittree.error.pageTitle";
     private static final String PROPERTY_CREATE_UNIT_PAGE_TITLE = "unittree.createUnit.pageTitle";
     private static final String PROPERTY_MODIFY_UNIT_PAGE_TITLE = "unittree.modifyUnit.pageTitle";
-    private static final String PROPERTY_ADD_USER_PAGE_TITLE = "unittree.addUser.pageTitle";
+    private static final String PROPERTY_ADD_USERS_PAGE_TITLE = "unittree.addUsers.pageTitle";
 
     // MESSAGES
     private static final String MESSAGE_ERROR_GENERIC_MESSAGE = "unittree.message.error.genericMessage";
@@ -102,6 +104,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
     private static final String MESSAGE_ERROR_UNIT_HAS_SUB_UNITS = "unittree.message.error.unitHasSubUnits";
     private static final String MESSAGE_ERROR_USER_ALREADY_IN_AN_UNIT = "unittree.message.error.userAlreadyInAnUnit";
     private static final String MESSAGE_CONFIRM_REMOVE_UNIT = "unittree.message.removeUnit";
+    private static final String MESSAGE_ACCESS_DENIED = "unittree.message.accessDenied";
 
     // MARKS
     private static final String MARK_ERROR_MESSAGE = "errorMessage";
@@ -129,7 +132,6 @@ public class UnitJspBean extends PluginAdminPageJspBean
 
     // JSP
     private static final String JSP_MANAGE_UNITS = "ManageUnits.jsp";
-    private static final String JSP_ERROR = "Error.jsp";
     private static final String JSP_URL_DO_REMOVE_UNIT = "jsp/admin/plugins/unittree/DoRemoveUnit.jsp";
     private static final String JSP_URL_ADD_USERS = "jsp/admin/plugins/unittree/AddUsers.jsp";
     private static final String JSP_URL_MANAGE_UNITS = "jsp/admin/plugins/unittree/ManageUnits.jsp";
@@ -137,10 +139,10 @@ public class UnitJspBean extends PluginAdminPageJspBean
     private static final String XSL_PARAMETER_ID_CURRENT_UNIT = "id-current-unit";
 
     // SERVICES
-    private IUnitService _unitService = (IUnitService) SpringContextService.getBean( BEAN_UNIT_SERVICE );
+    private IUnitService _unitService = (IUnitService) SpringContextService.getBean( IUnitService.BEAN_UNIT_SERVICE );
     private IUnitUserService _unitUserService = (IUnitUserService) SpringContextService.getBean( BEAN_UNIT_USER_SERVICE );
     private IActionService _actionService = (IActionService) SpringContextService.getBean( BEAN_ACTION_SERVICE );
-    private IUnitSearchFields _unitUserSearchFields;
+    private IUnitSearchFields _unitUserSearchFields = new UnitUserSearchFields(  );
 
     // GET
 
@@ -179,6 +181,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
             unit = _unitService.getRootUnit(  );
         }
 
+        // Check if there is some parameters in the session (for user search)
         if ( request.getParameter( PARAMETER_SESSION ) == null )
         {
             reInitSearchFields( request );
@@ -196,6 +199,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
 
         Map<String, Object> model = new HashMap<String, Object>(  );
 
+        // Add elements for user search form in the model
         List<AdminUser> listUsers = _unitUserService.getUsers( unit.getIdUnit(  ) );
         String strBaseUrl = AppPathService.getBaseUrl( request ) + JSP_URL_MANAGE_UNITS;
         _unitUserSearchFields.fillModelForSearch( listUsers, strBaseUrl, request, model, unit );
@@ -203,20 +207,24 @@ public class UnitJspBean extends PluginAdminPageJspBean
         model.put( MARK_UNIT_TREE, strHtmlUnitsTree );
         model.put( MARK_UNIT, unit );
         model.put( MARK_LIST_SUB_UNITS, _unitService.getSubUnits( unit.getIdUnit(  ) ) );
-        model.put( MARK_LIST_UNIT_ACTIONS, _actionService.getListActions( Unit.RESOURCE_TYPE, getLocale(  ) ) );
+
+        // Add actions in the model
+        model.put( MARK_LIST_UNIT_ACTIONS,
+            _actionService.getListActions( Unit.RESOURCE_TYPE, getLocale(  ), unit, getUser(  ) ) );
         PluginActionManager.fillModel( request, getUser(  ), model, IUnitAction.class, MARK_LIST_UNIT_USERS_ACTIONS );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MANAGE_UNITS, getLocale(  ), model );
 
         IPluginActionResult result = new DefaultPluginActionResult(  );
         result.setHtmlContent( getAdminPage( template.getHtml(  ) ) );
+        AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP );
 
         return result;
     }
 
     public String getCreateUnit( HttpServletRequest request )
+        throws AccessDeniedException
     {
-        // TODO : Check permission
         setPageTitleProperty( PROPERTY_CREATE_UNIT_PAGE_TITLE );
 
         Map<String, Object> model = new HashMap<String, Object>(  );
@@ -235,6 +243,13 @@ public class UnitJspBean extends PluginAdminPageJspBean
             unitParent = _unitService.getRootUnit(  );
         }
 
+        // Check permissions
+        if ( !RBACService.isAuthorized( unitParent, UnitResourceIdService.PERMISSION_CREATE, getUser(  ) ) )
+        {
+            String strErrorMessage = I18nService.getLocalizedString( MESSAGE_ACCESS_DENIED, getLocale(  ) );
+            throw new AccessDeniedException( strErrorMessage );
+        }
+
         model.put( MARK_PARENT_UNIT, unitParent );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CREATE_UNIT, getLocale(  ), model );
@@ -243,8 +258,8 @@ public class UnitJspBean extends PluginAdminPageJspBean
     }
 
     public String getModifyUnit( HttpServletRequest request )
+        throws AccessDeniedException
     {
-        // TODO : Check permission
         setPageTitleProperty( PROPERTY_MODIFY_UNIT_PAGE_TITLE );
 
         Unit unit = null;
@@ -258,7 +273,14 @@ public class UnitJspBean extends PluginAdminPageJspBean
 
         if ( unit == null )
         {
-            return getError( request );
+            throw new AppException(  );
+        }
+
+        // Check permissions
+        if ( !RBACService.isAuthorized( unit, UnitResourceIdService.PERMISSION_MODIFY, getUser(  ) ) )
+        {
+            String strErrorMessage = I18nService.getLocalizedString( MESSAGE_ACCESS_DENIED, getLocale(  ) );
+            throw new AccessDeniedException( strErrorMessage );
         }
 
         Unit parentUnit = _unitService.getUnit( unit.getIdParent(  ) );
@@ -272,10 +294,10 @@ public class UnitJspBean extends PluginAdminPageJspBean
         return getAdminPage( template.getHtml(  ) );
     }
 
-    public String getAddUser( HttpServletRequest request )
+    public String getAddUsers( HttpServletRequest request )
+        throws AccessDeniedException
     {
-        // TODO : Check permission
-        setPageTitleProperty( PROPERTY_ADD_USER_PAGE_TITLE );
+        setPageTitleProperty( PROPERTY_ADD_USERS_PAGE_TITLE );
 
         // Get the selected unit
         String strIdUnit = request.getParameter( PARAMETER_ID_UNIT );
@@ -292,6 +314,13 @@ public class UnitJspBean extends PluginAdminPageJspBean
             unit = _unitService.getRootUnit(  );
         }
 
+        // Check permissions
+        if ( !RBACService.isAuthorized( unit, UnitResourceIdService.PERMISSION_ADD_USER, getUser(  ) ) )
+        {
+            String strErrorMessage = I18nService.getLocalizedString( MESSAGE_ACCESS_DENIED, getLocale(  ) );
+            throw new AccessDeniedException( strErrorMessage );
+        }
+
         if ( request.getParameter( PARAMETER_SESSION ) == null )
         {
             reInitSearchFields( request );
@@ -302,16 +331,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
         List<AdminUser> listAvailableUsers = _unitUserService.getAvailableUsers( getUser(  ) );
         String strBaseUrl = AppPathService.getBaseUrl( request ) + JSP_URL_ADD_USERS;
 
-        try
-        {
-            _unitUserSearchFields.fillModelForSearch( listAvailableUsers, strBaseUrl, request, model, unit );
-        }
-        catch ( AccessDeniedException e )
-        {
-            AppLogService.error( e.getMessage(  ), e );
-
-            return JSP_ERROR;
-        }
+        _unitUserSearchFields.fillModelForSearch( listAvailableUsers, strBaseUrl, request, model, unit );
 
         model.put( MARK_UNIT, unit );
 
@@ -334,46 +354,18 @@ public class UnitJspBean extends PluginAdminPageJspBean
             return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
         }
 
+        // Check permissions
+        if ( !RBACService.isAuthorized( Unit.RESOURCE_TYPE, strIdUnit, UnitResourceIdService.PERMISSION_DELETE,
+                    getUser(  ) ) )
+        {
+            return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP );
+        }
+
         UrlItem url = new UrlItem( JSP_URL_DO_REMOVE_UNIT );
         url.addParameter( PARAMETER_ID_UNIT, strIdUnit );
 
         return AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_REMOVE_UNIT, url.getUrl(  ),
             AdminMessage.TYPE_CONFIRMATION );
-    }
-
-    /**
-     * Get error
-     * @param request the HTTP request
-     * @return the HTML code
-     */
-    public String getError( HttpServletRequest request )
-    {
-        String strErrorMessage = request.getParameter( PARAMETER_ERROR_MESSAGE );
-
-        if ( StringUtils.isBlank( strErrorMessage ) )
-        {
-            strErrorMessage = I18nService.getLocalizedString( MESSAGE_ERROR_GENERIC_MESSAGE, getLocale(  ) );
-        }
-
-        return getError( request, strErrorMessage );
-    }
-
-    /**
-     * Get error
-     * @param request the HTTP request
-     * @param strErrorMessage the error message
-     * @return the HTML code
-     */
-    public String getError( HttpServletRequest request, String strErrorMessage )
-    {
-        setPageTitleProperty( PROPERTY_ERRROR_PAGE_TITLE );
-
-        Map<String, Object> model = new HashMap<String, Object>(  );
-        model.put( MARK_ERROR_MESSAGE, strErrorMessage );
-
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_ERROR, getLocale(  ), model );
-
-        return getAdminPage( template.getHtml(  ) );
     }
 
     // DO
@@ -388,6 +380,13 @@ public class UnitJspBean extends PluginAdminPageJspBean
             url.addParameter( PARAMETER_ID_UNIT, strIdParent );
 
             return url.getUrl(  );
+        }
+
+        // Check permissions
+        if ( !RBACService.isAuthorized( Unit.RESOURCE_TYPE, strIdParent, UnitResourceIdService.PERMISSION_CREATE,
+                    getUser(  ) ) )
+        {
+            return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP );
         }
 
         Unit unit = new Unit(  );
@@ -413,7 +412,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
             // Revert
             _unitService.removeUnit( unit.getIdUnit(  ) );
 
-            return JSP_ERROR;
+            return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_GENERIC_MESSAGE, AdminMessage.TYPE_ERROR );
         }
 
         UrlItem url = new UrlItem( JSP_MANAGE_UNITS );
@@ -448,6 +447,12 @@ public class UnitJspBean extends PluginAdminPageJspBean
             return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_UNIT_NOT_FOUND, AdminMessage.TYPE_STOP );
         }
 
+        // Check permissions
+        if ( !RBACService.isAuthorized( unit, UnitResourceIdService.PERMISSION_MODIFY, getUser(  ) ) )
+        {
+            return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP );
+        }
+
         // Populate the bean
         populate( unit, request );
 
@@ -468,7 +473,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
             // Something wrong happened... a database check might be needed
             AppLogService.error( ex.getMessage(  ) + " when modifying an unit ", ex );
 
-            return JSP_ERROR;
+            return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_GENERIC_MESSAGE, AdminMessage.TYPE_ERROR );
         }
 
         UrlItem url = new UrlItem( JSP_MANAGE_UNITS );
@@ -490,6 +495,11 @@ public class UnitJspBean extends PluginAdminPageJspBean
         int nIdParent = Unit.ID_ROOT;
         Unit unit = _unitService.getUnit( nIdUnit );
 
+        if ( !RBACService.isAuthorized( unit, UnitResourceIdService.PERMISSION_DELETE, getUser(  ) ) )
+        {
+            return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP );
+        }
+
         if ( unit != null )
         {
             if ( _unitService.hasSubUnits( nIdUnit ) )
@@ -509,7 +519,8 @@ public class UnitJspBean extends PluginAdminPageJspBean
                 // Something wrong happened... a database check might be needed
                 AppLogService.error( ex.getMessage(  ) + " when deleting an unit ", ex );
 
-                return JSP_ERROR;
+                return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_GENERIC_MESSAGE,
+                    AdminMessage.TYPE_ERROR );
             }
         }
 
@@ -532,6 +543,12 @@ public class UnitJspBean extends PluginAdminPageJspBean
             return url.getUrl(  );
         }
 
+        if ( !RBACService.isAuthorized( Unit.RESOURCE_TYPE, strIdUnit, UnitResourceIdService.PERMISSION_ADD_USER,
+                    getUser(  ) ) )
+        {
+            return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP );
+        }
+
         String[] listIdUsers = request.getParameterValues( PARAMETER_ID_USERS );
 
         if ( ( listIdUsers == null ) || ( listIdUsers.length == 0 ) || StringUtils.isBlank( strIdUnit ) ||
@@ -548,7 +565,6 @@ public class UnitJspBean extends PluginAdminPageJspBean
             {
                 int nIdUser = Integer.parseInt( strIdUser );
 
-                // TODO : Check existence before adding, otherwise some data will be stored even when there are errors 
                 if ( !_unitUserService.addUserToUnit( nIdUnit, nIdUser ) )
                 {
                     return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_USER_ALREADY_IN_AN_UNIT,

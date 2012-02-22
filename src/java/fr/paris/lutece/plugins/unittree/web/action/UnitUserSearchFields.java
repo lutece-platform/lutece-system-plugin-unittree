@@ -85,6 +85,11 @@ public class UnitUserSearchFields extends DefaultUnitSearchFields
     private AdminUser _user;
     private AdminUserFilter _auFilter = new AdminUserFilter(  );
 
+    public UnitUserSearchFields(  )
+    {
+        super(  );
+    }
+
     public UnitUserSearchFields( HttpServletRequest request )
     {
         super(  );

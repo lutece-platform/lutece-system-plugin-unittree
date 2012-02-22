@@ -1,1 +1,3 @@
-<input type="submit" class="button" name="addUsers" value="#i18n{unittree.addUsers.btnAddUsers}" />
+<#if permissionAddUsers?? && permissionAddUsers>
+	<input type="submit" class="button" name="addUsers" value="#i18n{unittree.addUsers.btnAddUsers}" />
+</#if>

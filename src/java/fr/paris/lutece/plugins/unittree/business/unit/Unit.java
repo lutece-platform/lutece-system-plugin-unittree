@@ -33,6 +33,8 @@
  */
 package fr.paris.lutece.plugins.unittree.business.unit;
 
+import fr.paris.lutece.portal.service.rbac.RBACResource;
+
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
@@ -42,7 +44,7 @@ import javax.validation.constraints.NotNull;
  *
  *
  */
-public class Unit
+public class Unit implements RBACResource
 {
     public static final String RESOURCE_TYPE = "UNIT_TYPE";
     public static final int ID_ROOT = 0;
@@ -104,5 +106,23 @@ public class Unit
     public boolean isRoot(  )
     {
         return _nIdUnit == ID_ROOT;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getResourceId(  )
+    {
+        return Integer.toString( _nIdUnit );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getResourceTypeCode(  )
+    {
+        return RESOURCE_TYPE;
     }
 }

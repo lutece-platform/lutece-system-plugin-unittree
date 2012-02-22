@@ -34,6 +34,8 @@
 package fr.paris.lutece.plugins.unittree.service.action;
 
 import fr.paris.lutece.plugins.unittree.business.action.IAction;
+import fr.paris.lutece.portal.business.user.AdminUser;
+import fr.paris.lutece.portal.service.rbac.RBACResource;
 
 import java.util.List;
 import java.util.Locale;
@@ -45,5 +47,5 @@ import java.util.Locale;
  */
 public interface IActionService
 {
-    List<IAction> getListActions( String strResourceType, Locale locale );
+    List<IAction> getListActions( String strResourceType, Locale locale, RBACResource resource, AdminUser user );
 }

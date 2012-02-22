@@ -35,7 +35,10 @@ package fr.paris.lutece.plugins.unittree.service.action;
 
 import fr.paris.lutece.plugins.unittree.business.action.ActionHome;
 import fr.paris.lutece.plugins.unittree.business.action.IAction;
+import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.portal.service.i18n.I18nService;
+import fr.paris.lutece.portal.service.rbac.RBACResource;
+import fr.paris.lutece.portal.service.rbac.RBACService;
 
 import java.util.List;
 import java.util.Locale;
@@ -51,10 +54,10 @@ public class ActionService implements IActionService
      * {@inheritDoc}
      */
     @Override
-    public List<IAction> getListActions( String strResourceType, Locale locale )
+    public List<IAction> getListActions( String strResourceType, Locale locale, RBACResource resource, AdminUser user )
     {
-        List<IAction> listActions = ActionHome.getActionsList( strResourceType );
+        List<IAction> listActions = I18nService.localizeCollection( ActionHome.getActionsList( strResourceType ), locale );
 
-        return I18nService.localizeCollection( listActions, locale );
+        return (List<IAction>) RBACService.getAuthorizedActionsCollection( listActions, resource, user );
     }
 }

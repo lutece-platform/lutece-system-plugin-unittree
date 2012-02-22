@@ -33,8 +33,11 @@
  */
 package fr.paris.lutece.plugins.unittree.web.action;
 
+import fr.paris.lutece.plugins.unittree.business.unit.Unit;
+import fr.paris.lutece.plugins.unittree.service.unit.UnitResourceIdService;
 import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.portal.service.admin.AccessDeniedException;
+import fr.paris.lutece.portal.service.rbac.RBACService;
 import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.web.pluginaction.AbstractPluginAction;
 import fr.paris.lutece.portal.web.pluginaction.DefaultPluginActionResult;
@@ -61,6 +64,9 @@ public class AddUsersUnitAction extends AbstractPluginAction<IUnitSearchFields> 
     private static final String PARAMETER_ADD_USER = "addUsers";
     private static final String PARAMETER_ID_UNIT = "idUnit";
 
+    // MARKS
+    private static final String MARK_PERMISSION_ADD_USERS = "permissionAddUsers";
+
     // TEMPLATE
     private static final String TEMPLATE_BUTTON = "actions/add_users.html";
 
@@ -73,7 +79,10 @@ public class AddUsersUnitAction extends AbstractPluginAction<IUnitSearchFields> 
     @Override
     public void fillModel( HttpServletRequest request, AdminUser adminUser, Map<String, Object> model )
     {
-        // no additionnal data
+        String strIdUnit = request.getParameter( PARAMETER_ID_UNIT );
+        model.put( MARK_PERMISSION_ADD_USERS,
+            RBACService.isAuthorized( Unit.RESOURCE_TYPE, strIdUnit, UnitResourceIdService.PERMISSION_ADD_USER,
+                adminUser ) );
     }
 
     /**
