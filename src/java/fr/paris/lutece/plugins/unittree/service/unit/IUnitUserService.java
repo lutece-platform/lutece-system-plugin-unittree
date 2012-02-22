@@ -31,78 +31,29 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.unittree.business.unit;
+package fr.paris.lutece.plugins.unittree.service.unit;
 
-import org.hibernate.validator.constraints.NotBlank;
+import fr.paris.lutece.portal.business.user.AdminUser;
 
-import javax.validation.constraints.NotNull;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 
-/**
- *
- *
- */
-public class Unit
+public interface IUnitUserService
 {
-    public static final String RESOURCE_TYPE = "UNIT_TYPE";
-    public static final int ID_ROOT = 0;
-    private int _nIdUnit;
-    @NotNull
-    private int _nIdParent;
-    @NotBlank
-    private String _strLabel;
-    @NotBlank
-    private String _strDescription;
+    // GET
+    List<AdminUser> getUsers( int nIdUnit );
 
-    public int getIdUnit(  )
-    {
-        return _nIdUnit;
-    }
+    List<AdminUser> getAvailableUsers( AdminUser currentUser );
 
-    public void setIdUnit( int nIdUnit )
-    {
-        _nIdUnit = nIdUnit;
-    }
+    // CHECKS
+    boolean isUserInUnit( int nIdUser );
 
-    public String getLabel(  )
-    {
-        return _strLabel;
-    }
+    // CRUD
+    @Transactional( "unittree.transactionManager" )
+    boolean addUserToUnit( int nIdUnit, int nIdUser );
 
-    public void setLabel( String strLabel )
-    {
-        _strLabel = strLabel;
-    }
-
-    public String getDescription(  )
-    {
-        return _strDescription;
-    }
-
-    public void setDescription( String strDescription )
-    {
-        _strDescription = strDescription;
-    }
-
-    /**
-     *
-     * @param nIdParent the _nIdParent to set
-     */
-    public void setIdParent( int nIdParent )
-    {
-        this._nIdParent = nIdParent;
-    }
-
-    /**
-     * @return the _nIdParent
-     */
-    public int getIdParent(  )
-    {
-        return _nIdParent;
-    }
-
-    public boolean isRoot(  )
-    {
-        return _nIdUnit == ID_ROOT;
-    }
+    @Transactional( "unittree.transactionManager" )
+    void removeUserFromUnit( int nIdUser );
 }

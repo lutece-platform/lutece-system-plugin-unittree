@@ -33,6 +33,15 @@
  */
 package fr.paris.lutece.plugins.unittree.web.action;
 
+import fr.paris.lutece.plugins.unittree.business.unit.Unit;
+import fr.paris.lutece.portal.business.user.AdminUser;
+import fr.paris.lutece.portal.service.admin.AccessDeniedException;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
 
 /**
  *
@@ -40,4 +49,40 @@ package fr.paris.lutece.plugins.unittree.web.action;
  */
 public interface IUnitSearchFields
 {
+    int getItemsPerPage(  );
+
+    void setItemsPerPage( int nItemsPerPage );
+
+    /**
+    * Default items per page
+    *
+    * @return default items per page
+    */
+    int getDefaultItemsPerPage(  );
+
+    /**
+     * Default items per page
+     *
+     * @param nDefaultItemsPerPage
+     *            default items per page
+     */
+    void setDefaultItemsPerPage( int nDefaultItemsPerPage );
+
+    /**
+     * Current page index
+     *
+     * @return current page index
+     */
+    String getCurrentPageIndex(  );
+
+    /**
+     * Current page index
+     *
+     * @param strCurrentPageIndex
+     *            current page index
+     */
+    void setCurrentPageIndex( String strCurrentPageIndex );
+
+    void fillModelForSearch( List<AdminUser> listUsers, String strBaseUrl, HttpServletRequest request,
+        Map<String, Object> model, Unit unit ) throws AccessDeniedException;
 }

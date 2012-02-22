@@ -3,6 +3,11 @@
     <div class="content-box-content">
     	<form method="post" action="jsp/admin/plugins/unittree/DoCreateUnit.jsp">
     		<p>
+    			<label for="idParent">#i18n{unittree.createUnit.labelParentUnit} : </label>
+    			<strong>${parentUnit.label!}</strong>
+    			<input type="hidden" name="idParent" value="${parentUnit.idUnit!}" />
+    		</p>
+    		<p>
     			<label for="label">#i18n{unittree.createUnit.labelLabel} * : </label>
    				<input type="text" size="20" maxlength="20" value="" name="label" />
     		</p>
@@ -11,7 +16,6 @@
    				<input type="text" size="100" maxlength="100" value="" name="description" />
     		</p>
     		<p>
-    			<input type="hidden" name="idParent" value="${idParent}" />
    				<input type="submit" name="create" class="button" value="#i18n{portal.util.labelCreate}" />
     			<input type="submit" name="cancel" class="button" value="#i18n{portal.util.labelCancel}" />
     		</p>

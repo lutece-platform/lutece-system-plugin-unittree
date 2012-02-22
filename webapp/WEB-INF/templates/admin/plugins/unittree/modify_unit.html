@@ -2,6 +2,12 @@
     <h2>#i18n{unittree.modifyUnit.pageTitle}</h2>
     <div class="content-box-content">
     	<form method="post" action="jsp/admin/plugins/unittree/DoModifyUnit.jsp">
+    		<#if parentUnit??>
+	    		<p>
+	    			<label for="idParent">#i18n{unittree.createUnit.labelParentUnit} : </label>
+	    			<strong>${parentUnit.label!}</strong>
+	    		</p>
+	    	</#if>
     		<p>
     			<label for="label">#i18n{unittree.modifyUnit.labelLabel} * : </label>
    				<input type="text" size="20" maxlength="20" value="${unit.label!}" name="label" />

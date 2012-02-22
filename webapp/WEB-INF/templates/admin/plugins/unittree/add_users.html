@@ -20,18 +20,30 @@
 <div id="right">
 	<div class="content-box">
 		<h2>#i18n{unittree.addUsers.labelUsers}</h2>
-		<div class="highlight-box">
-			SEARCH USER FORM HERE
-		</div>
+		
+		<#-- SEARCH USER FORM-->
+		<@searchAdminUsersForm urlAction="jsp/admin/plugins/unittree/AddUsers.jsp" />
+		
+		<#-- ADD USER FORM -->
 		<form method="post" action="jsp/admin/plugins/unittree/DoAddUsers.jsp">
-			<#if listUsers?? && listUsers?has_content>
-				<table>
-					<tr>
-						<td>&nbsp;</td>
-						<th>#i18n{unittree.addUsers.labelFirstName}</th>
-						<th>#i18n{unittree.addUsers.labelLastName}</th>
-						<th>#i18n{unittree.addUsers.labelAccessCode}</th>
-					</tr>
+			<#assign additionnalAttribute = "&session=session&idUnit=" + unit.idUnit! + sort_search_attribute!>
+			<table>
+				<tr>
+					<th>&nbsp;</th>
+					<th>
+						#i18n{unittree.addUsers.labelFirstName}
+						<@sort jsp_url="jsp/admin/plugins/unittree/AddUsers.jsp" attribute="firstName${additionnalAttribute!}" />
+					</th>
+					<th>
+						#i18n{unittree.addUsers.labelLastName}
+						<@sort jsp_url="jsp/admin/plugins/unittree/AddUsers.jsp" attribute="lastName${additionnalAttribute!}" />
+					</th>
+					<th>
+						#i18n{unittree.addUsers.labelAccessCode}
+						<@sort jsp_url="jsp/admin/plugins/unittree/AddUsers.jsp" attribute="accessCode${additionnalAttribute!}" />
+					</th>
+				</tr>
+				<#if listUsers?? && listUsers?has_content>
 					<#list listUsers as user>
 						<tr>
 							<td><input type="checkbox" name="idUsers" value="${user.userId!}" /></td>
@@ -40,13 +52,14 @@
 							<td>${user.accessCode!}</td>
 						</tr>
 					</#list>
-				</table>
-				<p>
-					<input type="hidden" name="idUnit" value="${unit.idUnit!}" />
-					<input type="submit" name="addUsers" value="#i18n{unittree.addUsers.btnAdd}" class="button" />
-					<input type="submit" name="cancel" value="#i18n{portal.util.labelCancel}" class="button" />
-				</p>
-			</#if>
+				</#if>
+			</table>
+			<p>
+				<input type="hidden" name="idUnit" value="${unit.idUnit!}" />
+				<input type="submit" name="addUsers" value="#i18n{unittree.addUsers.btnAdd}" class="button" />
+				<input type="submit" name="cancel" value="#i18n{portal.util.labelCancel}" class="button" />
+			</p>
 		</form>
+		<@paginationAdmin paginator=paginator />
 	</div>
 </div>

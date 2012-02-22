@@ -170,46 +170,6 @@ public class UnitService implements IUnitService
         return new StreamSource( fis );
     }
 
-    public List<AdminUser> getUsers( int nIdUnit )
-    {
-        List<AdminUser> listUsers = new ArrayList<AdminUser>(  );
-        List<Integer> listIdUsers = UnitHome.findIdUsers( nIdUnit );
-
-        if ( ( listIdUsers != null ) && !listIdUsers.isEmpty(  ) )
-        {
-            for ( int nIdUser : listIdUsers )
-            {
-                AdminUser user = AdminUserHome.findByPrimaryKey( nIdUser );
-
-                if ( user != null )
-                {
-                    listUsers.add( user );
-                }
-            }
-        }
-
-        return listUsers;
-    }
-
-    public List<AdminUser> getUsers( AdminUser currentUser )
-    {
-        List<AdminUser> listUsers = new ArrayList<AdminUser>(  );
-
-        for ( AdminUser user : AdminUserHome.findUserList(  ) )
-        {
-            if ( currentUser.isAdmin(  ) ||
-                    ( ( user.getUserId(  ) == currentUser.getUserId(  ) ) &&
-                    ( currentUser.isParent( user ) &&
-                    ( ( haveCommonWorkgroups( currentUser, user ) ) ||
-                    ( !AdminWorkgroupHome.checkUserHasWorkgroup( user.getUserId(  ) ) ) ) ) ) )
-            {
-                listUsers.add( user );
-            }
-        }
-
-        return listUsers;
-    }
-
     // CHECKS
 
     /**
@@ -221,15 +181,6 @@ public class UnitService implements IUnitService
         List<Unit> listUnits = getSubUnits( nIdUnit );
 
         return ( listUnits != null ) && !listUnits.isEmpty(  );
-    }
-
-    /**
-         * {@inheritDoc}
-         */
-    @Override
-    public boolean isUserInAnUnit( int nIdUser )
-    {
-        return UnitHome.isUserInAnUnit( nIdUser );
     }
 
     // CRUD OPERATIONS
@@ -271,64 +222,9 @@ public class UnitService implements IUnitService
     @Transactional( "unittree.transactionManager" )
     public void updateUnit( Unit unit )
     {
-        if ( ( unit != null ) && ( unit.getIdUnit(  ) != Unit.ID_ROOT ) )
+        if ( unit != null )
         {
             UnitHome.update( unit );
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Transactional( "unittree.transactionManager" )
-    public boolean addUserToUnit( int nIdUnit, int nIdUser )
-    {
-        if ( !isUserInAnUnit( nIdUser ) )
-        {
-            UnitHome.addUserToUnit( nIdUnit, nIdUser );
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-         * {@inheritDoc}
-         */
-    @Override
-    @Transactional( "unittree.transactionManager" )
-    public void removeUserFromUnit( int nIdUser )
-    {
-        UnitHome.removeUser( nIdUser );
-    }
-
-    // PRIVATE METHODS
-
-    /**
-    * Tell if 2 users have groups in common
-    * @param user1 User1
-    * @param user2 User2
-    * @return true or false
-    */
-    private boolean haveCommonWorkgroups( AdminUser user1, AdminUser user2 )
-    {
-        ReferenceList workgroups = AdminWorkgroupHome.getUserWorkgroups( user1 );
-
-        if ( workgroups.size(  ) == 0 )
-        {
-            return true;
-        }
-
-        for ( ReferenceItem item : workgroups )
-        {
-            if ( AdminWorkgroupHome.isUserInWorkgroup( user2, item.getCode(  ) ) )
-            {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

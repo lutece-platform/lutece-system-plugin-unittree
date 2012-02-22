@@ -36,9 +36,11 @@ package fr.paris.lutece.plugins.unittree.web;
 import fr.paris.lutece.plugins.unittree.business.unit.Unit;
 import fr.paris.lutece.plugins.unittree.service.action.IActionService;
 import fr.paris.lutece.plugins.unittree.service.unit.IUnitService;
+import fr.paris.lutece.plugins.unittree.service.unit.IUnitUserService;
 import fr.paris.lutece.plugins.unittree.web.action.IUnitAction;
 import fr.paris.lutece.plugins.unittree.web.action.IUnitSearchFields;
-import fr.paris.lutece.plugins.unittree.web.action.UnitSearchFields;
+import fr.paris.lutece.plugins.unittree.web.action.UnitUserSearchFields;
+import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.portal.service.admin.AccessDeniedException;
 import fr.paris.lutece.portal.service.html.XmlTransformerService;
 import fr.paris.lutece.portal.service.i18n.I18nService;
@@ -47,6 +49,7 @@ import fr.paris.lutece.portal.service.message.AdminMessageService;
 import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
 import fr.paris.lutece.portal.service.util.AppLogService;
+import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.web.admin.PluginAdminPageJspBean;
 import fr.paris.lutece.portal.web.constants.Messages;
 import fr.paris.lutece.portal.web.pluginaction.DefaultPluginActionResult;
@@ -60,6 +63,7 @@ import fr.paris.lutece.util.url.UrlItem;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -82,6 +86,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
 
     // BEAN
     private static final String BEAN_UNIT_SERVICE = "unittree.unitService";
+    private static final String BEAN_UNIT_USER_SERVICE = "unittree.unitUserService";
     private static final String BEAN_ACTION_SERVICE = "unittree.actionService";
 
     // PROPERTIES
@@ -100,12 +105,10 @@ public class UnitJspBean extends PluginAdminPageJspBean
 
     // MARKS
     private static final String MARK_ERROR_MESSAGE = "errorMessage";
-    private static final String MARK_ID_UNIT = "idUnit";
     private static final String MARK_UNIT_TREE = "unitTree";
-    private static final String MARK_ID_PARENT = "idParent";
+    private static final String MARK_PARENT_UNIT = "parentUnit";
     private static final String MARK_LIST_SUB_UNITS = "listSubUnits";
     private static final String MARK_LIST_UNIT_ACTIONS = "listUnitActions";
-    private static final String MARK_LIST_USERS = "listUsers";
     private static final String MARK_LIST_UNIT_USERS_ACTIONS = "listUnitUserActions";
     private static final String MARK_UNIT = "unit";
 
@@ -115,6 +118,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
     private static final String PARAMETER_ID_UNIT = "idUnit";
     private static final String PARAMETER_ID_PARENT = "idParent";
     private static final String PARAMETER_ID_USERS = "idUsers";
+    private static final String PARAMETER_SESSION = "session";
 
     // TEMPLATES
     private static final String TEMPLATE_MANAGE_UNITS = "/admin/plugins/unittree/manage_units.html";
@@ -127,13 +131,16 @@ public class UnitJspBean extends PluginAdminPageJspBean
     private static final String JSP_MANAGE_UNITS = "ManageUnits.jsp";
     private static final String JSP_ERROR = "Error.jsp";
     private static final String JSP_URL_DO_REMOVE_UNIT = "jsp/admin/plugins/unittree/DoRemoveUnit.jsp";
+    private static final String JSP_URL_ADD_USERS = "jsp/admin/plugins/unittree/AddUsers.jsp";
+    private static final String JSP_URL_MANAGE_UNITS = "jsp/admin/plugins/unittree/ManageUnits.jsp";
     private static final String UNIT_TREE_XSL_UNIQUE_PREFIX = UniqueIDGenerator.getNewId(  ) + "SpacesTree";
     private static final String XSL_PARAMETER_ID_CURRENT_UNIT = "id-current-unit";
 
     // SERVICES
     private IUnitService _unitService = (IUnitService) SpringContextService.getBean( BEAN_UNIT_SERVICE );
+    private IUnitUserService _unitUserService = (IUnitUserService) SpringContextService.getBean( BEAN_UNIT_USER_SERVICE );
     private IActionService _actionService = (IActionService) SpringContextService.getBean( BEAN_ACTION_SERVICE );
-    private IUnitSearchFields _searchFields = new UnitSearchFields(  );
+    private IUnitSearchFields _unitUserSearchFields;
 
     // GET
 
@@ -154,7 +161,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
         {
             AppLogService.debug( "Processing unittree action " + action.getName(  ) );
 
-            return action.process( request, response, getUser(  ), _searchFields );
+            return action.process( request, response, getUser(  ), _unitUserSearchFields );
         }
 
         // Get the selected unit
@@ -172,6 +179,11 @@ public class UnitJspBean extends PluginAdminPageJspBean
             unit = _unitService.getRootUnit(  );
         }
 
+        if ( request.getParameter( PARAMETER_SESSION ) == null )
+        {
+            reInitSearchFields( request );
+        }
+
         // Build the html for units tree
         String strXmlUnits = _unitService.getXMLUnits(  );
         Source sourceXsl = _unitService.getTreeXsl(  );
@@ -183,11 +195,15 @@ public class UnitJspBean extends PluginAdminPageJspBean
                 UNIT_TREE_XSL_UNIQUE_PREFIX, htXslParameters, null );
 
         Map<String, Object> model = new HashMap<String, Object>(  );
+
+        List<AdminUser> listUsers = _unitUserService.getUsers( unit.getIdUnit(  ) );
+        String strBaseUrl = AppPathService.getBaseUrl( request ) + JSP_URL_MANAGE_UNITS;
+        _unitUserSearchFields.fillModelForSearch( listUsers, strBaseUrl, request, model, unit );
+
         model.put( MARK_UNIT_TREE, strHtmlUnitsTree );
-        model.put( MARK_ID_UNIT, unit.getIdUnit(  ) );
+        model.put( MARK_UNIT, unit );
         model.put( MARK_LIST_SUB_UNITS, _unitService.getSubUnits( unit.getIdUnit(  ) ) );
         model.put( MARK_LIST_UNIT_ACTIONS, _actionService.getListActions( Unit.RESOURCE_TYPE, getLocale(  ) ) );
-        model.put( MARK_LIST_USERS, _unitService.getUsers( unit.getIdUnit(  ) ) );
         PluginActionManager.fillModel( request, getUser(  ), model, IUnitAction.class, MARK_LIST_UNIT_USERS_ACTIONS );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MANAGE_UNITS, getLocale(  ), model );
@@ -205,25 +221,21 @@ public class UnitJspBean extends PluginAdminPageJspBean
 
         Map<String, Object> model = new HashMap<String, Object>(  );
 
-        boolean bHasParent = false;
+        Unit unitParent = null;
         String strIdParent = request.getParameter( PARAMETER_ID_UNIT );
 
         if ( StringUtils.isNotBlank( strIdParent ) && StringUtils.isNumeric( strIdParent ) )
         {
             int nIdParent = Integer.parseInt( strIdParent );
-            Unit unitParent = _unitService.getUnit( nIdParent );
-
-            if ( unitParent != null )
-            {
-                model.put( MARK_ID_PARENT, strIdParent );
-                bHasParent = true;
-            }
+            unitParent = _unitService.getUnit( nIdParent );
         }
 
-        if ( !bHasParent )
+        if ( unitParent == null )
         {
-            model.put( MARK_ID_PARENT, Unit.ID_ROOT );
+            unitParent = _unitService.getRootUnit(  );
         }
+
+        model.put( MARK_PARENT_UNIT, unitParent );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CREATE_UNIT, getLocale(  ), model );
 
@@ -240,8 +252,8 @@ public class UnitJspBean extends PluginAdminPageJspBean
 
         if ( StringUtils.isNotBlank( strIdUnit ) && StringUtils.isNumeric( strIdUnit ) )
         {
-            int nIdParent = Integer.parseInt( strIdUnit );
-            unit = _unitService.getUnit( nIdParent );
+            int nIdUnit = Integer.parseInt( strIdUnit );
+            unit = _unitService.getUnit( nIdUnit );
         }
 
         if ( unit == null )
@@ -249,8 +261,11 @@ public class UnitJspBean extends PluginAdminPageJspBean
             return getError( request );
         }
 
+        Unit parentUnit = _unitService.getUnit( unit.getIdParent(  ) );
+
         Map<String, Object> model = new HashMap<String, Object>(  );
         model.put( MARK_UNIT, unit );
+        model.put( MARK_PARENT_UNIT, parentUnit );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MODIFY_UNIT, getLocale(  ), model );
 
@@ -277,9 +292,28 @@ public class UnitJspBean extends PluginAdminPageJspBean
             unit = _unitService.getRootUnit(  );
         }
 
+        if ( request.getParameter( PARAMETER_SESSION ) == null )
+        {
+            reInitSearchFields( request );
+        }
+
         Map<String, Object> model = new HashMap<String, Object>(  );
+
+        List<AdminUser> listAvailableUsers = _unitUserService.getAvailableUsers( getUser(  ) );
+        String strBaseUrl = AppPathService.getBaseUrl( request ) + JSP_URL_ADD_USERS;
+
+        try
+        {
+            _unitUserSearchFields.fillModelForSearch( listAvailableUsers, strBaseUrl, request, model, unit );
+        }
+        catch ( AccessDeniedException e )
+        {
+            AppLogService.error( e.getMessage(  ), e );
+
+            return JSP_ERROR;
+        }
+
         model.put( MARK_UNIT, unit );
-        model.put( MARK_LIST_USERS, _unitService.getUsers( getUser(  ) ) );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_ADD_USERS, getLocale(  ), model );
 
@@ -515,7 +549,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
                 int nIdUser = Integer.parseInt( strIdUser );
 
                 // TODO : Check existence before adding, otherwise some data will be stored even when there are errors 
-                if ( !_unitService.addUserToUnit( nIdUnit, nIdUser ) )
+                if ( !_unitUserService.addUserToUnit( nIdUnit, nIdUser ) )
                 {
                     return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_USER_ALREADY_IN_AN_UNIT,
                         AdminMessage.TYPE_STOP );
@@ -527,5 +561,11 @@ public class UnitJspBean extends PluginAdminPageJspBean
         url.addParameter( PARAMETER_ID_UNIT, nIdUnit );
 
         return url.getUrl(  );
+    }
+
+    // PRIVATE METHODS
+    private void reInitSearchFields( HttpServletRequest request )
+    {
+        _unitUserSearchFields = new UnitUserSearchFields( request );
     }
 }

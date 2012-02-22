@@ -197,8 +197,8 @@ public abstract class AbstractAction implements IAction
     }
 
     /**
-         * {@inheritDoc}
-         */
+     * {@inheritDoc}
+     */
     @Override
     public String getResourceType(  )
     {

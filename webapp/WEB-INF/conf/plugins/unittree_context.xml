@@ -19,6 +19,7 @@
 	
 	<!-- Services -->
 	<bean id="unittree.unitService" class="fr.paris.lutece.plugins.unittree.service.unit.UnitService" />
+	<bean id="unittree.unitUserService" class="fr.paris.lutece.plugins.unittree.service.unit.UnitUserService" />
 	<bean id="unittree.actionService" class="fr.paris.lutece.plugins.unittree.service.action.ActionService" />
 	
 	<!-- Actions -->

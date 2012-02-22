@@ -53,7 +53,8 @@ public class UnitDAO implements IUnitDAO
     private static final String SQL_QUERY_DELETE = " DELETE FROM unittree_unit WHERE id_unit = ? ";
     private static final String SQL_QUERY_UPDATE = " UPDATE unittree_unit SET label = ?, description = ? WHERE id_unit = ? ";
     private static final String SQL_QUERY_ADD_USER_TO_UNIT = " INSERT INTO unittree_unit_user ( id_unit, id_user ) VALUES ( ?, ? ) ";
-    private static final String SQL_QUERY_SELECT_ID_USERS = " SELECT id_user FROM unittree_unit_user WHERE id_unit = ? ";
+    private static final String SQL_QUERY_SELECT_IDS_USER = " SELECT id_user FROM unittree_unit_user WHERE id_unit = ? ";
+    private static final String SQL_QUERY_SELECT_ALL_IDS_USER = " SELECT id_user FROM unittree_unit_user ";
     private static final String SQL_QUERY_REMOVE_USER = " DELETE FROM unittree_unit_user WHERE id_user = ? ";
     private static final String SQL_QUERY_REMOVE_USERS_BY_ID_UNIT = " DELETE FROM unittree_unit_user WHERE id_unit = ? ";
     private static final String SQL_QUERY_CHECK_USER = " SELECT id_unit FROM unittree_unit_user WHERE id_user = ? ";
@@ -245,14 +246,31 @@ public class UnitDAO implements IUnitDAO
         return listUnits;
     }
 
-    /**
-         * {@inheritDoc}
-         */
     @Override
-    public List<Integer> selectIdUsers( int nIdUnit, Plugin plugin )
+    public List<Integer> selectAllIdsUser( Plugin plugin )
     {
         List<Integer> listIdUsers = new ArrayList<Integer>(  );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ID_USERS, plugin );
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ALL_IDS_USER, plugin );
+        daoUtil.executeQuery(  );
+
+        while ( daoUtil.next(  ) )
+        {
+            listIdUsers.add( daoUtil.getInt( 1 ) );
+        }
+
+        daoUtil.free(  );
+
+        return listIdUsers;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Integer> selectIdsUser( int nIdUnit, Plugin plugin )
+    {
+        List<Integer> listIdUsers = new ArrayList<Integer>(  );
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_IDS_USER, plugin );
         daoUtil.setInt( 1, nIdUnit );
         daoUtil.executeQuery(  );
 
@@ -286,7 +304,7 @@ public class UnitDAO implements IUnitDAO
          * {@inheritDoc}
          */
     @Override
-    public boolean isUserInAnUnit( int nIdUser, Plugin plugin )
+    public boolean isUserInUnit( int nIdUser, Plugin plugin )
     {
         boolean bIsUserInAnUnit = false;
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_CHECK_USER, plugin );

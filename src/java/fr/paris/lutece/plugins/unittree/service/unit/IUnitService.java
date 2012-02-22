@@ -65,14 +65,8 @@ public interface IUnitService
 
     Source getTreeXsl(  );
 
-    List<AdminUser> getUsers( int nIdUnit );
-
-    List<AdminUser> getUsers( AdminUser currentUser );
-
     // CHECKS
     boolean hasSubUnits( int nIdUnit );
-
-    boolean isUserInAnUnit( int nIdUser );
 
     // CRUD OPERATIONS
 
@@ -97,10 +91,4 @@ public interface IUnitService
      */
     @Transactional( "unittree.transactionManager" )
     void removeUnit( int nIdUnit );
-
-    @Transactional( "unittree.transactionManager" )
-    boolean addUserToUnit( int nIdUnit, int nIdUser );
-
-    @Transactional( "unittree.transactionManager" )
-    void removeUserFromUnit( int nIdUser );
 }

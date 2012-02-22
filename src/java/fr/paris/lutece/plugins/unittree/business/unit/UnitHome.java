@@ -83,9 +83,14 @@ public final class UnitHome
         return _dao.selectAll( _plugin );
     }
 
+    public static List<Integer> findAllIdsUsers(  )
+    {
+        return _dao.selectAllIdsUser( _plugin );
+    }
+
     public static List<Integer> findIdUsers( int nIdUnit )
     {
-        return _dao.selectIdUsers( nIdUnit, _plugin );
+        return _dao.selectIdsUser( nIdUnit, _plugin );
     }
 
     /**
@@ -138,8 +143,8 @@ public final class UnitHome
         _dao.addUserToUnit( nIdUnit, nIdUser, _plugin );
     }
 
-    public static boolean isUserInAnUnit( int nIdUser )
+    public static boolean isUserInUnit( int nIdUser )
     {
-        return _dao.isUserInAnUnit( nIdUser, _plugin );
+        return _dao.isUserInUnit( nIdUser, _plugin );
     }
 }

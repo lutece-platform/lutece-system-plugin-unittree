@@ -68,7 +68,9 @@ public interface IUnitDAO
 
     List<Unit> selectByFilter( UnitFilter uFilter, Plugin plugin );
 
-    List<Integer> selectIdUsers( int nIdUnit, Plugin plugin );
+    List<Integer> selectAllIdsUser( Plugin plugin );
+
+    List<Integer> selectIdsUser( int nIdUnit, Plugin plugin );
 
     /**
      * Insert a new unit
@@ -93,7 +95,7 @@ public interface IUnitDAO
 
     void addUserToUnit( int nIdUnit, int nIdUser, Plugin plugin );
 
-    boolean isUserInAnUnit( int nIdUser, Plugin plugin );
+    boolean isUserInUnit( int nIdUser, Plugin plugin );
 
     void removeUser( int nIdUser, Plugin plugin );
 
