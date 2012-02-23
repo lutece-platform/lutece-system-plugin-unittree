@@ -98,26 +98,14 @@ public class UnitUserService implements IUnitUserService
     // PROCESS
 
     /**
-         * {@inheritDoc}
-         */
+     * {@inheritDoc}
+     */
     @Override
-    public void doAddUser( int nIdUser, HttpServletRequest request )
+    public void doProcessAddUser( int nIdUser, AdminUser currentUser, HttpServletRequest request )
     {
         for ( IUnitUserAttributeService service : UnitUserAttributeManager.getListUnitUserAttributeService(  ) )
         {
-            service.doAddUser( nIdUser, request );
-        }
-    }
-
-    /**
-         * {@inheritDoc}
-         */
-    @Override
-    public void doModifyUser( int nIdUser, HttpServletRequest request )
-    {
-        for ( IUnitUserAttributeService service : UnitUserAttributeManager.getListUnitUserAttributeService(  ) )
-        {
-            service.doModifyUser( nIdUser, request );
+            service.doAddUser( nIdUser, currentUser, request );
         }
     }
 
@@ -125,11 +113,23 @@ public class UnitUserService implements IUnitUserService
      * {@inheritDoc}
      */
     @Override
-    public void doRemoveUser( int nIdUser, HttpServletRequest request )
+    public void doProcessModifyUser( int nIdUser, AdminUser currentUser, HttpServletRequest request )
     {
         for ( IUnitUserAttributeService service : UnitUserAttributeManager.getListUnitUserAttributeService(  ) )
         {
-            service.doRemoveUser( nIdUser, request );
+            service.doModifyUser( nIdUser, currentUser, request );
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void doProcessRemoveUser( int nIdUser, AdminUser currentUser, HttpServletRequest request )
+    {
+        for ( IUnitUserAttributeService service : UnitUserAttributeManager.getListUnitUserAttributeService(  ) )
+        {
+            service.doRemoveUser( nIdUser, currentUser, request );
         }
     }
 

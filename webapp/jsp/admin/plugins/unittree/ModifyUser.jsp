@@ -17,10 +17,6 @@
 	{
 		response.sendRedirect( AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP ) );
 	}
-	catch ( AppException appe )
-	{
-		response.sendRedirect( AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP ) );
-	}
 %>
 
 <%@ page errorPage="../../ErrorPage.jsp" %>

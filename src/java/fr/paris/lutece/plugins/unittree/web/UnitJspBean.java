@@ -720,14 +720,15 @@ public class UnitJspBean extends PluginAdminPageJspBean
             {
                 int nIdUser = Integer.parseInt( strIdUser );
 
-                if ( !_unitUserService.addUserToUnit( nIdUnit, nIdUser ) )
+                if ( _unitUserService.isUserInUnit( nIdUser ) )
                 {
                     return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_USER_ALREADY_IN_AN_UNIT,
                         AdminMessage.TYPE_STOP );
                 }
                 else
                 {
-                    _unitUserService.doAddUser( nIdUser, request );
+                    _unitUserService.doProcessAddUser( nIdUser, getUser(  ), request );
+                    _unitUserService.addUserToUnit( nIdUnit, nIdUser );
                 }
             }
         }
@@ -763,7 +764,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
 
         if ( ( unit != null ) && ( user != null ) )
         {
-            _unitUserService.doModifyUser( nIdUser, request );
+            _unitUserService.doProcessModifyUser( nIdUser, getUser(  ), request );
         }
 
         UrlItem url = new UrlItem( JSP_MANAGE_UNITS );
@@ -838,10 +839,10 @@ public class UnitJspBean extends PluginAdminPageJspBean
             {
                 // Remove the user from the unit
                 _unitUserService.removeUserFromUnit( nIdUser );
-                _unitUserService.doRemoveUser( nIdUser, request );
+                _unitUserService.doProcessRemoveUser( nIdUser, getUser(  ), request );
                 // Then add the user to the new unit
                 _unitUserService.addUserToUnit( nIdSelectedUnit, nIdUser );
-                _unitUserService.doAddUser( nIdUser, request );
+                _unitUserService.doProcessAddUser( nIdUser, getUser(  ), request );
             }
             catch ( Exception ex )
             {
@@ -887,7 +888,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
             try
             {
                 _unitUserService.removeUserFromUnit( nIdUser );
-                _unitUserService.doRemoveUser( nIdUser, request );
+                _unitUserService.doProcessRemoveUser( nIdUser, getUser(  ), request );
             }
             catch ( Exception ex )
             {

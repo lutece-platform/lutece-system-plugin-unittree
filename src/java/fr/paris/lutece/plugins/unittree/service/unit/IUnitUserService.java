@@ -52,11 +52,11 @@ public interface IUnitUserService
     List<AdminUser> getAvailableUsers( AdminUser currentUser );
 
     // PROCESS
-    void doAddUser( int nIdUser, HttpServletRequest request );
+    void doProcessAddUser( int nIdUser, AdminUser currentUser, HttpServletRequest request );
 
-    void doModifyUser( int nIdUser, HttpServletRequest request );
+    void doProcessModifyUser( int nIdUser, AdminUser currentUser, HttpServletRequest request );
 
-    void doRemoveUser( int nIdUser, HttpServletRequest request );
+    void doProcessRemoveUser( int nIdUser, AdminUser currentUser, HttpServletRequest request );
 
     // CHECKS
     boolean isUserInUnit( int nIdUser );

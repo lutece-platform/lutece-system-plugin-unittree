@@ -33,6 +33,8 @@
  */
 package fr.paris.lutece.plugins.unittree.service.unit;
 
+import fr.paris.lutece.portal.business.user.AdminUser;
+
 import javax.servlet.http.HttpServletRequest;
 
 
@@ -42,9 +44,9 @@ import javax.servlet.http.HttpServletRequest;
  */
 public interface IUnitUserAttributeService
 {
-    void doAddUser( int nIdUser, HttpServletRequest request );
+    void doAddUser( int nIdUser, AdminUser currentUser, HttpServletRequest request );
 
-    void doModifyUser( int nIdUser, HttpServletRequest request );
+    void doModifyUser( int nIdUser, AdminUser currentUser, HttpServletRequest request );
 
-    void doRemoveUser( int nIdUser, HttpServletRequest request );
+    void doRemoveUser( int nIdUser, AdminUser currentUser, HttpServletRequest request );
 }
