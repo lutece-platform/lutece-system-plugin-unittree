@@ -58,6 +58,7 @@ import javax.xml.transform.stream.StreamSource;
 
 /**
  *
+ * UnitService
  *
  */
 public class UnitService implements IUnitService
@@ -104,8 +105,8 @@ public class UnitService implements IUnitService
     }
 
     /**
-         * {@inheritDoc}
-         */
+     * {@inheritDoc}
+     */
     @Override
     public Unit getRootUnit( boolean bGetSectors )
     {
@@ -208,6 +209,10 @@ public class UnitService implements IUnitService
         return new ReferenceList(  );
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public String getXMLUnits(  )
     {
         StringBuffer sbXML = new StringBuffer(  );
@@ -218,30 +223,6 @@ public class UnitService implements IUnitService
         XmlUtil.endElement( sbXML, TAG_UNITS );
 
         return sbXML.toString(  );
-    }
-
-    public void getXMLUnit( StringBuffer sbXML, Unit unit )
-    {
-        XmlUtil.beginElement( sbXML, TAG_UNIT );
-        XmlUtil.addElement( sbXML, TAG_ID_UNIT, unit.getIdUnit(  ) );
-        XmlUtil.addElement( sbXML, TAG_LABEL, unit.getLabel(  ) );
-        XmlUtil.addElement( sbXML, TAG_DESCRIPTION, unit.getDescription(  ) );
-
-        List<Unit> listChildren = getSubUnits( unit.getIdUnit(  ), false );
-
-        if ( ( listChildren != null ) && !listChildren.isEmpty(  ) )
-        {
-            XmlUtil.beginElement( sbXML, TAG_UNIT_CHILDREN );
-
-            for ( Unit child : listChildren )
-            {
-                getXMLUnit( sbXML, child );
-            }
-
-            XmlUtil.endElement( sbXML, TAG_UNIT_CHILDREN );
-        }
-
-        XmlUtil.endElement( sbXML, TAG_UNIT );
     }
 
     /**
@@ -321,5 +302,36 @@ public class UnitService implements IUnitService
             _sectorService.addSectorsToUnit( unit );
             UnitHome.update( unit );
         }
+    }
+
+    // PRIVATE METHODS
+
+    /**
+     * Get the XML for an unit
+     * @param sbXML the XML
+     * @param unit the unit
+     */
+    private void getXMLUnit( StringBuffer sbXML, Unit unit )
+    {
+        XmlUtil.beginElement( sbXML, TAG_UNIT );
+        XmlUtil.addElement( sbXML, TAG_ID_UNIT, unit.getIdUnit(  ) );
+        XmlUtil.addElement( sbXML, TAG_LABEL, unit.getLabel(  ) );
+        XmlUtil.addElement( sbXML, TAG_DESCRIPTION, unit.getDescription(  ) );
+
+        List<Unit> listChildren = getSubUnits( unit.getIdUnit(  ), false );
+
+        if ( ( listChildren != null ) && !listChildren.isEmpty(  ) )
+        {
+            XmlUtil.beginElement( sbXML, TAG_UNIT_CHILDREN );
+
+            for ( Unit child : listChildren )
+            {
+                getXMLUnit( sbXML, child );
+            }
+
+            XmlUtil.endElement( sbXML, TAG_UNIT_CHILDREN );
+        }
+
+        XmlUtil.endElement( sbXML, TAG_UNIT );
     }
 }

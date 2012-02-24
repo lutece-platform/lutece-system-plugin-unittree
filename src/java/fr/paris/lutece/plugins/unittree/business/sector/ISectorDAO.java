@@ -45,15 +45,50 @@ import java.util.List;
  */
 public interface ISectorDAO
 {
+    /**
+     * Load a sector
+     * @param nIdSector the id sector
+     * @param plugin the plugin
+     * @return an instance of {@link Sector}
+     */
     Sector load( int nIdSector, Plugin plugin );
 
+    /**
+     * Load all sectors
+     * @param plugin the plugin
+     * @return a list of {@link Sector}
+     */
     List<Sector> loadAll( Plugin plugin );
 
+    /**
+     * Load sectors from a given id unit
+     * @param nIdUnit the id unit
+     * @param plugin the plugin
+     * @return a list of {@link Sector}
+     */
     List<Sector> loadByIdUnit( int nIdUnit, Plugin plugin );
 
+    /**
+     * Add a sector to an unit
+     * @param nIdUnit the id unit
+     * @param nIdSector the id sector
+     * @param plugin the plugin
+     */
     void addSectorToUnit( int nIdUnit, int nIdSector, Plugin plugin );
 
+    /**
+     * Check if the given id unit has the given sector
+     * @param nIdUnit the id unit
+     * @param nIdSector the id sector
+     * @param plugin the plugin
+     * @return true if the unit has the sector, false otherwise
+     */
     boolean hasSector( int nIdUnit, int nIdSector, Plugin plugin );
 
+    /**
+     * Remove sectors from a given id unit
+     * @param nIdUnit the id unit
+     * @param plugin the plugin
+     */
     void removeSectorsFromUnit( int nIdUnit, Plugin plugin );
 }

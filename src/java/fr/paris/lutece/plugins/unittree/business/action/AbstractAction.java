@@ -39,7 +39,9 @@ import java.util.Locale;
 
 
 /**
- * Action available on an unit
+ *
+ * AbstractAction
+ *
  */
 public abstract class AbstractAction implements IAction
 {
@@ -52,15 +54,17 @@ public abstract class AbstractAction implements IAction
     private String _strPermission;
 
     /**
-         * @param _nIdAction the _nIdAction to set
-         */
-    public void setIdAction( int _nIdAction )
+     * Set the id action
+     * @param nIdAction the nIdAction to set
+     */
+    public void setIdAction( int nIdAction )
     {
-        this._nIdAction = _nIdAction;
+        this._nIdAction = nIdAction;
     }
 
     /**
-     * @return the _nIdAction
+     * Get the id action
+     * @return the nIdAction
      */
     public int getIdAction(  )
     {
@@ -77,8 +81,7 @@ public abstract class AbstractAction implements IAction
     }
 
     /**
-     * Returns the Url
-     *
+     * Return the Url
      * @return The Url
      */
     public String getUrl(  )
@@ -87,8 +90,7 @@ public abstract class AbstractAction implements IAction
     }
 
     /**
-     * Sets the Url
-     *
+     * Set the Url
      * @param strUrl The Url
      */
     public void setUrl( String strUrl )
@@ -98,7 +100,6 @@ public abstract class AbstractAction implements IAction
 
     /**
      * Returns the NameKey
-     *
      * @return The NameKey
      */
     public String getNameKey(  )
@@ -108,7 +109,6 @@ public abstract class AbstractAction implements IAction
 
     /**
      * Returns the Name
-     *
      * @return The Name
      */
     public String getName(  )
@@ -118,7 +118,6 @@ public abstract class AbstractAction implements IAction
 
     /**
      * Sets the NameKey
-     *
      * @param strNameKey The NameKey
      */
     public void setNameKey( String strNameKey )
@@ -128,7 +127,6 @@ public abstract class AbstractAction implements IAction
 
     /**
      * Returns the DescriptionKey
-     *
      * @return The DescriptionKey
      */
     public String getDescriptionKey(  )
@@ -138,7 +136,6 @@ public abstract class AbstractAction implements IAction
 
     /**
      * Returns the Description
-     *
      * @return The Description
      */
     public String getDescription(  )
@@ -148,7 +145,6 @@ public abstract class AbstractAction implements IAction
 
     /**
      * Sets the DescriptionKey
-     *
      * @param strDescriptionKey The DescriptionKey
      */
     public void setDescriptionKey( String strDescriptionKey )
@@ -158,7 +154,6 @@ public abstract class AbstractAction implements IAction
 
     /**
      * Returns the IconUrl
-     *
      * @return The IconUrl
      */
     public String getIconUrl(  )
@@ -168,7 +163,6 @@ public abstract class AbstractAction implements IAction
 
     /**
      * Sets the IconUrl
-     *
      * @param strIconUrl The IconUrl
      */
     public void setIconUrl( String strIconUrl )
@@ -187,7 +181,6 @@ public abstract class AbstractAction implements IAction
 
     /**
      * Sets the Permission
-     *
      * @param strPermission The Permission
      */
     public void setPermission( String strPermission )

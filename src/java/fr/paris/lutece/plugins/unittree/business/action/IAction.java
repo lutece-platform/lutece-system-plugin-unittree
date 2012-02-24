@@ -41,17 +41,20 @@ import java.util.Locale;
 
 /**
  *
+ * IAction
  *
  */
 public interface IAction extends Localizable, RBACAction
 {
     /**
-     * @param _nIdAction the _nIdAction to set
+     * Set the id action
+     * @param nIdAction the nIdAction to set
      */
-    void setIdAction( int _nIdAction );
+    void setIdAction( int nIdAction );
 
     /**
-     * @return the _nIdAction
+     * Get the id action
+     * @return the nIdAction
      */
     int getIdAction(  );
 
@@ -133,7 +136,15 @@ public interface IAction extends Localizable, RBACAction
      */
     void setPermission( String strPermission );
 
+    /**
+     * Get the action type
+     * @return the action type
+     */
     String getActionType(  );
 
-    void setActionType( String strResourceType );
+    /**
+     * Set the action type
+     * @param strActionType the action type
+     */
+    void setActionType( String strActionType );
 }

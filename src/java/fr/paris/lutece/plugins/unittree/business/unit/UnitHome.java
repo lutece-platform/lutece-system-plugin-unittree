@@ -69,6 +69,11 @@ public final class UnitHome
         return _dao.load( nIdUnit, _plugin );
     }
 
+    /**
+     * Find the units by filter
+     * @param uFilter the filter
+     * @return a list of {@link Unit}
+     */
     public static List<Unit> findByFilter( UnitFilter uFilter )
     {
         return _dao.selectByFilter( uFilter, _plugin );
@@ -83,12 +88,21 @@ public final class UnitHome
         return _dao.selectAll( _plugin );
     }
 
+    /**
+     * Find all ids users
+     * @return a list of ids user
+     */
     public static List<Integer> findAllIdsUsers(  )
     {
         return _dao.selectAllIdsUser( _plugin );
     }
 
-    public static List<Integer> findIdUsers( int nIdUnit )
+    /**
+     * Find the ids user
+     * @param nIdUnit the id unit
+     * @return the list of ids user
+     */
+    public static List<Integer> findIdsUser( int nIdUnit )
     {
         return _dao.selectIdsUser( nIdUnit, _plugin );
     }
@@ -96,6 +110,7 @@ public final class UnitHome
     /**
      * Insert a new unit
      * @param unit the unit
+     * @return the new primary key
      */
     public static int create( Unit unit )
     {
@@ -112,8 +127,8 @@ public final class UnitHome
     }
 
     /**
-     * Remove a unit
-     * @param nIdUnit the id unit
+     * Remove an unit from a given id user
+     * @param nIdUser the id user
      */
     public static void removeUserFromUnit( int nIdUser )
     {
@@ -121,7 +136,7 @@ public final class UnitHome
     }
 
     /**
-     * Remove a unit
+     * Remove an unit from a given id unit
      * @param nIdUnit the id unit
      */
     public static void removeUsersFromUnit( int nIdUnit )
@@ -138,11 +153,21 @@ public final class UnitHome
         _dao.update( unit, _plugin );
     }
 
+    /**
+     * Add the user to the unit
+     * @param nIdUnit the id unit
+     * @param nIdUser the id user
+     */
     public static void addUserToUnit( int nIdUnit, int nIdUser )
     {
         _dao.addUserToUnit( nIdUnit, nIdUser, _plugin );
     }
 
+    /**
+     * Check if the user is in the unit
+     * @param nIdUser the id user
+     * @return true if the user is in the unit, false otherwise
+     */
     public static boolean isUserInUnit( int nIdUser )
     {
         return _dao.isUserInUnit( nIdUser, _plugin );

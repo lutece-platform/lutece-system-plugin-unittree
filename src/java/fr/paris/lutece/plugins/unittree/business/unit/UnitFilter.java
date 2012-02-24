@@ -38,6 +38,7 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  *
+ * UnitFilter
  *
  */
 public class UnitFilter
@@ -122,7 +123,7 @@ public class UnitFilter
     }
 
     /**
-     * Set the reference code
+     * Set the id parent
      * @param nIdParent the reference code
      */
     public void setIdParent( int nIdParent )

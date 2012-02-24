@@ -35,47 +35,67 @@ package fr.paris.lutece.plugins.unittree.web.action;
 
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 
-import java.io.Serializable;
 
-
-public abstract class DefaultUnitSearchFields implements IUnitSearchFields, Serializable
+/**
+ *
+ * DefaultUnitSearchFields
+ *
+ */
+public abstract class DefaultUnitSearchFields implements IUnitSearchFields
 {
-    private static final long serialVersionUID = -7789771761021438527L;
     private static final String PROPERTY_ITEM_PER_PAGE = "unittree.itemsPerPage";
     private int _nItemsPerPage;
     private int _nDefaultItemsPerPage = AppPropertiesService.getPropertyInt( PROPERTY_ITEM_PER_PAGE, 50 );
     private String _strCurrentPageIndex;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getCurrentPageIndex(  )
     {
         return _strCurrentPageIndex;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getDefaultItemsPerPage(  )
     {
         return _nDefaultItemsPerPage;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setCurrentPageIndex( String strCurrentPageIndex )
     {
         _strCurrentPageIndex = strCurrentPageIndex;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setDefaultItemsPerPage( int nDefaultItemsPerPage )
     {
         _nDefaultItemsPerPage = nDefaultItemsPerPage;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getItemsPerPage(  )
     {
         return _nItemsPerPage;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setItemsPerPage( int nItemsPerPage )
     {

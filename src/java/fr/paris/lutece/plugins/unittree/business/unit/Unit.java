@@ -45,6 +45,7 @@ import javax.validation.constraints.NotNull;
 
 /**
  *
+ * Unit
  *
  */
 public class Unit implements RBACResource
@@ -61,39 +62,63 @@ public class Unit implements RBACResource
     private String _strDescription;
     private List<Integer> _listIdsSector = new ArrayList<Integer>(  );
 
+    /**
+     * Get the id unit
+     * @return the id unit
+     */
     public int getIdUnit(  )
     {
         return _nIdUnit;
     }
 
+    /**
+     * Set the id unit
+     * @param nIdUnit the id unit
+     */
     public void setIdUnit( int nIdUnit )
     {
         _nIdUnit = nIdUnit;
     }
 
+    /**
+     * Get the label
+     * @return the label
+     */
     public String getLabel(  )
     {
         return _strLabel;
     }
 
+    /**
+     * Set the label
+     * @param strLabel the label
+     */
     public void setLabel( String strLabel )
     {
         _strLabel = strLabel;
     }
 
+    /**
+     * Get the description
+     * @return the description
+     */
     public String getDescription(  )
     {
         return _strDescription;
     }
 
+    /**
+     * Set the description
+     * @param strDescription the description
+     */
     public void setDescription( String strDescription )
     {
         _strDescription = strDescription;
     }
 
     /**
-     *
-     * @param nIdParent the _nIdParent to set
+     * Set the id parent
+     * @param nIdParent the nIdParent to set
      */
     public void setIdParent( int nIdParent )
     {
@@ -101,23 +126,36 @@ public class Unit implements RBACResource
     }
 
     /**
-     * @return the _nIdParent
+     * Get the id parent
+     * @return the nIdParent
      */
     public int getIdParent(  )
     {
         return _nIdParent;
     }
 
+    /**
+     * Set the list of ids sector
+     * @param listIdsSector the list of ids sector
+     */
     public void setListIdsSector( List<Integer> listIdsSector )
     {
         this._listIdsSector = listIdsSector;
     }
 
+    /**
+     * Get the list of ids sector
+     * @return the list of ids sector
+     */
     public List<Integer> getListIdsSector(  )
     {
         return _listIdsSector;
     }
 
+    /**
+     * Add the id sector
+     * @param nIdSector the id sector
+     */
     public void addIdSector( int nIdSector )
     {
         if ( _listIdsSector == null )
@@ -128,6 +166,11 @@ public class Unit implements RBACResource
         _listIdsSector.add( nIdSector );
     }
 
+    /**
+     * Check if the unit has the given id sector
+     * @param nIdSector the id sector
+     * @return true if the unit has the id sector, false otherwise
+     */
     public boolean hasIdSector( int nIdSector )
     {
         if ( ( _listIdsSector != null ) && !_listIdsSector.isEmpty(  ) )
@@ -138,6 +181,10 @@ public class Unit implements RBACResource
         return false;
     }
 
+    /**
+     * Check if the unit is the root unit
+     * @return true if the unit is the root unit, false otherwise
+     */
     public boolean isRoot(  )
     {
         return _nIdUnit == ID_ROOT;

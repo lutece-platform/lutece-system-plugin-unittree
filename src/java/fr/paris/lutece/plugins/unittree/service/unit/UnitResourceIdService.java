@@ -48,7 +48,9 @@ import java.util.Locale;
 
 
 /**
- * Resource Id service for RBAC features to control access to document spaces
+ *
+ * UnitResourceIdService
+ *
  */
 public class UnitResourceIdService extends ResourceIdService
 {
@@ -73,7 +75,9 @@ public class UnitResourceIdService extends ResourceIdService
     private static final String PROPERTY_LABEL_MOVE_USER = "unittree.unit.permission.label.moveUser";
     private static final String PROPERTY_LABEL_REMOVE_USER = "unittree.unit.permission.label.removeUser";
 
-    /** Creates a new instance of SpaceResourceIdService */
+    /**
+     * Constructor
+     */
     public UnitResourceIdService(  )
     {
         setPluginName( UnitTreePlugin.PLUGIN_NAME );

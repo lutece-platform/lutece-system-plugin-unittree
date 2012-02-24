@@ -45,24 +45,43 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  *
+ * UnitUserAttributeManager
  *
  */
 public final class UnitUserAttributeManager
 {
+    /**
+     * Private constructor
+     */
     private UnitUserAttributeManager(  )
     {
     }
 
+    /**
+     * Get the list of unit user attribute components
+     * @return a list of {@link IUnitUserAttributeComponent}
+     */
     public static List<IUnitUserAttributeComponent> getListUnitUserAttributeComponents(  )
     {
         return SpringContextService.getBeansOfType( IUnitUserAttributeComponent.class );
     }
 
+    /**
+     * Get the list of unit user attribute services
+     * @return a list of {@link IUnitUserAttributeService}
+     */
     public static List<IUnitUserAttributeService> getListUnitUserAttributeService(  )
     {
         return SpringContextService.getBeansOfType( IUnitUserAttributeService.class );
     }
 
+    /**
+     * Fill the model for the unit user attribute component
+     * @param request the HTTP request
+     * @param adminUser the current user
+     * @param model the model
+     * @param strMark the marker
+     */
     public static void fillModel( HttpServletRequest request, AdminUser adminUser, Map<String, Object> model,
         String strMark )
     {

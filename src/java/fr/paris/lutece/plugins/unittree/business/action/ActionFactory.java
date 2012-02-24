@@ -46,10 +46,7 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
  * This factory is used for :
  * <ul>
  * <li>
- * creating new instance of {@link ICodeMapping} depending of the mapping type key
- * </li>
- * <li>
- * getting the {@link IMappingTypeComponent}
+ * creating new instance of {@link IAction} depending of the action type
  * </li>
  * </ul>
  *
@@ -57,10 +54,9 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 public class ActionFactory implements IActionFactory
 {
     /**
-     * Create a new instance of {@link ICodeMapping}
-     * @param strMappingTypeKey the mapping type key
-     * @return a new instance of {@link ICodeMapping}
+     * {@inheritDoc}
      */
+    @Override
     public IAction newAction( String strActionType )
     {
         IAction action = null;

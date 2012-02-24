@@ -42,7 +42,9 @@ import java.util.List;
 
 
 /**
- * This class provides instances management methods (create, find, ...) for SpaceAction objects
+ *
+ * ActionHome
+ *
  */
 public final class ActionHome
 {
@@ -58,8 +60,9 @@ public final class ActionHome
     }
 
     /**
-     * Returns the list of allowed actions for the current document
-     * @return A list of actions for the current document
+     * Returns the list of allowed actions for a given action type
+     * @param strActionType the action type
+     * @return A list of actions for a given action type
      */
     public static List<IAction> getActionsList( String strActionType )
     {

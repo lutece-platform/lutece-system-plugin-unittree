@@ -35,7 +35,9 @@ package fr.paris.lutece.plugins.unittree.business.action;
 
 
 /**
- * Action available on an unit
+ *
+ * DefaultAction
+ *
  */
 public class DefaultAction extends AbstractAction
 {

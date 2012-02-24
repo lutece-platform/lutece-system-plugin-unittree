@@ -42,6 +42,7 @@ import java.util.List;
 
 /**
  *
+ * UnitDAO
  *
  */
 public class UnitDAO implements IUnitDAO
@@ -250,6 +251,9 @@ public class UnitDAO implements IUnitDAO
         return listUnits;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Integer> selectAllIdsUser( Plugin plugin )
     {

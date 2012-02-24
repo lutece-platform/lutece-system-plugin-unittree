@@ -38,6 +38,7 @@ import fr.paris.lutece.portal.web.pluginaction.IPluginAction;
 
 /**
  *
+ * IUnitPluginAction
  *
  */
 public interface IUnitPluginAction extends IPluginAction<IUnitSearchFields>

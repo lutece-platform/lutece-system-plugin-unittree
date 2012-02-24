@@ -61,12 +61,11 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  *
+ * UnitUserSearchFields
  *
  */
 public class UnitUserSearchFields extends DefaultUnitSearchFields
 {
-    private static final long serialVersionUID = 6531098358870576482L;
-
     // PARAMETERS
     private static final String PARAMETER_ID_UNIT = "idUnit";
     private static final String PARAMETER_SESSION = "session";
@@ -85,19 +84,29 @@ public class UnitUserSearchFields extends DefaultUnitSearchFields
     private AdminUser _user;
     private AdminUserFilter _auFilter = new AdminUserFilter(  );
 
+    /**
+     * Constructor
+     */
     public UnitUserSearchFields(  )
     {
         super(  );
     }
 
+    /**
+     * Constructor
+     * @param request the HTTP request
+     */
     public UnitUserSearchFields( HttpServletRequest request )
     {
         super(  );
         _user = AdminUserService.getAdminUser( request );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void fillModelForSearch( List<AdminUser> listUsers, String strBaseUrl, HttpServletRequest request,
+    public void fillModelForUserSearchForm( List<AdminUser> listUsers, String strBaseUrl, HttpServletRequest request,
         Map<String, Object> model, Unit unit ) throws AccessDeniedException
     {
         if ( _user == null )

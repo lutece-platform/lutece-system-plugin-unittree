@@ -51,26 +51,74 @@ import javax.xml.transform.Source;
  */
 public interface IUnitService
 {
-    public static final String BEAN_UNIT_SERVICE = "unittree.unitService";
+    String BEAN_UNIT_SERVICE = "unittree.unitService";
 
     // GET
-    Unit getUnit( int nIdUnit, boolean bGetSectors );
 
-    Unit getRootUnit( boolean bGetSectors );
+    /**
+     * Get the unit
+     * @param nIdUnit the id unit
+     * @param bGetIdsSector true if it must get the ids sector
+     * @return an instance of {@link Unit}
+     */
+    Unit getUnit( int nIdUnit, boolean bGetIdsSector );
 
-    List<Unit> getAllUnits( boolean bGetSectors );
+    /**
+     * Get the root unit
+     * @param bGetIdsSector true if it must get the ids sector
+     * @return an instance of {@link Unit}
+     */
+    Unit getRootUnit( boolean bGetIdsSector );
 
-    List<Unit> getUnitsFirstLevel( boolean bGetSectors );
+    /**
+     * Get all units
+     * @param bGetIdsSector true if it must get the ids sector
+     * @return a list of {@link Unit}
+     */
+    List<Unit> getAllUnits( boolean bGetIdsSector );
 
-    List<Unit> getSubUnits( int nIdUnit, boolean bGetSectors );
+    /**
+     * Get the units first level
+     * @param bGetIdsSector true if it must get the ids sector
+     * @return a list of {@link Unit}
+     */
+    List<Unit> getUnitsFirstLevel( boolean bGetIdsSector );
 
+    /**
+     * Get the sub units from a given id unit
+     * @param nIdUnit the id unit
+     * @param bGetIdsSector true if it must get the ids sector
+     * @return a list of {@link Unit}
+     */
+    List<Unit> getSubUnits( int nIdUnit, boolean bGetIdsSector );
+
+    /**
+     * Get the sub units as a {@link ReferenceList}
+     * @param nIdUnit the id unit
+     * @param locale the locale
+     * @return a {@link ReferenceList}
+     */
     ReferenceList getSubUnitsAsReferenceList( int nIdUnit, Locale locale );
 
+    /**
+     * Get the XML units
+     * @return an XML
+     */
     String getXMLUnits(  );
 
+    /**
+     * Get the XSL of the tree
+     * @return the XSL
+     */
     Source getTreeXsl(  );
 
     // CHECKS
+
+    /**
+     * Check if the given id unit has sub units
+     * @param nIdUnit the id unit
+     * @return true if the unit has sub units, false otherwise
+     */
     boolean hasSubUnits( int nIdUnit );
 
     // CRUD OPERATIONS

@@ -45,44 +45,56 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  *
+ * IUnitPluginAction
  *
  */
 public interface IUnitSearchFields
 {
+    /**
+     * Get the items per page
+     * @return the items per page
+     */
     int getItemsPerPage(  );
 
+    /**
+     * Set the items per page
+     * @param nItemsPerPage the items per page
+     */
     void setItemsPerPage( int nItemsPerPage );
 
     /**
     * Default items per page
-    *
     * @return default items per page
     */
     int getDefaultItemsPerPage(  );
 
     /**
      * Default items per page
-     *
-     * @param nDefaultItemsPerPage
-     *            default items per page
+     * @param nDefaultItemsPerPage default items per page
      */
     void setDefaultItemsPerPage( int nDefaultItemsPerPage );
 
     /**
      * Current page index
-     *
      * @return current page index
      */
     String getCurrentPageIndex(  );
 
     /**
      * Current page index
-     *
-     * @param strCurrentPageIndex
-     *            current page index
+     * @param strCurrentPageIndex current page index
      */
     void setCurrentPageIndex( String strCurrentPageIndex );
 
-    void fillModelForSearch( List<AdminUser> listUsers, String strBaseUrl, HttpServletRequest request,
+    /**
+     * Fill the model for the user search form
+     * @param listUsers the list of users
+     * @param strBaseUrl the base url
+     * @param request the HTTP request
+     * @param model the model
+     * @param unit the unit
+     * @throws AccessDeniedException exception if the user does not have the rights
+     */
+    void fillModelForUserSearchForm( List<AdminUser> listUsers, String strBaseUrl, HttpServletRequest request,
         Map<String, Object> model, Unit unit ) throws AccessDeniedException;
 }

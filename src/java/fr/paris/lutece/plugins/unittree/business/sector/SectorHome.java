@@ -52,35 +52,67 @@ public final class SectorHome
     private static Plugin _plugin = PluginService.getPlugin( UnitTreePlugin.PLUGIN_NAME );
     private static ISectorDAO _dao = (ISectorDAO) SpringContextService.getBean( BEAN_SECTOR_DAO );
 
+    /**
+     * Private constructor
+     */
     private SectorHome(  )
     {
     }
 
+    /**
+     * Find a sector from its primary key
+     * @param nIdSector the id sector
+     * @return an instance of {@link Sector}
+     */
     public static Sector findByPrimaryKey( int nIdSector )
     {
         return _dao.load( nIdSector, _plugin );
     }
 
+    /**
+     * Find all sectors
+     * @return the sectors
+     */
     public static List<Sector> findAll(  )
     {
         return _dao.loadAll( _plugin );
     }
 
+    /**
+     * Find sectors from a given id unit
+     * @param nIdUnit the id unit
+     * @return a list of {@link Sector}
+     */
     public static List<Sector> findByIdUnit( int nIdUnit )
     {
         return _dao.loadByIdUnit( nIdUnit, _plugin );
     }
 
+    /**
+     * Add a sector to an unit
+     * @param nIdUnit the id unit
+     * @param nIdSector the id sector
+     */
     public static void addSectorToUnit( int nIdUnit, int nIdSector )
     {
         _dao.addSectorToUnit( nIdUnit, nIdSector, _plugin );
     }
 
+    /**
+     * Check if the unit has a sector
+     * @param nIdUnit the id unit
+     * @param nIdSector the id sector
+     * @return true if the unit has the sector, false otherwise
+     */
     public static boolean hasSector( int nIdUnit, int nIdSector )
     {
         return _dao.hasSector( nIdUnit, nIdSector, _plugin );
     }
 
+    /**
+     * Remove the sectors from an unit
+     * @param nIdUnit the id unit
+     */
     public static void removeSectorsFromUnit( int nIdUnit )
     {
         _dao.removeSectorsFromUnit( nIdUnit, _plugin );

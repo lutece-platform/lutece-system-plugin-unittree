@@ -168,9 +168,11 @@ public class UnitJspBean extends PluginAdminPageJspBean
     // GET
 
     /**
-     * Get manage code mappings
+     * Get manage units
      * @param request the HTTP request
+     * @param response the response
      * @return the HTML code
+     * @throws AccessDeniedException exception if there is the user does not have the permission
      */
     public IPluginActionResult getManageUnits( HttpServletRequest request, HttpServletResponse response )
         throws AccessDeniedException
@@ -223,7 +225,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
         // Add elements for user search form in the model
         List<AdminUser> listUsers = _unitUserService.getUsers( unit.getIdUnit(  ) );
         String strBaseUrl = AppPathService.getBaseUrl( request ) + JSP_URL_MANAGE_UNITS;
-        _unitUserSearchFields.fillModelForSearch( listUsers, strBaseUrl, request, model, unit );
+        _unitUserSearchFields.fillModelForUserSearchForm( listUsers, strBaseUrl, request, model, unit );
 
         model.put( MARK_UNIT_TREE, strHtmlUnitsTree );
         model.put( MARK_UNIT, unit );
@@ -246,6 +248,12 @@ public class UnitJspBean extends PluginAdminPageJspBean
         return result;
     }
 
+    /**
+     * Get create unit
+     * @param request the HTTP request
+     * @return the HTML code
+     * @throws AccessDeniedException exception if the user does not have the permission
+     */
     public String getCreateUnit( HttpServletRequest request )
         throws AccessDeniedException
     {
@@ -282,6 +290,12 @@ public class UnitJspBean extends PluginAdminPageJspBean
         return getAdminPage( template.getHtml(  ) );
     }
 
+    /**
+     * Get modify unit
+     * @param request the HTTP request
+     * @return the HTML code
+     * @throws AccessDeniedException exception if the user does not have the permission
+     */
     public String getModifyUnit( HttpServletRequest request )
         throws AccessDeniedException
     {
@@ -321,7 +335,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
     }
 
     /**
-     * Get confirm remove code mapping
+     * Get confirm remove unit
      * @param request the HTTP request
      * @return the HTML code
      */
@@ -348,6 +362,12 @@ public class UnitJspBean extends PluginAdminPageJspBean
             AdminMessage.TYPE_CONFIRMATION );
     }
 
+    /**
+     * Get add users
+     * @param request the HTTP request
+     * @return the HTML code
+     * @throws AccessDeniedException exception if the user does not have the permission
+     */
     public String getAddUsers( HttpServletRequest request )
         throws AccessDeniedException
     {
@@ -385,7 +405,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
         List<AdminUser> listAvailableUsers = _unitUserService.getAvailableUsers( getUser(  ) );
         String strBaseUrl = AppPathService.getBaseUrl( request ) + JSP_URL_ADD_USERS;
 
-        _unitUserSearchFields.fillModelForSearch( listAvailableUsers, strBaseUrl, request, model, unit );
+        _unitUserSearchFields.fillModelForUserSearchForm( listAvailableUsers, strBaseUrl, request, model, unit );
 
         model.put( MARK_UNIT, unit );
         UnitUserAttributeManager.fillModel( request, getUser(  ), model, MARK_LIST_UNIT_USER_ATTRIBUTES );
@@ -395,6 +415,12 @@ public class UnitJspBean extends PluginAdminPageJspBean
         return getAdminPage( template.getHtml(  ) );
     }
 
+    /**
+     * Get modify the user
+     * @param request the HTTP request
+     * @return the HTML code
+     * @throws AccessDeniedException exception if the user does not have the permission
+     */
     public String getModifyUser( HttpServletRequest request )
         throws AccessDeniedException
     {
@@ -437,6 +463,12 @@ public class UnitJspBean extends PluginAdminPageJspBean
         return getAdminPage( template.getHtml(  ) );
     }
 
+    /**
+     * Get move user
+     * @param request the HTTP request
+     * @return the HTML code
+     * @throws AccessDeniedException exception if the user does not have the permission
+     */
     public String getMoveUser( HttpServletRequest request )
         throws AccessDeniedException
     {
@@ -529,6 +561,12 @@ public class UnitJspBean extends PluginAdminPageJspBean
     }
 
     // DO
+
+    /**
+     * Do create an unit
+     * @param request the HTTP request
+     * @return the JSP return
+     */
     public String doCreateUnit( HttpServletRequest request )
     {
         String strCancel = request.getParameter( PARAMETER_CANCEL );
@@ -596,6 +634,11 @@ public class UnitJspBean extends PluginAdminPageJspBean
         return url.getUrl(  );
     }
 
+    /**
+     * Dp modify an unit
+     * @param request the HTTP request
+     * @return the JSP return
+     */
     public String doModifyUnit( HttpServletRequest request )
     {
         String strCancel = request.getParameter( PARAMETER_CANCEL );
@@ -674,6 +717,11 @@ public class UnitJspBean extends PluginAdminPageJspBean
         return url.getUrl(  );
     }
 
+    /**
+     * Do remove an unit
+     * @param request the HTTP request
+     * @return the JSP return
+     */
     public String doRemoveUnit( HttpServletRequest request )
     {
         String strIdUnit = request.getParameter( PARAMETER_ID_UNIT );
@@ -724,6 +772,11 @@ public class UnitJspBean extends PluginAdminPageJspBean
         return url.getUrl(  );
     }
 
+    /**
+     * Dp add users
+     * @param request the HTTP request
+     * @return the JSP return
+     */
     public String doAddUsers( HttpServletRequest request )
     {
         String strCancel = request.getParameter( PARAMETER_CANCEL );
@@ -778,6 +831,11 @@ public class UnitJspBean extends PluginAdminPageJspBean
         return url.getUrl(  );
     }
 
+    /**
+     * Do modify user
+     * @param request the HTTP request
+     * @return the JSP return
+     */
     public String doModifyUser( HttpServletRequest request )
     {
         String strIdUnit = request.getParameter( PARAMETER_ID_UNIT );
@@ -812,6 +870,11 @@ public class UnitJspBean extends PluginAdminPageJspBean
         return url.getUrl(  );
     }
 
+    /**
+     * Do move user
+     * @param request the HTTP request
+     * @return the JSP return
+     */
     public String doMoveUser( HttpServletRequest request )
     {
         String strCancel = request.getParameter( PARAMETER_CANCEL );
@@ -899,6 +962,11 @@ public class UnitJspBean extends PluginAdminPageJspBean
         return url.getUrl(  );
     }
 
+    /**
+     * Do remove user
+     * @param request the HTTP request
+     * @return the JSP return
+     */
     public String doRemoveUser( HttpServletRequest request )
     {
         String strIdUnit = request.getParameter( PARAMETER_ID_UNIT );
@@ -946,6 +1014,11 @@ public class UnitJspBean extends PluginAdminPageJspBean
     }
 
     // PRIVATE METHODS
+
+    /**
+     * Reinit the search fields
+     * @param request the HTTP request
+     */
     private void reInitSearchFields( HttpServletRequest request )
     {
         _unitUserSearchFields = new UnitUserSearchFields( request );

@@ -39,14 +39,17 @@ import java.util.List;
 
 
 /**
- * SpaceActionDAO Interface
+ *
+ * IActionDAO
+ *
  */
 public interface IActionDAO
 {
     /**
-     * Load the list of actions for a document
+     * Load the list of actions
+     * @param strActionType the action type
      * @param plugin the plugin
-     * @return The Collection of actions
+     * @return The List of actions
      */
     List<IAction> selectActions( String strActionType, Plugin plugin );
 }

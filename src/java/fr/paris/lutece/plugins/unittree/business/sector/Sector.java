@@ -45,31 +45,55 @@ public class Sector
     private String _strName;
     private String _strNumberSector;
 
+    /**
+     * Get the id sector
+     * @return the id sector
+     */
     public int getIdSector(  )
     {
         return _nIdSector;
     }
 
+    /**
+     * Set the id sector
+     * @param nIdSector the id sector
+     */
     public void setIdSector( int nIdSector )
     {
         _nIdSector = nIdSector;
     }
 
+    /**
+     * Get the name
+     * @return the name
+     */
     public String getName(  )
     {
         return _strName;
     }
 
+    /**
+     * Set the name
+     * @param strName the name
+     */
     public void setName( String strName )
     {
         _strName = strName;
     }
 
+    /**
+     * Get the number sector
+     * @return the number sector
+     */
     public String getNumberSector(  )
     {
         return _strNumberSector;
     }
 
+    /**
+     * Set the number sector
+     * @param strNumberSector the number sector
+     */
     public void setNumberSector( String strNumberSector )
     {
         _strNumberSector = strNumberSector;

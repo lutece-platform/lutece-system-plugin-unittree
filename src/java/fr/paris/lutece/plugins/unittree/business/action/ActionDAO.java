@@ -55,9 +55,9 @@ public class ActionDAO implements IActionDAO
     private ActionFactory _actionFactory;
 
     /**
-     * Load the list of actions for a document
-     * @return The Collection of actions
+     * {@inheritDoc}
      */
+    @Override
     public List<IAction> selectActions( String strActionType, Plugin plugin )
     {
         List<IAction> listActions = new ArrayList<IAction>(  );

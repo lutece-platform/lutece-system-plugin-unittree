@@ -43,9 +43,18 @@ import java.util.Locale;
 
 /**
  *
+ * IActionService
  *
  */
 public interface IActionService
 {
+    /**
+     * Get the list of actions
+     * @param strActionType the action type
+     * @param locale the locale
+     * @param resource the resource
+     * @param user the current user
+     * @return a list of {@link IAction}
+     */
     List<IAction> getListActions( String strActionType, Locale locale, RBACResource resource, AdminUser user );
 }

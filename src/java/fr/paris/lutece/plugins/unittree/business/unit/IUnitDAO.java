@@ -66,16 +66,34 @@ public interface IUnitDAO
      */
     List<Unit> selectAll( Plugin plugin );
 
+    /**
+     * Select the units by filter
+     * @param uFilter the filter
+     * @param plugin the plugin
+     * @return a list of {@link Unit}
+     */
     List<Unit> selectByFilter( UnitFilter uFilter, Plugin plugin );
 
+    /**
+     * Select all ids user
+     * @param plugin the plugin
+     * @return a list of ids user
+     */
     List<Integer> selectAllIdsUser( Plugin plugin );
 
+    /**
+     * Select the ids user from a given id unit
+     * @param nIdUnit the id unit
+     * @param plugin the plugin
+     * @return a list of ids user
+     */
     List<Integer> selectIdsUser( int nIdUnit, Plugin plugin );
 
     /**
      * Insert a new unit
      * @param unit the unit
      * @param plugin the plugin
+     * @return the new primary key
      */
     int insert( Unit unit, Plugin plugin );
 
@@ -93,11 +111,33 @@ public interface IUnitDAO
      */
     void update( Unit unit, Plugin plugin );
 
+    /**
+     * Add an user to an unit
+     * @param nIdUnit the id unit
+     * @param nIdUser the id user
+     * @param plugin the plugin
+     */
     void addUserToUnit( int nIdUnit, int nIdUser, Plugin plugin );
 
+    /**
+     * Check if the user is in the unit
+     * @param nIdUser the id user
+     * @param plugin the plugin
+     * @return true if the user is in the unit, false otherwise
+     */
     boolean isUserInUnit( int nIdUser, Plugin plugin );
 
+    /**
+     * Remove a given user from the unit
+     * @param nIdUser the id user
+     * @param plugin the plugin
+     */
     void removeUserFromUnit( int nIdUser, Plugin plugin );
 
+    /**
+     * Remove users from a given id unit
+     * @param nIdUnit the id unit
+     * @param plugin the plugin
+     */
     void removeUsersFromUnit( int nIdUnit, Plugin plugin );
 }

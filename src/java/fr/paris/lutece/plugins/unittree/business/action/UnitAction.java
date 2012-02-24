@@ -36,6 +36,7 @@ package fr.paris.lutece.plugins.unittree.business.action;
 
 /**
  *
+ * This class represents the action usable on an unit
  *
  */
 public class UnitAction extends AbstractAction

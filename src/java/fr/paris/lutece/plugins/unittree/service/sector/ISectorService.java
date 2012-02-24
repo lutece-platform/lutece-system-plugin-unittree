@@ -48,19 +48,52 @@ import java.util.List;
  */
 public interface ISectorService
 {
+    /**
+     * Find a sector from its primary key
+     * @param nIdSector the id sector
+     * @return an instance of {@link Sector}
+     */
     Sector findByPrimaryKey( int nIdSector );
 
+    /**
+     * find a list of sectors from a given id unit
+     * @param nIdUnit the id unit
+     * @return a list of {@link Sector}
+     */
     List<Sector> findByIdUnit( int nIdUnit );
 
+    /**
+     * Find all sectors
+     * @return a list of {@link Sector}
+     */
     List<Sector> findAll(  );
 
+    /**
+     * Get the ids sector from a given id unit
+     * @param nIdUnit the id unit
+     * @return a list of ids sector
+     */
     List<Integer> getIdsSectorByIdUnit( int nIdUnit );
 
+    /**
+     * Check if the unit has the sector
+     * @param nIdUnit the id unit
+     * @param nIdSector the id sector
+     * @return true if the unit has the sector, false otherwise
+     */
     boolean hasSector( int nIdUnit, int nIdSector );
 
+    /**
+     * Add sectors to the unit
+     * @param unit the unit
+     */
     @Transactional( "unittree.transactionManager" )
     void addSectorsToUnit( Unit unit );
 
+    /**
+     * Remove the sectors from an unit
+     * @param nIdUnit the id unit
+     */
     @Transactional( "unittree.transactionManager" )
     void removeSectorsFromUnit( int nIdUnit );
 }

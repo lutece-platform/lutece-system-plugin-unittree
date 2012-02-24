@@ -42,32 +42,93 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 
+/**
+ *
+ * IUnitUserService
+ *
+ */
 public interface IUnitUserService
 {
     // GET
+
+    /**
+     * Get the user from a given id user
+     * @param nIdUser the id user
+     * @return an {@link AdminUser}
+     */
     AdminUser getUser( int nIdUser );
 
+    /**
+     * Get the list of {@link AdminUser} from a given id unit
+     * @param nIdUnit the id unit
+     * @return a list of {@link AdminUser}
+     */
     List<AdminUser> getUsers( int nIdUnit );
 
+    /**
+     * Get the list of available users
+     * @param currentUser the current user
+     * @return a list of {@link AdminUser}
+     */
     List<AdminUser> getAvailableUsers( AdminUser currentUser );
 
     // PROCESS
+
+    /**
+     * Do process adding the user to the unit
+     * @param nIdUser the id user
+     * @param currentUser the current user
+     * @param request the HTTP requesst
+     */
     void doProcessAddUser( int nIdUser, AdminUser currentUser, HttpServletRequest request );
 
+    /**
+     * Do process modifying the user
+     * @param nIdUser the id user
+     * @param currentUser the current user
+     * @param request the HTTP request
+     */
     void doProcessModifyUser( int nIdUser, AdminUser currentUser, HttpServletRequest request );
 
+    /**
+     * Do process removing an user from an unit
+     * @param nIdUser the id user
+     * @param currentUser the current user
+     * @param request the HTTP request
+     */
     void doProcessRemoveUser( int nIdUser, AdminUser currentUser, HttpServletRequest request );
 
     // CHECKS
+
+    /**
+     * Check if the given user is in an unit
+     * @param nIdUser the id user
+     * @return true if the user is in an unit, false otherwises
+     */
     boolean isUserInUnit( int nIdUser );
 
     // CRUD
+
+    /**
+     * Add an user to an unit
+     * @param nIdUnit the id unit
+     * @param nIdUser the id user
+     * @return true if the user is added to the unit, false otherwise
+     */
     @Transactional( "unittree.transactionManager" )
     boolean addUserToUnit( int nIdUnit, int nIdUser );
 
+    /**
+     * Remove the user from an unit
+     * @param nIdUser the id user
+     */
     @Transactional( "unittree.transactionManager" )
     void removeUserFromUnit( int nIdUser );
 
+    /**
+     * Remove users from a given id unit
+     * @param nIdUnit the id unit
+     */
     @Transactional( "unittree.transactionManager" )
     void removeUsersFromUnit( int nIdUnit );
 }

@@ -69,8 +69,8 @@ public class SectorService implements ISectorService
     }
 
     /**
-         * {@inheritDoc}
-         */
+     * {@inheritDoc}
+     */
     @Override
     public List<Sector> findByIdUnit( int nIdUnit )
     {

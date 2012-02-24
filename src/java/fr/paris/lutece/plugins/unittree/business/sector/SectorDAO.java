@@ -112,8 +112,8 @@ public class SectorDAO implements ISectorDAO
     }
 
     /**
-         * {@inheritDoc}
-         */
+     * {@inheritDoc}
+     */
     @Override
     public List<Sector> loadByIdUnit( int nIdUnit, Plugin plugin )
     {

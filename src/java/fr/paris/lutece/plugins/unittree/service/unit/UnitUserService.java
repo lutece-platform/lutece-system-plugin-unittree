@@ -48,19 +48,32 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 
+/**
+ *
+ * UnitUserService
+ *
+ */
 public class UnitUserService implements IUnitUserService
 {
     // GET
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public AdminUser getUser( int nIdUser )
     {
         return AdminUserHome.findByPrimaryKey( nIdUser );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<AdminUser> getUsers( int nIdUnit )
     {
         List<AdminUser> listUsers = new ArrayList<AdminUser>(  );
-        List<Integer> listIdUsers = UnitHome.findIdUsers( nIdUnit );
+        List<Integer> listIdUsers = UnitHome.findIdsUser( nIdUnit );
 
         if ( ( listIdUsers != null ) && !listIdUsers.isEmpty(  ) )
         {
@@ -78,6 +91,9 @@ public class UnitUserService implements IUnitUserService
         return listUsers;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<AdminUser> getAvailableUsers( AdminUser currentUser )
     {
@@ -211,6 +227,13 @@ public class UnitUserService implements IUnitUserService
         return false;
     }
 
+    /**
+     * Check if the user is available
+     * @param currentUser the current user
+     * @param userToCheck the user to check
+     * @param listIdsUserInUnit the list of ids user in the unit
+     * @return true if the user is available, false otherwise
+     */
     private boolean isUserAvailable( AdminUser currentUser, AdminUser userToCheck, List<Integer> listIdsUserInUnit )
     {
         // Check if the user is already in the unit
