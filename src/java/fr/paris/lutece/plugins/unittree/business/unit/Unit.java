@@ -37,6 +37,9 @@ import fr.paris.lutece.portal.service.rbac.RBACResource;
 
 import org.hibernate.validator.constraints.NotBlank;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.validation.constraints.NotNull;
 
 
@@ -56,6 +59,7 @@ public class Unit implements RBACResource
     private String _strLabel;
     @NotBlank
     private String _strDescription;
+    private List<Integer> _listIdsSector = new ArrayList<Integer>(  );
 
     public int getIdUnit(  )
     {
@@ -102,6 +106,36 @@ public class Unit implements RBACResource
     public int getIdParent(  )
     {
         return _nIdParent;
+    }
+
+    public void setListIdsSector( List<Integer> listIdsSector )
+    {
+        this._listIdsSector = listIdsSector;
+    }
+
+    public List<Integer> getListIdsSector(  )
+    {
+        return _listIdsSector;
+    }
+
+    public void addIdSector( int nIdSector )
+    {
+        if ( _listIdsSector == null )
+        {
+            _listIdsSector = new ArrayList<Integer>(  );
+        }
+
+        _listIdsSector.add( nIdSector );
+    }
+
+    public boolean hasIdSector( int nIdSector )
+    {
+        if ( ( _listIdsSector != null ) && !_listIdsSector.isEmpty(  ) )
+        {
+            return _listIdsSector.contains( nIdSector );
+        }
+
+        return false;
     }
 
     public boolean isRoot(  )

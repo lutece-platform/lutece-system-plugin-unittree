@@ -97,7 +97,7 @@ public interface IUnitDAO
 
     boolean isUserInUnit( int nIdUser, Plugin plugin );
 
-    void removeUser( int nIdUser, Plugin plugin );
+    void removeUserFromUnit( int nIdUser, Plugin plugin );
 
-    void removeUsersByIdUnit( int nIdUnit, Plugin plugin );
+    void removeUsersFromUnit( int nIdUnit, Plugin plugin );
 }

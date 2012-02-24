@@ -17,6 +17,22 @@
    				<input type="text" size="100" maxlength="100" value="${unit.description!}" name="description" />
     		</p>
     		<p>
+    			<label for="idSector">#i18n{unittree.createUnit.labelSector} : </label>
+    			#i18n{unittree.createUnit.labelSectorComment}
+    			<#if listSectors?? && listSectors?has_content>
+	    			<#list listSectors as sector>
+	    				<br />
+	    				<label for="idSector_${sector.idSector}">&nbsp;</label>
+	    				<input type="checkbox" name="idSector" id="idSector_${sector.idSector}" value="${sector.idSector}" 
+	    					<#if unit.hasIdSector( sector.idSector )>
+	    						checked="checked"
+	    					</#if>
+	    				/>
+	    				${sector.name}
+	    			</#list>
+    			</#if>
+    		</p>
+    		<p>
     			<input type="hidden" name="idUnit" value="${unit.idUnit!}" />
    				<input type="submit" name="create" class="button" value="#i18n{portal.util.labelModify}" />
     			<input type="submit" name="cancel" class="button" value="#i18n{portal.util.labelCancel}" />

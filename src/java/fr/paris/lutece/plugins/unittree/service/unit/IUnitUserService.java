@@ -67,4 +67,7 @@ public interface IUnitUserService
 
     @Transactional( "unittree.transactionManager" )
     void removeUserFromUnit( int nIdUser );
+
+    @Transactional( "unittree.transactionManager" )
+    void removeUsersFromUnit( int nIdUnit );
 }

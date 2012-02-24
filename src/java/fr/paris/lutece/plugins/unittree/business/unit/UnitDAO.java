@@ -46,24 +46,28 @@ import java.util.List;
  */
 public class UnitDAO implements IUnitDAO
 {
-    private static final String SQL_QUERY_NEW_PK = " SELECT max( id_unit ) FROM unittree_unit ";
-    private static final String SQL_QUERY_INSERT = " INSERT INTO unittree_unit ( id_unit, id_parent, label, description ) VALUES ( ?, ?, ?, ? ) ";
-    private static final String SQL_QUERY_SELECT = " SELECT id_unit, id_parent, label, description FROM unittree_unit WHERE id_unit = ? ";
-    private static final String SQL_QUERY_SELECT_ALL = " SELECT id_unit, id_parent, label, description FROM unittree_unit ";
-    private static final String SQL_QUERY_DELETE = " DELETE FROM unittree_unit WHERE id_unit = ? ";
-    private static final String SQL_QUERY_UPDATE = " UPDATE unittree_unit SET label = ?, description = ? WHERE id_unit = ? ";
-    private static final String SQL_QUERY_ADD_USER_TO_UNIT = " INSERT INTO unittree_unit_user ( id_unit, id_user ) VALUES ( ?, ? ) ";
-    private static final String SQL_QUERY_SELECT_IDS_USER = " SELECT id_user FROM unittree_unit_user WHERE id_unit = ? ";
-    private static final String SQL_QUERY_SELECT_ALL_IDS_USER = " SELECT id_user FROM unittree_unit_user ";
-    private static final String SQL_QUERY_REMOVE_USER = " DELETE FROM unittree_unit_user WHERE id_user = ? ";
-    private static final String SQL_QUERY_REMOVE_USERS_BY_ID_UNIT = " DELETE FROM unittree_unit_user WHERE id_unit = ? ";
-    private static final String SQL_QUERY_CHECK_USER = " SELECT id_unit FROM unittree_unit_user WHERE id_user = ? ";
     private static final String SQL_WHERE = " WHERE ";
     private static final String SQL_AND = " AND ";
     private static final String SQL_OR = " OR ";
     private static final String SQL_FILTER_ID_PARENT = " id_parent = ? ";
     private static final String SQL_FILTER_LABEL = " label = ? ";
     private static final String SQL_FILTER_DESCRIPTION = " description = ? ";
+
+    // Table unittree_unit
+    private static final String SQL_QUERY_NEW_PK = " SELECT max( id_unit ) FROM unittree_unit ";
+    private static final String SQL_QUERY_INSERT = " INSERT INTO unittree_unit ( id_unit, id_parent, label, description ) VALUES ( ?, ?, ?, ? ) ";
+    private static final String SQL_QUERY_SELECT = " SELECT id_unit, id_parent, label, description FROM unittree_unit WHERE id_unit = ? ";
+    private static final String SQL_QUERY_SELECT_ALL = " SELECT id_unit, id_parent, label, description FROM unittree_unit ";
+    private static final String SQL_QUERY_DELETE = " DELETE FROM unittree_unit WHERE id_unit = ? ";
+    private static final String SQL_QUERY_UPDATE = " UPDATE unittree_unit SET label = ?, description = ? WHERE id_unit = ? ";
+
+    // Table unittree_unit_user
+    private static final String SQL_QUERY_ADD_USER_TO_UNIT = " INSERT INTO unittree_unit_user ( id_unit, id_user ) VALUES ( ?, ? ) ";
+    private static final String SQL_QUERY_SELECT_IDS_USER = " SELECT id_user FROM unittree_unit_user WHERE id_unit = ? ";
+    private static final String SQL_QUERY_SELECT_ALL_IDS_USER = " SELECT id_user FROM unittree_unit_user ";
+    private static final String SQL_QUERY_REMOVE_USER_FROM_UNIT = " DELETE FROM unittree_unit_user WHERE id_user = ? ";
+    private static final String SQL_QUERY_REMOVE_USERS_FROM_UNIT = " DELETE FROM unittree_unit_user WHERE id_unit = ? ";
+    private static final String SQL_QUERY_CHECK_USER = " SELECT id_unit FROM unittree_unit_user WHERE id_user = ? ";
 
     /**
      * {@inheritDoc}
@@ -177,12 +181,12 @@ public class UnitDAO implements IUnitDAO
     }
 
     /**
-         * {@inheritDoc}
-         */
+     * {@inheritDoc}
+     */
     @Override
-    public void removeUser( int nIdUser, Plugin plugin )
+    public void removeUserFromUnit( int nIdUser, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_REMOVE_USER, plugin );
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_REMOVE_USER_FROM_UNIT, plugin );
         daoUtil.setInt( 1, nIdUser );
         daoUtil.executeUpdate(  );
         daoUtil.free(  );
@@ -192,9 +196,9 @@ public class UnitDAO implements IUnitDAO
      * {@inheritDoc}
      */
     @Override
-    public void removeUsersByIdUnit( int nIdUnit, Plugin plugin )
+    public void removeUsersFromUnit( int nIdUnit, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_REMOVE_USERS_BY_ID_UNIT, plugin );
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_REMOVE_USERS_FROM_UNIT, plugin );
         daoUtil.setInt( 1, nIdUnit );
         daoUtil.executeUpdate(  );
         daoUtil.free(  );
@@ -301,8 +305,8 @@ public class UnitDAO implements IUnitDAO
     }
 
     /**
-         * {@inheritDoc}
-         */
+     * {@inheritDoc}
+     */
     @Override
     public boolean isUserInUnit( int nIdUser, Plugin plugin )
     {
@@ -320,6 +324,8 @@ public class UnitDAO implements IUnitDAO
 
         return bIsUserInAnUnit;
     }
+
+    // PRIVATE METHODS
 
     /**
      * Build the SQL query with filter

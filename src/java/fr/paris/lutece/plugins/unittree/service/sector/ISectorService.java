@@ -31,69 +31,36 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.unittree.service.unit;
+package fr.paris.lutece.plugins.unittree.service.sector;
 
+import fr.paris.lutece.plugins.unittree.business.sector.Sector;
 import fr.paris.lutece.plugins.unittree.business.unit.Unit;
-import fr.paris.lutece.util.ReferenceList;
 
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Locale;
-
-import javax.xml.transform.Source;
 
 
 /**
  *
- * IUnitService
+ * ISectorService
  *
  */
-public interface IUnitService
+public interface ISectorService
 {
-    public static final String BEAN_UNIT_SERVICE = "unittree.unitService";
+    Sector findByPrimaryKey( int nIdSector );
 
-    // GET
-    Unit getUnit( int nIdUnit, boolean bGetSectors );
+    List<Sector> findByIdUnit( int nIdUnit );
 
-    Unit getRootUnit( boolean bGetSectors );
+    List<Sector> findAll(  );
 
-    List<Unit> getAllUnits( boolean bGetSectors );
+    List<Integer> getIdsSectorByIdUnit( int nIdUnit );
 
-    List<Unit> getUnitsFirstLevel( boolean bGetSectors );
+    boolean hasSector( int nIdUnit, int nIdSector );
 
-    List<Unit> getSubUnits( int nIdUnit, boolean bGetSectors );
-
-    ReferenceList getSubUnitsAsReferenceList( int nIdUnit, Locale locale );
-
-    String getXMLUnits(  );
-
-    Source getTreeXsl(  );
-
-    // CHECKS
-    boolean hasSubUnits( int nIdUnit );
-
-    // CRUD OPERATIONS
-
-    /**
-    * Create a unit
-    * @param unit the unit
-    * @return the id unit
-    */
     @Transactional( "unittree.transactionManager" )
-    int createUnit( Unit unit );
+    void addSectorsToUnit( Unit unit );
 
-    /**
-     * Update the unit
-     * @param unit the unit
-     */
     @Transactional( "unittree.transactionManager" )
-    void updateUnit( Unit unit );
-
-    /**
-     * Remove the unit
-     * @param nIdUnit the id unit
-     */
-    @Transactional( "unittree.transactionManager" )
-    void removeUnit( int nIdUnit );
+    void removeSectorsFromUnit( int nIdUnit );
 }

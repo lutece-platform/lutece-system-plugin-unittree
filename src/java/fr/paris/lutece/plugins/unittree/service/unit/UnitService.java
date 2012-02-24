@@ -36,6 +36,7 @@ package fr.paris.lutece.plugins.unittree.service.unit;
 import fr.paris.lutece.plugins.unittree.business.unit.Unit;
 import fr.paris.lutece.plugins.unittree.business.unit.UnitFilter;
 import fr.paris.lutece.plugins.unittree.business.unit.UnitHome;
+import fr.paris.lutece.plugins.unittree.service.sector.ISectorService;
 import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.util.ReferenceList;
@@ -48,6 +49,8 @@ import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import javax.inject.Inject;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
@@ -77,6 +80,10 @@ public class UnitService implements IUnitService
     // XSL
     private static final String PATH_XSL = "/WEB-INF/plugins/unittree/xsl/";
     private static final String FILE_TREE_XSL = "units_tree.xsl";
+    @Inject
+    private IUnitUserService _unitUserService;
+    @Inject
+    private ISectorService _sectorService;
 
     // GET
 
@@ -84,49 +91,69 @@ public class UnitService implements IUnitService
      * {@inheritDoc}
      */
     @Override
-    public Unit getUnit( int nIdUnit )
+    public Unit getUnit( int nIdUnit, boolean bGetSectors )
     {
-        return UnitHome.findByPrimaryKey( nIdUnit );
+        Unit unit = UnitHome.findByPrimaryKey( nIdUnit );
+
+        if ( bGetSectors )
+        {
+            unit.setListIdsSector( _sectorService.getIdsSectorByIdUnit( nIdUnit ) );
+        }
+
+        return unit;
     }
 
     /**
          * {@inheritDoc}
          */
     @Override
-    public Unit getRootUnit(  )
+    public Unit getRootUnit( boolean bGetSectors )
     {
-        return getUnit( Unit.ID_ROOT );
+        return getUnit( Unit.ID_ROOT, bGetSectors );
     }
 
     /**
     * {@inheritDoc}
     */
     @Override
-    public List<Unit> getAllUnits(  )
+    public List<Unit> getAllUnits( boolean bGetSectors )
     {
-        return UnitHome.findAll(  );
-    }
+        List<Unit> listUnits = UnitHome.findAll(  );
 
-    /**
-         * {@inheritDoc}
-         */
-    @Override
-    public List<Unit> getUnitsFirstLevel(  )
-    {
-        return getSubUnits( Unit.ID_ROOT );
+        if ( bGetSectors )
+        {
+            for ( Unit unit : listUnits )
+            {
+                if ( unit != null )
+                {
+                    unit.setListIdsSector( _sectorService.getIdsSectorByIdUnit( unit.getIdUnit(  ) ) );
+                }
+            }
+        }
+
+        return listUnits;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<Unit> getSubUnits( int nIdUnit )
+    public List<Unit> getUnitsFirstLevel( boolean bGetSectors )
+    {
+        return getSubUnits( Unit.ID_ROOT, bGetSectors );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Unit> getSubUnits( int nIdUnit, boolean bGetSectors )
     {
         // If the ID unit == -1, then only return the root unit
         if ( nIdUnit == Unit.ID_NULL )
         {
             List<Unit> listUnits = new ArrayList<Unit>(  );
-            listUnits.add( getRootUnit(  ) );
+            listUnits.add( getRootUnit( bGetSectors ) );
 
             return listUnits;
         }
@@ -134,12 +161,25 @@ public class UnitService implements IUnitService
         UnitFilter uFilter = new UnitFilter(  );
         uFilter.setIdParent( nIdUnit );
 
-        return UnitHome.findByFilter( uFilter );
+        List<Unit> listUnits = UnitHome.findByFilter( uFilter );
+
+        if ( bGetSectors )
+        {
+            for ( Unit unit : listUnits )
+            {
+                if ( unit != null )
+                {
+                    unit.setListIdsSector( _sectorService.getIdsSectorByIdUnit( unit.getIdUnit(  ) ) );
+                }
+            }
+        }
+
+        return listUnits;
     }
 
     /**
-         * {@inheritDoc}
-         */
+     * {@inheritDoc}
+     */
     @Override
     public ReferenceList getSubUnitsAsReferenceList( int nIdUnit, Locale locale )
     {
@@ -147,17 +187,17 @@ public class UnitService implements IUnitService
         if ( nIdUnit == Unit.ID_NULL )
         {
             ReferenceList listSubUnits = new ReferenceList(  );
-            listSubUnits.addItem( Unit.ID_ROOT, getRootUnit(  ).getLabel(  ) );
+            listSubUnits.addItem( Unit.ID_ROOT, getRootUnit( false ).getLabel(  ) );
 
             return listSubUnits;
         }
 
         // Otherwise, build the reference list
-        Unit unit = getUnit( nIdUnit );
+        Unit unit = getUnit( nIdUnit, false );
 
         if ( unit != null )
         {
-            ReferenceList listSubUnits = ReferenceList.convert( getSubUnits( nIdUnit ), ATTRIBUTE_ID_UNIT,
+            ReferenceList listSubUnits = ReferenceList.convert( getSubUnits( nIdUnit, false ), ATTRIBUTE_ID_UNIT,
                     ATTRIBUTE_LABEL, true );
             String strLabelParentUnit = I18nService.getLocalizedString( PROPERTY_LABEL_PARENT_UNIT, locale );
             listSubUnits.addItem( unit.getIdParent(  ), strLabelParentUnit );
@@ -173,7 +213,7 @@ public class UnitService implements IUnitService
         StringBuffer sbXML = new StringBuffer(  );
         XmlUtil.beginElement( sbXML, TAG_UNITS );
 
-        getXMLUnit( sbXML, getRootUnit(  ) );
+        getXMLUnit( sbXML, getRootUnit( false ) );
 
         XmlUtil.endElement( sbXML, TAG_UNITS );
 
@@ -187,7 +227,7 @@ public class UnitService implements IUnitService
         XmlUtil.addElement( sbXML, TAG_LABEL, unit.getLabel(  ) );
         XmlUtil.addElement( sbXML, TAG_DESCRIPTION, unit.getDescription(  ) );
 
-        List<Unit> listChildren = getSubUnits( unit.getIdUnit(  ) );
+        List<Unit> listChildren = getSubUnits( unit.getIdUnit(  ), false );
 
         if ( ( listChildren != null ) && !listChildren.isEmpty(  ) )
         {
@@ -223,7 +263,7 @@ public class UnitService implements IUnitService
     @Override
     public boolean hasSubUnits( int nIdUnit )
     {
-        List<Unit> listUnits = getSubUnits( nIdUnit );
+        List<Unit> listUnits = getSubUnits( nIdUnit, false );
 
         return ( listUnits != null ) && !listUnits.isEmpty(  );
     }
@@ -237,9 +277,14 @@ public class UnitService implements IUnitService
     @Transactional( "unittree.transactionManager" )
     public int createUnit( Unit unit )
     {
+        int nIdUnit = Unit.ID_NULL;
+
         if ( unit != null )
         {
-            return UnitHome.create( unit );
+            nIdUnit = UnitHome.create( unit );
+            _sectorService.addSectorsToUnit( unit );
+
+            return nIdUnit;
         }
 
         return Unit.ID_NULL;
@@ -255,7 +300,8 @@ public class UnitService implements IUnitService
         if ( nIdUnit != Unit.ID_ROOT )
         {
             // Remove users
-            UnitHome.removeUsersByIdUnit( nIdUnit );
+            _unitUserService.removeUsersFromUnit( nIdUnit );
+            _sectorService.removeSectorsFromUnit( nIdUnit );
             UnitHome.remove( nIdUnit );
         }
     }
@@ -269,6 +315,10 @@ public class UnitService implements IUnitService
     {
         if ( unit != null )
         {
+            // First remove the sectors from the unit
+            _sectorService.removeSectorsFromUnit( unit.getIdUnit(  ) );
+            // Then add the sector to the unit
+            _sectorService.addSectorsToUnit( unit );
             UnitHome.update( unit );
         }
     }

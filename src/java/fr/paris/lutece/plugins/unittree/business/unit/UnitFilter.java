@@ -52,7 +52,7 @@ public class UnitFilter
     */
     public UnitFilter(  )
     {
-        _nIdParent = -1;
+        _nIdParent = Unit.ID_NULL;
         _strLabel = StringUtils.EMPTY;
         _strDescription = StringUtils.EMPTY;
         _bIsWideSearch = false;

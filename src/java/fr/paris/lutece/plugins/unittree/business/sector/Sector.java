@@ -31,69 +31,47 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.unittree.service.unit;
-
-import fr.paris.lutece.plugins.unittree.business.unit.Unit;
-import fr.paris.lutece.util.ReferenceList;
-
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Locale;
-
-import javax.xml.transform.Source;
+package fr.paris.lutece.plugins.unittree.business.sector;
 
 
 /**
  *
- * IUnitService
+ * Sector
  *
  */
-public interface IUnitService
+public class Sector
 {
-    public static final String BEAN_UNIT_SERVICE = "unittree.unitService";
+    private int _nIdSector;
+    private String _strName;
+    private String _strNumberSector;
 
-    // GET
-    Unit getUnit( int nIdUnit, boolean bGetSectors );
+    public int getIdSector(  )
+    {
+        return _nIdSector;
+    }
 
-    Unit getRootUnit( boolean bGetSectors );
+    public void setIdSector( int nIdSector )
+    {
+        _nIdSector = nIdSector;
+    }
 
-    List<Unit> getAllUnits( boolean bGetSectors );
+    public String getName(  )
+    {
+        return _strName;
+    }
 
-    List<Unit> getUnitsFirstLevel( boolean bGetSectors );
+    public void setName( String strName )
+    {
+        _strName = strName;
+    }
 
-    List<Unit> getSubUnits( int nIdUnit, boolean bGetSectors );
+    public String getNumberSector(  )
+    {
+        return _strNumberSector;
+    }
 
-    ReferenceList getSubUnitsAsReferenceList( int nIdUnit, Locale locale );
-
-    String getXMLUnits(  );
-
-    Source getTreeXsl(  );
-
-    // CHECKS
-    boolean hasSubUnits( int nIdUnit );
-
-    // CRUD OPERATIONS
-
-    /**
-    * Create a unit
-    * @param unit the unit
-    * @return the id unit
-    */
-    @Transactional( "unittree.transactionManager" )
-    int createUnit( Unit unit );
-
-    /**
-     * Update the unit
-     * @param unit the unit
-     */
-    @Transactional( "unittree.transactionManager" )
-    void updateUnit( Unit unit );
-
-    /**
-     * Remove the unit
-     * @param nIdUnit the id unit
-     */
-    @Transactional( "unittree.transactionManager" )
-    void removeUnit( int nIdUnit );
+    public void setNumberSector( String strNumberSector )
+    {
+        _strNumberSector = strNumberSector;
+    }
 }

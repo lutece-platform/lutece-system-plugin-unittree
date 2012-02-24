@@ -31,69 +31,58 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.unittree.service.unit;
+package fr.paris.lutece.plugins.unittree.business.sector;
 
-import fr.paris.lutece.plugins.unittree.business.unit.Unit;
-import fr.paris.lutece.util.ReferenceList;
-
-import org.springframework.transaction.annotation.Transactional;
+import fr.paris.lutece.plugins.unittree.service.UnitTreePlugin;
+import fr.paris.lutece.portal.service.plugin.Plugin;
+import fr.paris.lutece.portal.service.plugin.PluginService;
+import fr.paris.lutece.portal.service.spring.SpringContextService;
 
 import java.util.List;
-import java.util.Locale;
-
-import javax.xml.transform.Source;
 
 
 /**
  *
- * IUnitService
+ * SectorHome
  *
  */
-public interface IUnitService
+public final class SectorHome
 {
-    public static final String BEAN_UNIT_SERVICE = "unittree.unitService";
+    private static final String BEAN_SECTOR_DAO = "unittree.sectorDAO";
+    private static Plugin _plugin = PluginService.getPlugin( UnitTreePlugin.PLUGIN_NAME );
+    private static ISectorDAO _dao = (ISectorDAO) SpringContextService.getBean( BEAN_SECTOR_DAO );
 
-    // GET
-    Unit getUnit( int nIdUnit, boolean bGetSectors );
+    private SectorHome(  )
+    {
+    }
 
-    Unit getRootUnit( boolean bGetSectors );
+    public static Sector findByPrimaryKey( int nIdSector )
+    {
+        return _dao.load( nIdSector, _plugin );
+    }
 
-    List<Unit> getAllUnits( boolean bGetSectors );
+    public static List<Sector> findAll(  )
+    {
+        return _dao.loadAll( _plugin );
+    }
 
-    List<Unit> getUnitsFirstLevel( boolean bGetSectors );
+    public static List<Sector> findByIdUnit( int nIdUnit )
+    {
+        return _dao.loadByIdUnit( nIdUnit, _plugin );
+    }
 
-    List<Unit> getSubUnits( int nIdUnit, boolean bGetSectors );
+    public static void addSectorToUnit( int nIdUnit, int nIdSector )
+    {
+        _dao.addSectorToUnit( nIdUnit, nIdSector, _plugin );
+    }
 
-    ReferenceList getSubUnitsAsReferenceList( int nIdUnit, Locale locale );
+    public static boolean hasSector( int nIdUnit, int nIdSector )
+    {
+        return _dao.hasSector( nIdUnit, nIdSector, _plugin );
+    }
 
-    String getXMLUnits(  );
-
-    Source getTreeXsl(  );
-
-    // CHECKS
-    boolean hasSubUnits( int nIdUnit );
-
-    // CRUD OPERATIONS
-
-    /**
-    * Create a unit
-    * @param unit the unit
-    * @return the id unit
-    */
-    @Transactional( "unittree.transactionManager" )
-    int createUnit( Unit unit );
-
-    /**
-     * Update the unit
-     * @param unit the unit
-     */
-    @Transactional( "unittree.transactionManager" )
-    void updateUnit( Unit unit );
-
-    /**
-     * Remove the unit
-     * @param nIdUnit the id unit
-     */
-    @Transactional( "unittree.transactionManager" )
-    void removeUnit( int nIdUnit );
+    public static void removeSectorsFromUnit( int nIdUnit )
+    {
+        _dao.removeSectorsFromUnit( nIdUnit, _plugin );
+    }
 }

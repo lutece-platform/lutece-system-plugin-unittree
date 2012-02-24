@@ -138,7 +138,7 @@ public class UnitResourceIdService extends ResourceIdService
         IUnitService unitService = (IUnitService) SpringContextService.getBean( IUnitService.BEAN_UNIT_SERVICE );
         ReferenceList listResources = new ReferenceList(  );
 
-        for ( Unit unit : unitService.getAllUnits(  ) )
+        for ( Unit unit : unitService.getAllUnits( false ) )
         {
             listResources.addItem( unit.getIdUnit(  ), unit.getLabel(  ) );
         }
@@ -158,7 +158,7 @@ public class UnitResourceIdService extends ResourceIdService
         {
             IUnitService unitService = (IUnitService) SpringContextService.getBean( IUnitService.BEAN_UNIT_SERVICE );
             int nIdUnit = Integer.parseInt( strId );
-            Unit unit = unitService.getUnit( nIdUnit );
+            Unit unit = unitService.getUnit( nIdUnit, false );
 
             if ( unit != null )
             {

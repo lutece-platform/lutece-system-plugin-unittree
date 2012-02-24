@@ -31,69 +31,29 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.unittree.service.unit;
+package fr.paris.lutece.plugins.unittree.business.sector;
 
-import fr.paris.lutece.plugins.unittree.business.unit.Unit;
-import fr.paris.lutece.util.ReferenceList;
-
-import org.springframework.transaction.annotation.Transactional;
+import fr.paris.lutece.portal.service.plugin.Plugin;
 
 import java.util.List;
-import java.util.Locale;
-
-import javax.xml.transform.Source;
 
 
 /**
  *
- * IUnitService
+ * ISectorDAO
  *
  */
-public interface IUnitService
+public interface ISectorDAO
 {
-    public static final String BEAN_UNIT_SERVICE = "unittree.unitService";
+    Sector load( int nIdSector, Plugin plugin );
 
-    // GET
-    Unit getUnit( int nIdUnit, boolean bGetSectors );
+    List<Sector> loadAll( Plugin plugin );
 
-    Unit getRootUnit( boolean bGetSectors );
+    List<Sector> loadByIdUnit( int nIdUnit, Plugin plugin );
 
-    List<Unit> getAllUnits( boolean bGetSectors );
+    void addSectorToUnit( int nIdUnit, int nIdSector, Plugin plugin );
 
-    List<Unit> getUnitsFirstLevel( boolean bGetSectors );
+    boolean hasSector( int nIdUnit, int nIdSector, Plugin plugin );
 
-    List<Unit> getSubUnits( int nIdUnit, boolean bGetSectors );
-
-    ReferenceList getSubUnitsAsReferenceList( int nIdUnit, Locale locale );
-
-    String getXMLUnits(  );
-
-    Source getTreeXsl(  );
-
-    // CHECKS
-    boolean hasSubUnits( int nIdUnit );
-
-    // CRUD OPERATIONS
-
-    /**
-    * Create a unit
-    * @param unit the unit
-    * @return the id unit
-    */
-    @Transactional( "unittree.transactionManager" )
-    int createUnit( Unit unit );
-
-    /**
-     * Update the unit
-     * @param unit the unit
-     */
-    @Transactional( "unittree.transactionManager" )
-    void updateUnit( Unit unit );
-
-    /**
-     * Remove the unit
-     * @param nIdUnit the id unit
-     */
-    @Transactional( "unittree.transactionManager" )
-    void removeUnit( int nIdUnit );
+    void removeSectorsFromUnit( int nIdUnit, Plugin plugin );
 }

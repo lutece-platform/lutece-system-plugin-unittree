@@ -170,7 +170,17 @@ public class UnitUserService implements IUnitUserService
     @Transactional( "unittree.transactionManager" )
     public void removeUserFromUnit( int nIdUser )
     {
-        UnitHome.removeUser( nIdUser );
+        UnitHome.removeUserFromUnit( nIdUser );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional( "unittree.transactionManager" )
+    public void removeUsersFromUnit( int nIdUnit )
+    {
+        UnitHome.removeUsersFromUnit( nIdUnit );
     }
 
     // PRIVATE METHODS

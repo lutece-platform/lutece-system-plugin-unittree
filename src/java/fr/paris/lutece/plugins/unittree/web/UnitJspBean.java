@@ -37,6 +37,7 @@ import fr.paris.lutece.plugins.unittree.business.action.UnitAction;
 import fr.paris.lutece.plugins.unittree.business.action.UnitUserAction;
 import fr.paris.lutece.plugins.unittree.business.unit.Unit;
 import fr.paris.lutece.plugins.unittree.service.action.IActionService;
+import fr.paris.lutece.plugins.unittree.service.sector.ISectorService;
 import fr.paris.lutece.plugins.unittree.service.unit.IUnitService;
 import fr.paris.lutece.plugins.unittree.service.unit.IUnitUserService;
 import fr.paris.lutece.plugins.unittree.service.unit.UnitResourceIdService;
@@ -94,6 +95,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
     // BEAN
     private static final String BEAN_UNIT_USER_SERVICE = "unittree.unitUserService";
     private static final String BEAN_ACTION_SERVICE = "unittree.actionService";
+    private static final String BEAN_SECTOR_SERVICE = "unittree.sectorService";
 
     // PROPERTIES
     private static final String PROPERTY_MANAGE_UNITS_PAGE_TITLE = "unittree.manageUnits.pageTitle";
@@ -123,6 +125,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
     private static final String MARK_UNIT = "unit";
     private static final String MARK_USER = "user";
     private static final String MARK_LIST_UNIT_USER_ATTRIBUTES = "listUnitUserAttributes";
+    private static final String MARK_LIST_SECTORS = "listSectors";
 
     // PARAMETERS
     private static final String PARAMETER_CANCEL = "cancel";
@@ -133,6 +136,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
     private static final String PARAMETER_SESSION = "session";
     private static final String PARAMETER_SELECT_SUB_UNITS = "selectSubUnits";
     private static final String PARAMETER_ID_SELECTED_UNIT = "idSelectedUnit";
+    private static final String PARAMETER_ID_SECTOR = "idSector";
 
     // TEMPLATES
     private static final String TEMPLATE_MANAGE_UNITS = "/admin/plugins/unittree/manage_units.html";
@@ -158,6 +162,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
     private IUnitService _unitService = (IUnitService) SpringContextService.getBean( IUnitService.BEAN_UNIT_SERVICE );
     private IUnitUserService _unitUserService = (IUnitUserService) SpringContextService.getBean( BEAN_UNIT_USER_SERVICE );
     private IActionService _actionService = (IActionService) SpringContextService.getBean( BEAN_ACTION_SERVICE );
+    private ISectorService _sectorService = (ISectorService) SpringContextService.getBean( BEAN_SECTOR_SERVICE );
     private IUnitSearchFields _unitUserSearchFields = new UnitUserSearchFields(  );
 
     // GET
@@ -189,12 +194,12 @@ public class UnitJspBean extends PluginAdminPageJspBean
         if ( StringUtils.isNotBlank( strIdUnit ) && StringUtils.isNumeric( strIdUnit ) )
         {
             int nIdUnit = Integer.parseInt( strIdUnit );
-            unit = _unitService.getUnit( nIdUnit );
+            unit = _unitService.getUnit( nIdUnit, false );
         }
 
         if ( unit == null )
         {
-            unit = _unitService.getRootUnit(  );
+            unit = _unitService.getRootUnit( false );
         }
 
         // Check if there is some parameters in the session (for user search)
@@ -222,7 +227,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
 
         model.put( MARK_UNIT_TREE, strHtmlUnitsTree );
         model.put( MARK_UNIT, unit );
-        model.put( MARK_LIST_SUB_UNITS, _unitService.getSubUnits( unit.getIdUnit(  ) ) );
+        model.put( MARK_LIST_SUB_UNITS, _unitService.getSubUnits( unit.getIdUnit(  ), false ) );
 
         // Add actions in the model
         model.put( MARK_LIST_UNIT_ACTIONS,
@@ -254,12 +259,12 @@ public class UnitJspBean extends PluginAdminPageJspBean
         if ( StringUtils.isNotBlank( strIdParent ) && StringUtils.isNumeric( strIdParent ) )
         {
             int nIdParent = Integer.parseInt( strIdParent );
-            unitParent = _unitService.getUnit( nIdParent );
+            unitParent = _unitService.getUnit( nIdParent, false );
         }
 
         if ( unitParent == null )
         {
-            unitParent = _unitService.getRootUnit(  );
+            unitParent = _unitService.getRootUnit( false );
         }
 
         // Check permissions
@@ -270,6 +275,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
         }
 
         model.put( MARK_PARENT_UNIT, unitParent );
+        model.put( MARK_LIST_SECTORS, _sectorService.findAll(  ) );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CREATE_UNIT, getLocale(  ), model );
 
@@ -287,7 +293,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
         if ( StringUtils.isNotBlank( strIdUnit ) && StringUtils.isNumeric( strIdUnit ) )
         {
             int nIdUnit = Integer.parseInt( strIdUnit );
-            unit = _unitService.getUnit( nIdUnit );
+            unit = _unitService.getUnit( nIdUnit, true );
         }
 
         if ( unit == null )
@@ -302,11 +308,12 @@ public class UnitJspBean extends PluginAdminPageJspBean
             throw new AccessDeniedException( strErrorMessage );
         }
 
-        Unit parentUnit = _unitService.getUnit( unit.getIdParent(  ) );
+        Unit parentUnit = _unitService.getUnit( unit.getIdParent(  ), false );
 
         Map<String, Object> model = new HashMap<String, Object>(  );
         model.put( MARK_UNIT, unit );
         model.put( MARK_PARENT_UNIT, parentUnit );
+        model.put( MARK_LIST_SECTORS, _sectorService.findAll(  ) );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MODIFY_UNIT, getLocale(  ), model );
 
@@ -353,12 +360,12 @@ public class UnitJspBean extends PluginAdminPageJspBean
         if ( StringUtils.isNotBlank( strIdUnit ) && StringUtils.isNumeric( strIdUnit ) )
         {
             int nIdUnit = Integer.parseInt( strIdUnit );
-            unit = _unitService.getUnit( nIdUnit );
+            unit = _unitService.getUnit( nIdUnit, false );
         }
 
         if ( unit == null )
         {
-            unit = _unitService.getRootUnit(  );
+            unit = _unitService.getRootUnit( false );
         }
 
         // Check permissions
@@ -402,7 +409,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
                 StringUtils.isNotBlank( strIdUser ) && StringUtils.isNumeric( strIdUser ) )
         {
             int nIdUnit = Integer.parseInt( strIdUnit );
-            unit = _unitService.getUnit( nIdUnit );
+            unit = _unitService.getUnit( nIdUnit, false );
 
             int nIdUser = Integer.parseInt( strIdUser );
             user = _unitUserService.getUser( nIdUser );
@@ -446,7 +453,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
                 StringUtils.isNotBlank( strIdUser ) && StringUtils.isNumeric( strIdUser ) )
         {
             nIdUnit = Integer.parseInt( strIdUnit );
-            unit = _unitService.getUnit( nIdUnit );
+            unit = _unitService.getUnit( nIdUnit, false );
             nIdUser = Integer.parseInt( strIdUser );
             user = _unitUserService.getUser( nIdUser );
         }
@@ -554,6 +561,21 @@ public class UnitJspBean extends PluginAdminPageJspBean
             return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
         }
 
+        // Ids sector
+        String[] strIdsSectors = request.getParameterValues( PARAMETER_ID_SECTOR );
+
+        if ( ( strIdsSectors != null ) && ( strIdsSectors.length > 0 ) )
+        {
+            for ( String strIdSector : strIdsSectors )
+            {
+                if ( StringUtils.isNotBlank( strIdSector ) && StringUtils.isNumeric( strIdSector ) )
+                {
+                    int nIdSector = Integer.parseInt( strIdSector );
+                    unit.addIdSector( nIdSector );
+                }
+            }
+        }
+
         try
         {
             _unitService.createUnit( unit );
@@ -593,7 +615,9 @@ public class UnitJspBean extends PluginAdminPageJspBean
         }
 
         int nIdUnit = Integer.parseInt( strIdUnit );
-        Unit unit = _unitService.getUnit( nIdUnit );
+
+        // Do no get the sectors because the list will be deleted, and we store the new id sectors
+        Unit unit = _unitService.getUnit( nIdUnit, false );
 
         if ( unit == null )
         {
@@ -615,6 +639,21 @@ public class UnitJspBean extends PluginAdminPageJspBean
         if ( constraintViolations.size(  ) > 0 )
         {
             return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
+        }
+
+        // Ids sector
+        String[] strIdsSectors = request.getParameterValues( PARAMETER_ID_SECTOR );
+
+        if ( ( strIdsSectors != null ) && ( strIdsSectors.length > 0 ) )
+        {
+            for ( String strIdSector : strIdsSectors )
+            {
+                if ( StringUtils.isNotBlank( strIdSector ) && StringUtils.isNumeric( strIdSector ) )
+                {
+                    int nIdSector = Integer.parseInt( strIdSector );
+                    unit.addIdSector( nIdSector );
+                }
+            }
         }
 
         try
@@ -653,7 +692,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
 
         int nIdUnit = Integer.parseInt( strIdUnit );
         int nIdParent = Unit.ID_ROOT;
-        Unit unit = _unitService.getUnit( nIdUnit );
+        Unit unit = _unitService.getUnit( nIdUnit, false );
 
         if ( unit != null )
         {
@@ -759,7 +798,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
 
         int nIdUnit = Integer.parseInt( strIdUnit );
         int nIdUser = Integer.parseInt( strIdUser );
-        Unit unit = _unitService.getUnit( nIdUnit );
+        Unit unit = _unitService.getUnit( nIdUnit, false );
         AdminUser user = _unitUserService.getUser( nIdUser );
 
         if ( ( unit != null ) && ( user != null ) )
@@ -812,7 +851,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
         if ( StringUtils.isNotBlank( strSelectSubUnits ) )
         {
             // Check if the selected unit has sub units
-            List<Unit> listSubUnits = _unitService.getSubUnits( nIdSelectedUnit );
+            List<Unit> listSubUnits = _unitService.getSubUnits( nIdSelectedUnit, false );
 
             if ( ( listSubUnits == null ) || listSubUnits.isEmpty(  ) )
             {
@@ -830,8 +869,8 @@ public class UnitJspBean extends PluginAdminPageJspBean
         int nIdUser = Integer.parseInt( strIdUser );
         int nIdUnit = Integer.parseInt( strIdUnit );
         AdminUser user = _unitUserService.getUser( nIdUser );
-        Unit unit = _unitService.getUnit( nIdUnit );
-        Unit selectedUnit = _unitService.getUnit( nIdSelectedUnit );
+        Unit unit = _unitService.getUnit( nIdUnit, false );
+        Unit selectedUnit = _unitService.getUnit( nIdSelectedUnit, false );
 
         if ( ( user != null ) && ( unit != null ) && ( selectedUnit != null ) )
         {
@@ -880,7 +919,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
 
         int nIdUnit = Integer.parseInt( strIdUnit );
         int nIdUser = Integer.parseInt( strIdUser );
-        Unit unit = _unitService.getUnit( nIdUnit );
+        Unit unit = _unitService.getUnit( nIdUnit, false );
         AdminUser user = _unitUserService.getUser( nIdUser );
 
         if ( ( unit != null ) && ( user != null ) )

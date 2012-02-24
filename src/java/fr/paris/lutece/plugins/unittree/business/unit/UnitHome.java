@@ -115,18 +115,18 @@ public final class UnitHome
      * Remove a unit
      * @param nIdUnit the id unit
      */
-    public static void removeUser( int nIdUser )
+    public static void removeUserFromUnit( int nIdUser )
     {
-        _dao.removeUser( nIdUser, _plugin );
+        _dao.removeUserFromUnit( nIdUser, _plugin );
     }
 
     /**
      * Remove a unit
      * @param nIdUnit the id unit
      */
-    public static void removeUsersByIdUnit( int nIdUnit )
+    public static void removeUsersFromUnit( int nIdUnit )
     {
-        _dao.removeUsersByIdUnit( nIdUnit, _plugin );
+        _dao.removeUsersFromUnit( nIdUnit, _plugin );
     }
 
     /**
