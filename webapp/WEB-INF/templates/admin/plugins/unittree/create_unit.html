@@ -1,4 +1,4 @@
-<div class="content-box" >
+﻿<div class="content-box" >
     <h2>#i18n{unittree.createUnit.pageTitle}</h2>
     <div class="content-box-content">
     	<form method="post" action="jsp/admin/plugins/unittree/DoCreateUnit.jsp">
@@ -22,8 +22,8 @@
 	    			<#list listSectors as sector>
 	    				<br />
 	    				<label for="idSector_${sector.idSector}">&nbsp;</label>
-	    				<input type="checkbox" name="idSector" id="idSector_${sector.idSector}" value="${sector.idSector}" />
-	    				${sector.name}
+	    				<input type="checkbox" name="idSector" id="idSector_${sector.idSector!}" value="${sector.idSector!}" />
+	    				${sector.name!} (${sector.numberSector!})
 	    			</#list>
     			</#if>
     		</p>

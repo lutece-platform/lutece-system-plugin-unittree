@@ -47,11 +47,11 @@ import java.util.List;
  */
 public class SectorDAO implements ISectorDAO
 {
-    private static final String SQL_QUERY_SELECT = " SELECT id_sector, name, number_sector FROM unittree_sector WHERE id_sector = ? ";
+    private static final String SQL_QUERY_SELECT = " SELECT id_sector, name, number_sector FROM unittree_sector WHERE id_sector = ? ORDER BY name ASC ";
     private static final String SQL_QUERY_SELECT_BY_ID_UNIT = " SELECT s.id_sector, s.name, s.number_sector " +
         " FROM unittree_sector s INNER JOIN unittree_unit_sector u ON s.id_sector = u.id_sector " +
-        " WHERE u.id_unit = ? ";
-    private static final String SQL_QUERY_SELECT_ALL = " SELECT id_sector, name, number_sector FROM unittree_sector ";
+        " WHERE u.id_unit = ? ORDER BY name ASC ";
+    private static final String SQL_QUERY_SELECT_ALL = " SELECT id_sector, name, number_sector FROM unittree_sector ORDER BY name ASC ";
     private static final String SQL_QUERY_ADD_SECTOR_TO_UNIT = " INSERT INTO unittree_unit_sector ( id_unit, id_sector ) VALUES ( ?, ? ) ";
     private static final String SQL_QUERY_HAS_SECTOR = " SELECT id_unit, id_sector FROM unittree_unit_sector WHERE id_unit = ? AND id_sector = ? ";
     private static final String SQL_QUERY_HAS_SECTORS = " SELECT id_unit, id_sector FROM unittree_unit_sector WHERE id_unit = ? ";
