@@ -68,4 +68,15 @@ public final class ActionHome
     {
         return _dao.selectActions( strActionType, _plugin );
     }
+
+    /**
+     * Load the list of actions
+     * @param strActionType the action type
+     * @param strPermission the permission
+     * @return The List of actions
+     */
+    public static List<IAction> selectFilterByPermission( String strActionType, String strPermission )
+    {
+        return _dao.selectFilterByPermission( strActionType, strPermission, _plugin );
+    }
 }

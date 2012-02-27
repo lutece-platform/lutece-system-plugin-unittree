@@ -60,6 +60,14 @@ public interface IUnitDAO
     Unit load( int nIdUnit, Plugin plugin );
 
     /**
+     * Load an unit by id user
+     * @param nIdUser the id user
+     * @param plugin the plugin
+     * @return an instance of {@link Unit}
+     */
+    Unit selectByIdUser( int nIdUser, Plugin plugin );
+
+    /**
      * Select all units
      * @param plugin the plugin
      * @return a list of {@link Unit}
@@ -96,6 +104,14 @@ public interface IUnitDAO
      * @return the new primary key
      */
     int insert( Unit unit, Plugin plugin );
+
+    /**
+     * Check if the given id unit has sub units or not
+     * @param nIdUnit the id unit
+     * @param plugin the plugin
+     * @return true if the unit has sub units, false otherwise
+     */
+    boolean hasSubUnits( int nIdUnit, Plugin plugin );
 
     /**
      * Remove a unit

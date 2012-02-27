@@ -76,6 +76,13 @@ public interface ISectorService
     List<Integer> getIdsSectorByIdUnit( int nIdUnit );
 
     /**
+     * Check if the unit has sectors
+     * @param nIdUnit the id unit
+     * @return true if the unit has sector, false otherwise
+     */
+    boolean hasSectors( int nIdUnit );
+
+    /**
      * Check if the unit has the sector
      * @param nIdUnit the id unit
      * @param nIdSector the id sector
@@ -86,9 +93,10 @@ public interface ISectorService
     /**
      * Add sectors to the unit
      * @param unit the unit
+     * @param listIdsSector the list of ids sector
      */
     @Transactional( "unittree.transactionManager" )
-    void addSectorsToUnit( Unit unit );
+    void addSectorsToUnit( Unit unit, List<Integer> listIdsSector );
 
     /**
      * Remove the sectors from an unit
@@ -96,4 +104,12 @@ public interface ISectorService
      */
     @Transactional( "unittree.transactionManager" )
     void removeSectorsFromUnit( int nIdUnit );
+
+    /**
+     * Remove the sectors from an unit
+     * @param nIdUnit the id unit
+     * @param nIdSector the id sector
+     */
+    @Transactional( "unittree.transactionManager" )
+    void removeSector( int nIdUnit, int nIdSector );
 }

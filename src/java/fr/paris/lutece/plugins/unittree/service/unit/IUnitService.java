@@ -33,7 +33,9 @@
  */
 package fr.paris.lutece.plugins.unittree.service.unit;
 
+import fr.paris.lutece.plugins.unittree.business.action.IAction;
 import fr.paris.lutece.plugins.unittree.business.unit.Unit;
+import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.util.ReferenceList;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -71,6 +73,14 @@ public interface IUnitService
     Unit getRootUnit( boolean bGetIdsSector );
 
     /**
+     * Get the unit by id user
+     * @param nIdUser the id user
+     * @param bGetSectors true if it must get the ids sector
+     * @return an instance of {@link Unit}
+     */
+    Unit getUnitByIdUser( int nIdUser, boolean bGetSectors );
+
+    /**
      * Get all units
      * @param bGetIdsSector true if it must get the ids sector
      * @return a list of {@link Unit}
@@ -91,6 +101,16 @@ public interface IUnitService
      * @return a list of {@link Unit}
      */
     List<Unit> getSubUnits( int nIdUnit, boolean bGetIdsSector );
+
+    /**
+     * Get the list of actions
+     * @param strActionType the action type
+     * @param locale the locale
+     * @param unit the unit
+     * @param user the user
+     * @return a list of {@link IAction}
+     */
+    List<IAction> getListActions( String strActionType, Locale locale, Unit unit, AdminUser user );
 
     /**
      * Get the sub units as a {@link ReferenceList}
@@ -121,6 +141,24 @@ public interface IUnitService
      */
     boolean hasSubUnits( int nIdUnit );
 
+    /**
+     * Check if the first unit in parameter is parent of the second
+     * unit in parameter
+     * @param unitParent the unit parent ?
+     * @param unitRef of the unit ?
+     * @return true if there is a parent link between those two units
+     */
+    boolean isParent( Unit unitParent, Unit unitRef );
+
+    /**
+     * Check if the given id unit, we can create sub unit.
+     * <br />
+     * Return false if the unit does not have sub units and has sectors
+     * @param nIdUnit the id unit
+     * @return true if we can create sub unit, false otherwise
+     */
+    boolean canCreateSubUnit( int nIdUnit );
+
     // CRUD OPERATIONS
 
     /**
@@ -139,7 +177,7 @@ public interface IUnitService
     void updateUnit( Unit unit );
 
     /**
-     * Remove the unit
+     * Remove the unit only if the unit does not have sub units
      * @param nIdUnit the id unit
      */
     @Transactional( "unittree.transactionManager" )

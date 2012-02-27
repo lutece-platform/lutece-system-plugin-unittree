@@ -17,8 +17,8 @@
    				<input type="text" size="100" maxlength="100" value="${unit.description!}" name="description" />
     		</p>
     		<p>
-    			<label for="idSector">#i18n{unittree.createUnit.labelSector} : </label>
-    			#i18n{unittree.createUnit.labelSectorComment}
+    			<label for="idSector">#i18n{unittree.modifyUnit.labelSector} : </label>
+    			<#if !hasSubUnits>#i18n{unittree.modifyUnit.labelSectorComment}</#if>
     			<#if listSectors?? && listSectors?has_content>
 	    			<#list listSectors as sector>
 	    				<br />
@@ -27,6 +27,9 @@
 	    					<#if unit.hasIdSector( sector.idSector )>
 	    						checked="checked"
 	    					</#if>
+	    					<#if hasSubUnits>
+	    						disabled="disabled"
+	    					</#if>
 	    				/>
 	    				${sector.name}
 	    			</#list>
@@ -34,7 +37,7 @@
     		</p>
     		<p>
     			<input type="hidden" name="idUnit" value="${unit.idUnit!}" />
-   				<input type="submit" name="create" class="button" value="#i18n{portal.util.labelModify}" />
+   				<input type="submit" name="modify" class="button" value="#i18n{portal.util.labelModify}" />
     			<input type="submit" name="cancel" class="button" value="#i18n{portal.util.labelCancel}" />
     		</p>
     	</form>

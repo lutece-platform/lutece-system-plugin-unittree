@@ -36,7 +36,6 @@ package fr.paris.lutece.plugins.unittree.web;
 import fr.paris.lutece.plugins.unittree.business.action.UnitAction;
 import fr.paris.lutece.plugins.unittree.business.action.UnitUserAction;
 import fr.paris.lutece.plugins.unittree.business.unit.Unit;
-import fr.paris.lutece.plugins.unittree.service.action.IActionService;
 import fr.paris.lutece.plugins.unittree.service.sector.ISectorService;
 import fr.paris.lutece.plugins.unittree.service.unit.IUnitService;
 import fr.paris.lutece.plugins.unittree.service.unit.IUnitUserService;
@@ -94,7 +93,6 @@ public class UnitJspBean extends PluginAdminPageJspBean
 
     // BEAN
     private static final String BEAN_UNIT_USER_SERVICE = "unittree.unitUserService";
-    private static final String BEAN_ACTION_SERVICE = "unittree.actionService";
     private static final String BEAN_SECTOR_SERVICE = "unittree.sectorService";
 
     // PROPERTIES
@@ -126,6 +124,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
     private static final String MARK_USER = "user";
     private static final String MARK_LIST_UNIT_USER_ATTRIBUTES = "listUnitUserAttributes";
     private static final String MARK_LIST_SECTORS = "listSectors";
+    private static final String MARK_HAS_SUB_UNITS = "hasSubUnits";
 
     // PARAMETERS
     private static final String PARAMETER_CANCEL = "cancel";
@@ -161,7 +160,6 @@ public class UnitJspBean extends PluginAdminPageJspBean
     // SERVICES
     private IUnitService _unitService = (IUnitService) SpringContextService.getBean( IUnitService.BEAN_UNIT_SERVICE );
     private IUnitUserService _unitUserService = (IUnitUserService) SpringContextService.getBean( BEAN_UNIT_USER_SERVICE );
-    private IActionService _actionService = (IActionService) SpringContextService.getBean( BEAN_ACTION_SERVICE );
     private ISectorService _sectorService = (ISectorService) SpringContextService.getBean( BEAN_SECTOR_SERVICE );
     private IUnitSearchFields _unitUserSearchFields = new UnitUserSearchFields(  );
 
@@ -233,9 +231,9 @@ public class UnitJspBean extends PluginAdminPageJspBean
 
         // Add actions in the model
         model.put( MARK_LIST_UNIT_ACTIONS,
-            _actionService.getListActions( UnitAction.ACTION_TYPE, getLocale(  ), unit, getUser(  ) ) );
+            _unitService.getListActions( UnitAction.ACTION_TYPE, getLocale(  ), unit, getUser(  ) ) );
         model.put( MARK_LIST_UNIT_USER_ACTIONS,
-            _actionService.getListActions( UnitUserAction.ACTION_TYPE, getLocale(  ), unit, getUser(  ) ) );
+            _unitService.getListActions( UnitUserAction.ACTION_TYPE, getLocale(  ), unit, getUser(  ) ) );
         PluginActionManager.fillModel( request, getUser(  ), model, IUnitPluginAction.class,
             MARK_LIST_UNIT_USER_PLUGIN_ACTIONS );
 
@@ -276,7 +274,8 @@ public class UnitJspBean extends PluginAdminPageJspBean
         }
 
         // Check permissions
-        if ( !RBACService.isAuthorized( unitParent, UnitResourceIdService.PERMISSION_CREATE, getUser(  ) ) )
+        if ( !RBACService.isAuthorized( unitParent, UnitResourceIdService.PERMISSION_CREATE, getUser(  ) ) ||
+                !_unitService.canCreateSubUnit( unitParent.getIdUnit(  ) ) )
         {
             String strErrorMessage = I18nService.getLocalizedString( MESSAGE_ACCESS_DENIED, getLocale(  ) );
             throw new AccessDeniedException( strErrorMessage );
@@ -323,11 +322,24 @@ public class UnitJspBean extends PluginAdminPageJspBean
         }
 
         Unit parentUnit = _unitService.getUnit( unit.getIdParent(  ), false );
+        boolean bHasSubUnits = _unitService.hasSubUnits( unit.getIdUnit(  ) );
 
         Map<String, Object> model = new HashMap<String, Object>(  );
         model.put( MARK_UNIT, unit );
         model.put( MARK_PARENT_UNIT, parentUnit );
-        model.put( MARK_LIST_SECTORS, _sectorService.findAll(  ) );
+
+        if ( !bHasSubUnits )
+        {
+            // If the unit does not have sub units, then display all sectors
+            model.put( MARK_LIST_SECTORS, _sectorService.findAll(  ) );
+        }
+        else
+        {
+            // Otherwise, only display the associated sectors
+            model.put( MARK_LIST_SECTORS, _sectorService.findByIdUnit( unit.getIdUnit(  ) ) );
+        }
+
+        model.put( MARK_HAS_SUB_UNITS, bHasSubUnits );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MODIFY_UNIT, getLocale(  ), model );
 
@@ -572,7 +584,8 @@ public class UnitJspBean extends PluginAdminPageJspBean
         String strCancel = request.getParameter( PARAMETER_CANCEL );
         String strIdParent = request.getParameter( PARAMETER_ID_PARENT );
 
-        if ( StringUtils.isNotBlank( strCancel ) )
+        if ( StringUtils.isNotBlank( strCancel ) || StringUtils.isBlank( strIdParent ) ||
+                !StringUtils.isNumeric( strIdParent ) )
         {
             UrlItem url = new UrlItem( JSP_MANAGE_UNITS );
             url.addParameter( PARAMETER_ID_UNIT, strIdParent );
@@ -580,9 +593,11 @@ public class UnitJspBean extends PluginAdminPageJspBean
             return url.getUrl(  );
         }
 
+        int nIdParent = Integer.parseInt( strIdParent );
+
         // Check permissions
         if ( !RBACService.isAuthorized( Unit.RESOURCE_TYPE, strIdParent, UnitResourceIdService.PERMISSION_CREATE,
-                    getUser(  ) ) )
+                    getUser(  ) ) || !_unitService.canCreateSubUnit( nIdParent ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP );
         }

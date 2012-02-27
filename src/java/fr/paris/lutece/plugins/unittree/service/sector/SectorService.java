@@ -100,12 +100,30 @@ public class SectorService implements ISectorService
      * {@inheritDoc}
      */
     @Override
-    @Transactional( "unittree.transactionManager" )
-    public void addSectorsToUnit( Unit unit )
+    public boolean hasSector( int nIdUnit, int nIdSector )
     {
-        if ( ( unit != null ) && ( unit.getListIdsSector(  ) != null ) && !unit.getListIdsSector(  ).isEmpty(  ) )
+        return SectorHome.hasSector( nIdUnit, nIdSector );
+    }
+
+    /**
+         * {@inheritDoc}
+         */
+    @Override
+    public boolean hasSectors( int nIdUnit )
+    {
+        return SectorHome.hasSectors( nIdUnit );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional( "unittree.transactionManager" )
+    public void addSectorsToUnit( Unit unit, List<Integer> listIdsSector )
+    {
+        if ( ( unit != null ) && ( listIdsSector != null ) && !listIdsSector.isEmpty(  ) )
         {
-            for ( int nIdSector : unit.getListIdsSector(  ) )
+            for ( int nIdSector : listIdsSector )
             {
                 SectorHome.addSectorToUnit( unit.getIdUnit(  ), nIdSector );
             }
@@ -116,18 +134,18 @@ public class SectorService implements ISectorService
      * {@inheritDoc}
      */
     @Override
-    public boolean hasSector( int nIdUnit, int nIdSector )
+    @Transactional( "unittree.transactionManager" )
+    public void removeSectorsFromUnit( int nIdUnit )
     {
-        return SectorHome.hasSector( nIdUnit, nIdSector );
+        SectorHome.removeSectorsFromUnit( nIdUnit );
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @Transactional( "unittree.transactionManager" )
-    public void removeSectorsFromUnit( int nIdUnit )
+    public void removeSector( int nIdUnit, int nIdSector )
     {
-        SectorHome.removeSectorsFromUnit( nIdUnit );
+        SectorHome.removeSector( nIdUnit, nIdSector );
     }
 }

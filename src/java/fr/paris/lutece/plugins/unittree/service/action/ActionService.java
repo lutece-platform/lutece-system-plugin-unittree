@@ -40,6 +40,9 @@ import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.service.rbac.RBACResource;
 import fr.paris.lutece.portal.service.rbac.RBACService;
 
+import org.apache.commons.lang.StringUtils;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -55,10 +58,59 @@ public class ActionService implements IActionService
      * {@inheritDoc}
      */
     @Override
+    public List<IAction> getListActions( String strActionType, Locale locale, AdminUser user )
+    {
+        return getListActions( strActionType, locale, null, user, StringUtils.EMPTY );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<IAction> getListActions( String strActionType, Locale locale, AdminUser user, String strPermission )
+    {
+        return getListActions( strActionType, locale, null, user, strPermission );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public List<IAction> getListActions( String strActionType, Locale locale, RBACResource resource, AdminUser user )
     {
-        List<IAction> listActions = I18nService.localizeCollection( ActionHome.getActionsList( strActionType ), locale );
+        return getListActions( strActionType, locale, resource, user, StringUtils.EMPTY );
+    }
 
-        return (List<IAction>) RBACService.getAuthorizedActionsCollection( listActions, resource, user );
+    /**
+         * {@inheritDoc}
+         */
+    @Override
+    public List<IAction> getListActions( String strActionType, Locale locale, RBACResource resource, AdminUser user,
+        String strPermission )
+    {
+        List<IAction> listActions = null;
+
+        if ( StringUtils.isNotBlank( strPermission ) )
+        {
+            listActions = ActionHome.selectFilterByPermission( strActionType, strPermission );
+        }
+        else
+        {
+            listActions = ActionHome.getActionsList( strActionType );
+        }
+
+        listActions = I18nService.localizeCollection( listActions, locale );
+
+        if ( user.isAdmin(  ) )
+        {
+            return listActions;
+        }
+
+        if ( resource != null )
+        {
+            return (List<IAction>) RBACService.getAuthorizedActionsCollection( listActions, resource, user );
+        }
+
+        return new ArrayList<IAction>(  );
     }
 }

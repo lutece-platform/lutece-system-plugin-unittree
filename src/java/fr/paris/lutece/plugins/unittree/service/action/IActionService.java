@@ -49,7 +49,26 @@ import java.util.Locale;
 public interface IActionService
 {
     /**
-     * Get the list of actions
+    * Get the list of actions by filter by permission
+    * @param strActionType the action type
+    * @param locale the locale
+    * @param user the current user
+    * @return a list of {@link IAction}
+    */
+    List<IAction> getListActions( String strActionType, Locale locale, AdminUser user );
+
+    /**
+     * Get the list of actions by filter by permission
+     * @param strActionType the action type
+     * @param locale the locale
+     * @param user the current user
+     * @param strPermission the permission
+     * @return a list of {@link IAction}
+     */
+    List<IAction> getListActions( String strActionType, Locale locale, AdminUser user, String strPermission );
+
+    /**
+     * Get the list of actions by filter by permission
      * @param strActionType the action type
      * @param locale the locale
      * @param resource the resource
@@ -57,4 +76,16 @@ public interface IActionService
      * @return a list of {@link IAction}
      */
     List<IAction> getListActions( String strActionType, Locale locale, RBACResource resource, AdminUser user );
+
+    /**
+     * Get the list of actions by filter by permission
+     * @param strActionType the action type
+     * @param locale the locale
+     * @param resource the resource
+     * @param user the current user
+     * @param strPermission the permission
+     * @return a list of {@link IAction}
+     */
+    List<IAction> getListActions( String strActionType, Locale locale, RBACResource resource, AdminUser user,
+        String strPermission );
 }

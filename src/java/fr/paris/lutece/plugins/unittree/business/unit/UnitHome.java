@@ -70,6 +70,16 @@ public final class UnitHome
     }
 
     /**
+     * Load an unit by id user
+     * @param nIdUser the id user
+     * @return an instance of {@link Unit}
+     */
+    public static Unit findByIdUser( int nIdUser )
+    {
+        return _dao.selectByIdUser( nIdUser, _plugin );
+    }
+
+    /**
      * Find the units by filter
      * @param uFilter the filter
      * @return a list of {@link Unit}
@@ -124,6 +134,16 @@ public final class UnitHome
     public static void remove( int nIdUnit )
     {
         _dao.remove( nIdUnit, _plugin );
+    }
+
+    /**
+     * Check if the given id unit has sub units
+     * @param nIdUnit the id unit
+     * @return true if it has sub units, false otherwise
+     */
+    public static boolean hasSubUnits( int nIdUnit )
+    {
+        return _dao.hasSubUnits( nIdUnit, _plugin );
     }
 
     /**

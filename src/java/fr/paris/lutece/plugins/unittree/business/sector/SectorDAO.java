@@ -53,8 +53,10 @@ public class SectorDAO implements ISectorDAO
         " WHERE u.id_unit = ? ";
     private static final String SQL_QUERY_SELECT_ALL = " SELECT id_sector, name, number_sector FROM unittree_sector ";
     private static final String SQL_QUERY_ADD_SECTOR_TO_UNIT = " INSERT INTO unittree_unit_sector ( id_unit, id_sector ) VALUES ( ?, ? ) ";
-    private static final String SQL_QUERY_HAS_SECTOR = " SELECT id_unit, id_sector FROM unittree_unit_sector FROM unittree_unit_sector WHERE id_unit = ? AND id_sector = ? ";
+    private static final String SQL_QUERY_HAS_SECTOR = " SELECT id_unit, id_sector FROM unittree_unit_sector WHERE id_unit = ? AND id_sector = ? ";
+    private static final String SQL_QUERY_HAS_SECTORS = " SELECT id_unit, id_sector FROM unittree_unit_sector WHERE id_unit = ? ";
     private static final String SQL_QUERY_REMOVE_SECTORS_FROM_UNIT = " DELETE FROM unittree_unit_sector WHERE id_unit = ? ";
+    private static final String SQL_QUERY_REMOVE = " DELETE FROM unittree_unit_sector WHERE id_unit = ? AND id_sector = ? ";
 
     /**
      * {@inheritDoc}
@@ -75,7 +77,7 @@ public class SectorDAO implements ISectorDAO
             sector = new Sector(  );
             sector.setIdSector( daoUtil.getInt( nIndex++ ) );
             sector.setName( daoUtil.getString( nIndex++ ) );
-            sector.setNumberSector( daoUtil.getString( nIndex++ ) );
+            sector.setNumberSector( daoUtil.getString( nIndex ) );
         }
 
         daoUtil.free(  );
@@ -101,7 +103,7 @@ public class SectorDAO implements ISectorDAO
             Sector sector = new Sector(  );
             sector.setIdSector( daoUtil.getInt( nIndex++ ) );
             sector.setName( daoUtil.getString( nIndex++ ) );
-            sector.setNumberSector( daoUtil.getString( nIndex++ ) );
+            sector.setNumberSector( daoUtil.getString( nIndex ) );
 
             listSectors.add( sector );
         }
@@ -129,7 +131,7 @@ public class SectorDAO implements ISectorDAO
             Sector sector = new Sector(  );
             sector.setIdSector( daoUtil.getInt( nIndex++ ) );
             sector.setName( daoUtil.getString( nIndex++ ) );
-            sector.setNumberSector( daoUtil.getString( nIndex++ ) );
+            sector.setNumberSector( daoUtil.getString( nIndex ) );
             listSectors.add( sector );
         }
 
@@ -148,7 +150,7 @@ public class SectorDAO implements ISectorDAO
 
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_ADD_SECTOR_TO_UNIT, plugin );
         daoUtil.setInt( nIndex++, nIdUnit );
-        daoUtil.setInt( nIndex++, nIdSector );
+        daoUtil.setInt( nIndex, nIdSector );
 
         daoUtil.executeUpdate(  );
         daoUtil.free(  );
@@ -164,7 +166,29 @@ public class SectorDAO implements ISectorDAO
         int nIndex = 1;
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_HAS_SECTOR, plugin );
         daoUtil.setInt( nIndex++, nIdUnit );
-        daoUtil.setInt( nIndex++, nIdSector );
+        daoUtil.setInt( nIndex, nIdSector );
+        daoUtil.executeQuery(  );
+
+        if ( daoUtil.next(  ) )
+        {
+            bHasSector = true;
+        }
+
+        daoUtil.free(  );
+
+        return bHasSector;
+    }
+
+    /**
+         * {@inheritDoc}
+         */
+    @Override
+    public boolean hasSectors( int nIdUnit, Plugin plugin )
+    {
+        boolean bHasSector = false;
+        int nIndex = 1;
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_HAS_SECTORS, plugin );
+        daoUtil.setInt( nIndex, nIdUnit );
         daoUtil.executeQuery(  );
 
         if ( daoUtil.next(  ) )
@@ -185,6 +209,20 @@ public class SectorDAO implements ISectorDAO
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_REMOVE_SECTORS_FROM_UNIT, plugin );
         daoUtil.setInt( 1, nIdUnit );
+        daoUtil.executeUpdate(  );
+        daoUtil.free(  );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void removeSector( int nIdUnit, int nIdSector, Plugin plugin )
+    {
+        int nIndex = 1;
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_REMOVE, plugin );
+        daoUtil.setInt( nIndex++, nIdUnit );
+        daoUtil.setInt( nIndex, nIdSector );
         daoUtil.executeUpdate(  );
         daoUtil.free(  );
     }

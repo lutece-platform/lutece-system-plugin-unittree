@@ -59,8 +59,11 @@ public class UnitDAO implements IUnitDAO
     private static final String SQL_QUERY_INSERT = " INSERT INTO unittree_unit ( id_unit, id_parent, label, description ) VALUES ( ?, ?, ?, ? ) ";
     private static final String SQL_QUERY_SELECT = " SELECT id_unit, id_parent, label, description FROM unittree_unit WHERE id_unit = ? ";
     private static final String SQL_QUERY_SELECT_ALL = " SELECT id_unit, id_parent, label, description FROM unittree_unit ";
+    private static final String SQL_QUERY_SELECT_BY_ID_USER = " SELECT u.id_unit, u.id_parent, u.label, u.description " +
+        " FROM unittree_unit u INNER JOIN unittree_unit_user uu ON u.id_unit = uu.id_unit" + " WHERE uu.id_user = ? ";
     private static final String SQL_QUERY_DELETE = " DELETE FROM unittree_unit WHERE id_unit = ? ";
     private static final String SQL_QUERY_UPDATE = " UPDATE unittree_unit SET label = ?, description = ? WHERE id_unit = ? ";
+    private static final String SQL_QUERY_HAS_SUB_UNIT = " SELECT id_unit FROM unittree_unit WHERE id_parent = ? ";
 
     // Table unittree_unit_user
     private static final String SQL_QUERY_ADD_USER_TO_UNIT = " INSERT INTO unittree_unit_user ( id_unit, id_user ) VALUES ( ?, ? ) ";
@@ -105,7 +108,7 @@ public class UnitDAO implements IUnitDAO
         daoUtil.setInt( nIndex++, unit.getIdUnit(  ) );
         daoUtil.setInt( nIndex++, unit.getIdParent(  ) );
         daoUtil.setString( nIndex++, unit.getLabel(  ) );
-        daoUtil.setString( nIndex++, unit.getDescription(  ) );
+        daoUtil.setString( nIndex, unit.getDescription(  ) );
 
         daoUtil.executeUpdate(  );
         daoUtil.free(  );
@@ -122,7 +125,7 @@ public class UnitDAO implements IUnitDAO
         Unit unit = null;
         int nIndex = 1;
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin );
-        daoUtil.setInt( nIndex++, nIdUnit );
+        daoUtil.setInt( nIndex, nIdUnit );
         daoUtil.executeQuery(  );
 
         if ( daoUtil.next(  ) )
@@ -133,7 +136,35 @@ public class UnitDAO implements IUnitDAO
             unit.setIdUnit( daoUtil.getInt( nIndex++ ) );
             unit.setIdParent( daoUtil.getInt( nIndex++ ) );
             unit.setLabel( daoUtil.getString( nIndex++ ) );
-            unit.setDescription( daoUtil.getString( nIndex++ ) );
+            unit.setDescription( daoUtil.getString( nIndex ) );
+        }
+
+        daoUtil.free(  );
+
+        return unit;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Unit selectByIdUser( int nIdUser, Plugin plugin )
+    {
+        Unit unit = null;
+        int nIndex = 1;
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_ID_USER, plugin );
+        daoUtil.setInt( nIndex, nIdUser );
+        daoUtil.executeQuery(  );
+
+        if ( daoUtil.next(  ) )
+        {
+            nIndex = 1;
+
+            unit = new Unit(  );
+            unit.setIdUnit( daoUtil.getInt( nIndex++ ) );
+            unit.setIdParent( daoUtil.getInt( nIndex++ ) );
+            unit.setLabel( daoUtil.getString( nIndex++ ) );
+            unit.setDescription( daoUtil.getString( nIndex ) );
         }
 
         daoUtil.free(  );
@@ -159,7 +190,7 @@ public class UnitDAO implements IUnitDAO
             unit.setIdUnit( daoUtil.getInt( nIndex++ ) );
             unit.setIdParent( daoUtil.getInt( nIndex++ ) );
             unit.setLabel( daoUtil.getString( nIndex++ ) );
-            unit.setDescription( daoUtil.getString( nIndex++ ) );
+            unit.setDescription( daoUtil.getString( nIndex ) );
 
             listUnits.add( unit );
         }
@@ -179,6 +210,27 @@ public class UnitDAO implements IUnitDAO
         daoUtil.setInt( 1, nIdUnit );
         daoUtil.executeUpdate(  );
         daoUtil.free(  );
+    }
+
+    /**
+         * {@inheritDoc}
+         */
+    @Override
+    public boolean hasSubUnits( int nIdUnit, Plugin plugin )
+    {
+        boolean bHasSubUnits = false;
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_HAS_SUB_UNIT, plugin );
+        daoUtil.setInt( 1, nIdUnit );
+        daoUtil.executeQuery(  );
+
+        if ( daoUtil.next(  ) )
+        {
+            bHasSubUnits = true;
+        }
+
+        daoUtil.free(  );
+
+        return bHasSubUnits;
     }
 
     /**
@@ -216,7 +268,7 @@ public class UnitDAO implements IUnitDAO
         daoUtil.setString( nIndex++, unit.getLabel(  ) );
         daoUtil.setString( nIndex++, unit.getDescription(  ) );
 
-        daoUtil.setInt( nIndex++, unit.getIdUnit(  ) );
+        daoUtil.setInt( nIndex, unit.getIdUnit(  ) );
 
         daoUtil.executeUpdate(  );
         daoUtil.free(  );
@@ -241,7 +293,7 @@ public class UnitDAO implements IUnitDAO
             unit.setIdUnit( daoUtil.getInt( nIndex++ ) );
             unit.setIdParent( daoUtil.getInt( nIndex++ ) );
             unit.setLabel( daoUtil.getString( nIndex++ ) );
-            unit.setDescription( daoUtil.getString( nIndex++ ) );
+            unit.setDescription( daoUtil.getString( nIndex ) );
 
             listUnits.add( unit );
         }
@@ -302,7 +354,7 @@ public class UnitDAO implements IUnitDAO
 
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_ADD_USER_TO_UNIT, plugin );
         daoUtil.setInt( nIndex++, nIdUnit );
-        daoUtil.setInt( nIndex++, nIdUser );
+        daoUtil.setInt( nIndex, nIdUser );
 
         daoUtil.executeUpdate(  );
         daoUtil.free(  );
@@ -409,7 +461,7 @@ public class UnitDAO implements IUnitDAO
 
         if ( uFilter.containsDescription(  ) )
         {
-            daoUtil.setString( nIndex++, uFilter.getDescription(  ) );
+            daoUtil.setString( nIndex, uFilter.getDescription(  ) );
         }
     }
 }

@@ -110,11 +110,31 @@ public final class SectorHome
     }
 
     /**
+     * Check if the unit has a sectors
+     * @param nIdUnit the id unit
+     * @return true if the unit has sectors, false otherwise
+     */
+    public static boolean hasSectors( int nIdUnit )
+    {
+        return _dao.hasSectors( nIdUnit, _plugin );
+    }
+
+    /**
      * Remove the sectors from an unit
      * @param nIdUnit the id unit
      */
     public static void removeSectorsFromUnit( int nIdUnit )
     {
         _dao.removeSectorsFromUnit( nIdUnit, _plugin );
+    }
+
+    /**
+     * Remove the sectors from an unit
+     * @param nIdUnit the id unit
+     * @param nIdSector the id sector
+     */
+    public static void removeSector( int nIdUnit, int nIdSector )
+    {
+        _dao.removeSector( nIdUnit, nIdSector, _plugin );
     }
 }

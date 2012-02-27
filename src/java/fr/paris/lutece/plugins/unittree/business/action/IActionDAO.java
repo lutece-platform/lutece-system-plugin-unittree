@@ -52,4 +52,13 @@ public interface IActionDAO
      * @return The List of actions
      */
     List<IAction> selectActions( String strActionType, Plugin plugin );
+
+    /**
+     * Load the list of actions
+     * @param strActionType the action type
+     * @param strPermission the permission
+     * @param plugin the plugin
+     * @return The List of actions
+     */
+    List<IAction> selectFilterByPermission( String strActionType, String strPermission, Plugin plugin );
 }

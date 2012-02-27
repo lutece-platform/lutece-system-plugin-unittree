@@ -51,6 +51,8 @@ public class ActionDAO implements IActionDAO
 {
     private static final String SQL_QUERY_SELECT_ACTIONS = "SELECT id_action, name_key, description_key, action_url, icon_url, action_permission, action_type " +
         " FROM unittree_action WHERE action_type = ? ";
+    private static final String SQL_QUERY_SELECT_FILTER_BY_PERMISSION = "SELECT id_action, name_key, description_key, action_url, icon_url, action_permission, action_type " +
+        " FROM unittree_action WHERE action_type = ? AND action_permission != ? ";
     @Inject
     private ActionFactory _actionFactory;
 
@@ -75,7 +77,41 @@ public class ActionDAO implements IActionDAO
             action.setUrl( daoUtil.getString( nIndex++ ) );
             action.setIconUrl( daoUtil.getString( nIndex++ ) );
             action.setPermission( daoUtil.getString( nIndex++ ) );
-            action.setActionType( daoUtil.getString( nIndex++ ) );
+            action.setActionType( daoUtil.getString( nIndex ) );
+
+            listActions.add( action );
+        }
+
+        daoUtil.free(  );
+
+        return listActions;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<IAction> selectFilterByPermission( String strActionType, String strPermission, Plugin plugin )
+    {
+        int nIndex = 1;
+        List<IAction> listActions = new ArrayList<IAction>(  );
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_FILTER_BY_PERMISSION, plugin );
+        daoUtil.setString( nIndex++, strActionType );
+        daoUtil.setString( nIndex, strPermission );
+        daoUtil.executeQuery(  );
+
+        while ( daoUtil.next(  ) )
+        {
+            nIndex = 1;
+
+            IAction action = _actionFactory.newAction( strActionType );
+            action.setIdAction( daoUtil.getInt( nIndex++ ) );
+            action.setNameKey( daoUtil.getString( nIndex++ ) );
+            action.setDescriptionKey( daoUtil.getString( nIndex++ ) );
+            action.setUrl( daoUtil.getString( nIndex++ ) );
+            action.setIconUrl( daoUtil.getString( nIndex++ ) );
+            action.setPermission( daoUtil.getString( nIndex++ ) );
+            action.setActionType( daoUtil.getString( nIndex ) );
 
             listActions.add( action );
         }

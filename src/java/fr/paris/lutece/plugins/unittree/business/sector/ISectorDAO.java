@@ -86,9 +86,25 @@ public interface ISectorDAO
     boolean hasSector( int nIdUnit, int nIdSector, Plugin plugin );
 
     /**
+     * Check if the given id unit has the given sector
+     * @param nIdUnit the id unit
+     * @param plugin the plugin
+     * @return true if the unit has the sector, false otherwise
+     */
+    boolean hasSectors( int nIdUnit, Plugin plugin );
+
+    /**
      * Remove sectors from a given id unit
      * @param nIdUnit the id unit
      * @param plugin the plugin
      */
     void removeSectorsFromUnit( int nIdUnit, Plugin plugin );
+
+    /**
+     * Remove sectors from a given id unit
+     * @param nIdUnit the id unit
+     * @param nIdSector the id sector
+     * @param plugin the plugin
+     */
+    void removeSector( int nIdUnit, int nIdSector, Plugin plugin );
 }
