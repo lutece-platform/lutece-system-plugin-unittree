@@ -33,11 +33,10 @@
  */
 package fr.paris.lutece.plugins.unittree.web.action;
 
-import fr.paris.lutece.plugins.unittree.business.unit.Unit;
+import fr.paris.lutece.plugins.unittree.service.unit.IUnitService;
 import fr.paris.lutece.plugins.unittree.service.unit.UnitResourceIdService;
 import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.portal.service.admin.AccessDeniedException;
-import fr.paris.lutece.portal.service.rbac.RBACService;
 import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.web.pluginaction.AbstractPluginAction;
 import fr.paris.lutece.portal.web.pluginaction.DefaultPluginActionResult;
@@ -47,6 +46,8 @@ import fr.paris.lutece.util.url.UrlItem;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.Map;
+
+import javax.inject.Inject;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -73,6 +74,8 @@ public class AddUnitUsersPluginAction extends AbstractPluginAction<IUnitSearchFi
 
     // JSP
     private static final String JSP_URL_ADD_USERS = "jsp/admin/plugins/unittree/AddUsers.jsp";
+    @Inject
+    private IUnitService _unitService;
 
     /**
      * {@inheritDoc}
@@ -82,8 +85,7 @@ public class AddUnitUsersPluginAction extends AbstractPluginAction<IUnitSearchFi
     {
         String strIdUnit = request.getParameter( PARAMETER_ID_UNIT );
         model.put( MARK_PERMISSION_ADD_USERS,
-            RBACService.isAuthorized( Unit.RESOURCE_TYPE, strIdUnit, UnitResourceIdService.PERMISSION_ADD_USER,
-                adminUser ) );
+            _unitService.isAuthorized( strIdUnit, UnitResourceIdService.PERMISSION_ADD_USER, adminUser ) );
     }
 
     /**

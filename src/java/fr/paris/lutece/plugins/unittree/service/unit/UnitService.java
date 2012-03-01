@@ -41,9 +41,12 @@ import fr.paris.lutece.plugins.unittree.service.action.IActionService;
 import fr.paris.lutece.plugins.unittree.service.sector.ISectorService;
 import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.portal.service.i18n.I18nService;
+import fr.paris.lutece.portal.service.rbac.RBACService;
 import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.util.ReferenceList;
 import fr.paris.lutece.util.xml.XmlUtil;
+
+import org.apache.commons.lang.StringUtils;
 
 import org.springframework.transaction.annotation.Transactional;
 
@@ -361,6 +364,64 @@ public class UnitService implements IUnitService
     public boolean canCreateSubUnit( int nIdUnit )
     {
         return hasSubUnits( nIdUnit ) || !_sectorService.hasSectors( nIdUnit );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isAuthorized( Unit unit, String strPermission, AdminUser user )
+    {
+        // 1) The given user is admin
+        if ( user.isAdmin(  ) )
+        {
+            return true;
+        }
+
+        // 2) unitUser == null : The given user does not belong to any unit
+        Unit unitUser = getUnitByIdUser( user.getUserId(  ), false );
+
+        if ( ( unitUser != null ) && ( unit != null ) )
+        {
+            Unit targetUnit = null;
+
+            // 3) The given user belongs to the given unit
+            if ( unitUser.getIdUnit(  ) == unit.getIdUnit(  ) )
+            {
+                targetUnit = unit;
+            }
+
+            // 4) The given user belongs to a parent unit of the given unit
+            else if ( isParent( unitUser, unit ) )
+            {
+                targetUnit = unitUser;
+            }
+
+            // 5) targetUnit == null : The given user belongs to an unit who is not a parent unit of the given unit
+            if ( targetUnit != null )
+            {
+                return RBACService.isAuthorized( targetUnit, strPermission, user );
+            }
+        }
+
+        return false;
+    }
+
+    /**
+         * {@inheritDoc}
+         */
+    @Override
+    public boolean isAuthorized( String strIdUnit, String strPermission, AdminUser user )
+    {
+        if ( StringUtils.isNotBlank( strIdUnit ) && StringUtils.isNumeric( strIdUnit ) )
+        {
+            int nIdUnit = Integer.parseInt( strIdUnit );
+            Unit unit = getUnit( nIdUnit, false );
+
+            return isAuthorized( unit, strPermission, user );
+        }
+
+        return false;
     }
 
     // CRUD OPERATIONS

@@ -50,7 +50,6 @@ import fr.paris.lutece.portal.service.html.XmlTransformerService;
 import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.service.message.AdminMessage;
 import fr.paris.lutece.portal.service.message.AdminMessageService;
-import fr.paris.lutece.portal.service.rbac.RBACService;
 import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
 import fr.paris.lutece.portal.service.util.AppException;
@@ -274,7 +273,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
         }
 
         // Check permissions
-        if ( !RBACService.isAuthorized( unitParent, UnitResourceIdService.PERMISSION_CREATE, getUser(  ) ) ||
+        if ( !_unitService.isAuthorized( unitParent, UnitResourceIdService.PERMISSION_CREATE, getUser(  ) ) ||
                 !_unitService.canCreateSubUnit( unitParent.getIdUnit(  ) ) )
         {
             String strErrorMessage = I18nService.getLocalizedString( MESSAGE_ACCESS_DENIED, getLocale(  ) );
@@ -315,7 +314,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
         }
 
         // Check permissions
-        if ( !RBACService.isAuthorized( unit, UnitResourceIdService.PERMISSION_MODIFY, getUser(  ) ) )
+        if ( !_unitService.isAuthorized( unit, UnitResourceIdService.PERMISSION_MODIFY, getUser(  ) ) )
         {
             String strErrorMessage = I18nService.getLocalizedString( MESSAGE_ACCESS_DENIED, getLocale(  ) );
             throw new AccessDeniedException( strErrorMessage );
@@ -361,8 +360,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
         }
 
         // Check permissions
-        if ( !RBACService.isAuthorized( Unit.RESOURCE_TYPE, strIdUnit, UnitResourceIdService.PERMISSION_DELETE,
-                    getUser(  ) ) )
+        if ( !_unitService.isAuthorized( strIdUnit, UnitResourceIdService.PERMISSION_DELETE, getUser(  ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP );
         }
@@ -401,7 +399,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
         }
 
         // Check permissions
-        if ( !RBACService.isAuthorized( unit, UnitResourceIdService.PERMISSION_ADD_USER, getUser(  ) ) )
+        if ( !_unitService.isAuthorized( unit, UnitResourceIdService.PERMISSION_ADD_USER, getUser(  ) ) )
         {
             String strErrorMessage = I18nService.getLocalizedString( MESSAGE_ACCESS_DENIED, getLocale(  ) );
             throw new AccessDeniedException( strErrorMessage );
@@ -459,7 +457,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
         }
 
         // Check permissions
-        if ( !RBACService.isAuthorized( unit, UnitResourceIdService.PERMISSION_MODIFY_USER, getUser(  ) ) )
+        if ( !_unitService.isAuthorized( unit, UnitResourceIdService.PERMISSION_MODIFY_USER, getUser(  ) ) )
         {
             String strErrorMessage = I18nService.getLocalizedString( MESSAGE_ACCESS_DENIED, getLocale(  ) );
             throw new AccessDeniedException( strErrorMessage );
@@ -508,7 +506,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
         }
 
         // Check permissions
-        if ( !RBACService.isAuthorized( unit, UnitResourceIdService.PERMISSION_MOVE_USER, getUser(  ) ) )
+        if ( !_unitService.isAuthorized( unit, UnitResourceIdService.PERMISSION_MOVE_USER, getUser(  ) ) )
         {
             String strErrorMessage = I18nService.getLocalizedString( MESSAGE_ACCESS_DENIED, getLocale(  ) );
             throw new AccessDeniedException( strErrorMessage );
@@ -558,8 +556,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
         }
 
         // Check permissions
-        if ( !RBACService.isAuthorized( Unit.RESOURCE_TYPE, strIdUnit, UnitResourceIdService.PERMISSION_REMOVE_USER,
-                    getUser(  ) ) )
+        if ( !_unitService.isAuthorized( strIdUnit, UnitResourceIdService.PERMISSION_REMOVE_USER, getUser(  ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP );
         }
@@ -596,8 +593,8 @@ public class UnitJspBean extends PluginAdminPageJspBean
         int nIdParent = Integer.parseInt( strIdParent );
 
         // Check permissions
-        if ( !RBACService.isAuthorized( Unit.RESOURCE_TYPE, strIdParent, UnitResourceIdService.PERMISSION_CREATE,
-                    getUser(  ) ) || !_unitService.canCreateSubUnit( nIdParent ) )
+        if ( !_unitService.isAuthorized( strIdParent, UnitResourceIdService.PERMISSION_CREATE, getUser(  ) ) ||
+                !_unitService.canCreateSubUnit( nIdParent ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP );
         }
@@ -683,7 +680,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
         }
 
         // Check permissions
-        if ( !RBACService.isAuthorized( unit, UnitResourceIdService.PERMISSION_MODIFY, getUser(  ) ) )
+        if ( !_unitService.isAuthorized( unit, UnitResourceIdService.PERMISSION_MODIFY, getUser(  ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP );
         }
@@ -747,8 +744,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
         }
 
         // Check permissions
-        if ( !RBACService.isAuthorized( Unit.RESOURCE_TYPE, strIdUnit, UnitResourceIdService.PERMISSION_DELETE,
-                    getUser(  ) ) )
+        if ( !_unitService.isAuthorized( strIdUnit, UnitResourceIdService.PERMISSION_DELETE, getUser(  ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP );
         }
@@ -805,8 +801,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
             return url.getUrl(  );
         }
 
-        if ( !RBACService.isAuthorized( Unit.RESOURCE_TYPE, strIdUnit, UnitResourceIdService.PERMISSION_ADD_USER,
-                    getUser(  ) ) )
+        if ( !_unitService.isAuthorized( strIdUnit, UnitResourceIdService.PERMISSION_ADD_USER, getUser(  ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP );
         }
@@ -863,8 +858,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
         }
 
         // Check permissions
-        if ( !RBACService.isAuthorized( Unit.RESOURCE_TYPE, strIdUnit, UnitResourceIdService.PERMISSION_MODIFY_USER,
-                    getUser(  ) ) )
+        if ( !_unitService.isAuthorized( strIdUnit, UnitResourceIdService.PERMISSION_MODIFY_USER, getUser(  ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP );
         }
@@ -916,8 +910,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
         }
 
         // Check permissions
-        if ( !RBACService.isAuthorized( Unit.RESOURCE_TYPE, strIdUnit, UnitResourceIdService.PERMISSION_MOVE_USER,
-                    getUser(  ) ) )
+        if ( !_unitService.isAuthorized( strIdUnit, UnitResourceIdService.PERMISSION_MOVE_USER, getUser(  ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP );
         }
@@ -994,8 +987,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
         }
 
         // Check permissions
-        if ( !RBACService.isAuthorized( Unit.RESOURCE_TYPE, strIdUnit, UnitResourceIdService.PERMISSION_REMOVE_USER,
-                    getUser(  ) ) )
+        if ( !_unitService.isAuthorized( strIdUnit, UnitResourceIdService.PERMISSION_REMOVE_USER, getUser(  ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP );
         }

@@ -159,6 +159,54 @@ public interface IUnitService
      */
     boolean canCreateSubUnit( int nIdUnit );
 
+    /**
+     * Check if the given user is authorized to do the action
+     * for a given unit.
+     * <br />
+     * This method calls the service RBACService to check the permission.
+     * However, the resource on which the permission must be checked is not
+     * necessarily the given unit. It may be a parent unit of the given unit.
+     * <br />
+     * There are 5 cases to handle :
+     * <ul>
+     * <li>
+     *                 1) The given user is admin
+     *                 => The user is always authorized
+     * </li>
+     * <li>
+     *                 2) The given user does not belong to any unit
+     *                 => The user is not authorized
+     * </li>
+     * <li>
+     *                 3) The given user belongs to the given unit
+     *                 => Check with RBACService with the given unit
+     * </li>
+     * <li>
+     *                 4) The given user belongs to a parent unit of the given unit
+     *                 => Check with RBACService with the parent unit
+     * </li>
+     * <li>
+     *                 5) The given user belongs to an unit who is not a parent unit of the given unit
+     *                 => The user is not authorized
+     * </li>
+     * </ul>
+     * @param unit the unit
+     * @param strPermission the permission
+     * @param user the user
+     * @return true if he is authorized, false otherwise
+     */
+    boolean isAuthorized( Unit unit, String strPermission, AdminUser user );
+
+    /**
+     * See {@link #isAuthorized(Unit, String, AdminUser)}
+     * @param strResourceType the resource type
+     * @param strIdResource the id resource
+     * @param strPermission the permission
+     * @param user the user
+     * @return true if he is authorized, false otherwise
+     */
+    boolean isAuthorized( String strIdResource, String strPermission, AdminUser user );
+
     // CRUD OPERATIONS
 
     /**
