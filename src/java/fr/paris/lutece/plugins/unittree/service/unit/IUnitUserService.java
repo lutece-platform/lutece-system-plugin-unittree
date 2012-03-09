@@ -35,11 +35,11 @@ package fr.paris.lutece.plugins.unittree.service.unit;
 
 import fr.paris.lutece.portal.business.user.AdminUser;
 
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.transaction.annotation.Transactional;
 
 
 /**

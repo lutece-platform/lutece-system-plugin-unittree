@@ -98,4 +98,13 @@ public class Sector
     {
         _strNumberSector = strNumberSector;
     }
+    
+    /**
+     * To string representation
+     * @return formatted string
+     */
+    public String getFormatNameNumber(  )
+    {
+    	return _strName + " - " + _strNumberSector;
+    }
 }

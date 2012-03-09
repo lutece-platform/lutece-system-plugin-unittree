@@ -156,4 +156,12 @@ public interface IUnitDAO
      * @param plugin the plugin
      */
     void removeUsersFromUnit( int nIdUnit, Plugin plugin );
+
+    /**
+     * Return all the Unit of the Sector
+     * @param lIdSector id sector
+     * @return all the Unit of the Sector
+     */
+    public List<Unit> findBySectorId( long lIdSector );
+
 }

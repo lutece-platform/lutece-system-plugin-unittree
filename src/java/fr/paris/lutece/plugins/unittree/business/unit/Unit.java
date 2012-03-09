@@ -35,13 +35,12 @@ package fr.paris.lutece.plugins.unittree.business.unit;
 
 import fr.paris.lutece.portal.service.rbac.RBACResource;
 
-import org.hibernate.validator.constraints.NotBlank;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  *

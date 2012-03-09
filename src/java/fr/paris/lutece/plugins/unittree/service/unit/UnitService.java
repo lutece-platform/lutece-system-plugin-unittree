@@ -34,6 +34,7 @@
 package fr.paris.lutece.plugins.unittree.service.unit;
 
 import fr.paris.lutece.plugins.unittree.business.action.IAction;
+import fr.paris.lutece.plugins.unittree.business.unit.IUnitDAO;
 import fr.paris.lutece.plugins.unittree.business.unit.Unit;
 import fr.paris.lutece.plugins.unittree.business.unit.UnitFilter;
 import fr.paris.lutece.plugins.unittree.business.unit.UnitHome;
@@ -46,20 +47,17 @@ import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.util.ReferenceList;
 import fr.paris.lutece.util.xml.XmlUtil;
 
-import org.apache.commons.lang.StringUtils;
-
-import org.springframework.transaction.annotation.Transactional;
-
 import java.io.FileInputStream;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import javax.inject.Inject;
-
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.transaction.annotation.Transactional;
 
 
 /**
@@ -93,7 +91,8 @@ public class UnitService implements IUnitService
     private ISectorService _sectorService;
     @Inject
     private IActionService _actionService;
-
+    @Inject
+    private IUnitDAO _unitDAO;
     // GET
 
     /**
@@ -570,4 +569,15 @@ public class UnitService implements IUnitService
             _sectorService.removeSectorsFromUnit( unit.getIdUnit(  ) );
         }
     }
+
+    /**
+     * Find by sector id
+     * @param lIdSector id sector
+     * Unit list found
+     */
+    public List<Unit> findBySectorId( long lIdSector )
+    {
+        return _unitDAO.findBySectorId( lIdSector );
+    }
+
 }

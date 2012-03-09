@@ -38,12 +38,12 @@ import fr.paris.lutece.plugins.unittree.business.unit.Unit;
 import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.util.ReferenceList;
 
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Locale;
 
 import javax.xml.transform.Source;
+
+import org.springframework.transaction.annotation.Transactional;
 
 
 /**
@@ -230,4 +230,11 @@ public interface IUnitService
      */
     @Transactional( "unittree.transactionManager" )
     void removeUnit( int nIdUnit );
+
+    /**
+     * Return all the Unit of the Sector
+     * @param lIdSector id sector
+     * @return all the Unit of the Sector
+     */
+    List<Unit> findBySectorId( long lIdSector );
 }
