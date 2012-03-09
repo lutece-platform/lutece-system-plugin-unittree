@@ -64,7 +64,7 @@ public class UnitDAO implements IUnitDAO
     private static final String SQL_QUERY_DELETE = " DELETE FROM unittree_unit WHERE id_unit = ? ";
     private static final String SQL_QUERY_UPDATE = " UPDATE unittree_unit SET label = ?, description = ? WHERE id_unit = ? ";
     private static final String SQL_QUERY_HAS_SUB_UNIT = " SELECT id_unit FROM unittree_unit WHERE id_parent = ? ";
-    private static final String SQL_QUERY_SELECT_BY_SECTOR = "SELECT id_unit, label, description FROM  unittree_sector, unittree_unit unittree_unit_sector WHERE unittree_sector.id_sector = unittree_unit_sector.id_sector AND unittree_unit_sector.id_unit = unittree_unit.id_unit AND unittree_sector = ?";
+    private static final String SQL_QUERY_SELECT_BY_SECTOR = "SELECT unittree_unit.id_unit, unittree_unit.label, unittree_unit.description FROM  unittree_sector, unittree_unit, unittree_unit_sector WHERE unittree_sector.id_sector = unittree_unit_sector.id_sector AND unittree_unit_sector.id_unit = unittree_unit.id_unit AND unittree_sector.id_sector = ?";
 
     // Table unittree_unit_user
     private static final String SQL_QUERY_ADD_USER_TO_UNIT = " INSERT INTO unittree_unit_user ( id_unit, id_user ) VALUES ( ?, ? ) ";
