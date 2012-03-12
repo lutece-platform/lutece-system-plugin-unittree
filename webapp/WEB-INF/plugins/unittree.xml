@@ -29,7 +29,7 @@
             <feature-level>2</feature-level>
             <feature-url>jsp/admin/plugins/unittree/ManageUnits.jsp</feature-url>
             <feature-icon-url>images/admin/skin/plugins/unittree/unittree.png</feature-icon-url>
-            <feature-documentation-url></feature-documentation-url>
+            <feature-documentation-url/>
         </admin-feature>
     </admin-features>
     
