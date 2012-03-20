@@ -31,7 +31,7 @@
 	    						disabled="disabled"
 	    					</#if>
 	    				/>
-	    				${sector.name!} (${sector.numberSector!})
+	    				${sector.name!} <#if sector.numberSector?? && sector.numberSector != ''>(${sector.numberSector!})</#if>
 	    			</#list>
     			</#if>
     		</p>
