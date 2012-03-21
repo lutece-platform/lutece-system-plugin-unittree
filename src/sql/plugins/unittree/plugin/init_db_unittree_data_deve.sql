@@ -15,16 +15,6 @@ INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (8, 2,
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (9, 2, 'Thiais', 'Atelier d\'entretien général du cimetière de Thiais');
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (10, 2, 'Montmartre', 'Atelier d\'entretien général du cimetière de Montmartre');
 
--- unittree_sector
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (3, 'Atelier d\'entretien général du cimetière de Bagneux', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (4, 'Atelier d\'entretien général du cimetière d\'Ivry', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (5, 'Atelier d\'entretien général du cimetière de Montparnasse', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (6, 'Atelier d\'entretien général du cimetière de Père Lachaise', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (7, 'Atelier d\'entretien général du cimetière de Pantin', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (8, 'Atelier d\'entretien général du cimetière de Saint-Ouen', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (9, 'Atelier d\'entretien général du cimetière de Thiais', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (10, 'Atelier d\'entretien général du cimetière de Montmartre', '');
-
 -- unittree_unit_sector
 INSERT INTO unittree_unit_sector (id_unit, id_sector) VALUES (0, 3);
 INSERT INTO unittree_unit_sector (id_unit, id_sector) VALUES (0, 4);
@@ -135,75 +125,6 @@ INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (75, 1
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (76, 11, '19ème arrondissement Ouest', 'Atelier de jardinage du 19ème arrondissement Ouest');
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (77, 11, 'Ecole Breuil Roseraie-Potager-Verger', 'Atelier de jardinage de l\'école Breuil Roseraie-Potager-Verger');
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (78, 11, '13ème arrondissement Sud', 'Atelier de jardinage du 13ème arrondissement Sud');
-
--- unittree_sector
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (12, 'Atelier de jardinage Conservation de Bagneux', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (13, 'Atelier de jardinage de Bagatelle', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (14, 'Atelier de jardinage Maillot', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (15, 'Atelier de jardinage du parc Floral', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (16, 'Atelier de jardinage du Champs de Mars (07ème arrondissement)', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (17, 'Atelier de jardinage de la plaine (Boulogne)', ''); 
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (18, 'Atelier de jardinage du Pré catelan', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (19, 'Atelier de jardinage Auteuil', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (20, 'Atelier de jardinage de la plaine (Vincennes)', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (21, 'Atelier de jardinage du 01ème et 02ème arrondissements', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (22, 'Atelier de jardinage du 04ème arrondissement', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (23, 'Atelier de jardinage du 05ème arrondissement', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (24, 'Atelier de jardinage du 08ème et 09ème arrondissements (hors Champs Elysées)', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (25, 'Atelier de jardinage du 10ème arrondissement', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (26, 'Atelier de jardinage du 11ème arrondissement Est', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (27, 'Atelier de jardinage Conservation d\'Ivry', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (28, 'Atelier de jardinage Conservation de Saint-Ouen', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (29, 'Atelier de jardinage Conservation de Thiais', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (30, 'Atelier de jardinage du 07ème arrondissement (hors Champs de Mars)', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (31, 'Atelier de jardinage du parc de Bercy(12ème arrondissement)', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (32, 'Atelier de jardinage Conservation de Pantin', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (33, 'Atelier de jardinage de Saint-Mandé', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (34, 'Atelier de jardinage des Minimes', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (35, 'Atelier de jardinage Conservation Père Lachaise', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (36, 'Atelier de jardinage du 13ème arrondissement Nord', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (37, 'Atelier de jardinage du 16ème arrondissement Sud', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (38, 'Atelier de jardinage du 17ème arrondissement Ouest', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (39, 'Atelier de jardinage du 20ème arrondissement Est', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (40, 'Atelier de jardinage de l\'école Breuil Serres-Floriculture', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (41, 'Atelier de jardinage du parc André CitroÙn (15ème arrondissement)', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (42, 'Atelier de jardinage du 12ème arrondissement Est', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (43, 'Atelier de jardinage du 18ème arrondissement Est', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (44, 'Atelier de jardinage du 13ème arrondissement Est', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (45, 'Atelier de jardinage du 15ème arrondissement Sud-Ouest', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (46, 'Atelier de jardinage du 16ème arrondissement Est', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (47, 'Atelier de jardinage du 16ème arrondissement Nord', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (48, 'Atelier de jardinage du 16ème arrondissement Ouest', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (49, 'Atelier de jardinage du 17ème arrondissement Est', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (50, 'Atelier de jardinage du 17ème arrondissement Nord-Ouest', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (51, 'Atelier de jardinage du 18ème arrondissement Nord', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (52, 'Atelier de jardinage du 18ème arrondissement Sud', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (53, 'Atelier de jardinage du parc des Buttes-Chaumont (19ème arrondissement)', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (54, 'Atelier de jardinage du 20ème arrondissement Ouest', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (55, 'Atelier de jardinage du 13ème arrondissement Ouest', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (56, 'Atelier de jardinage du parc Montsouris (14ème arrondissement)', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (57, 'Atelier de jardinage du 03ème arrondissement', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (58, 'Atelier de jardinage du 06ème arrondissement', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (59, 'Atelier de jardinage Champs Elysées (08ème arrondissement)', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (60, 'Atelier de jardinage Conservation de Montmartre', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (61, 'Atelier de jardinage Conservation de Montparnasse', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (62, 'Atelier de jardinage du 19ème arrondissement Sud', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (63, 'Atelier de jardinage du 20ème arrondissement Nord', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (64, 'Atelier de jardinage du 20ème arrondissement Sud', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (65, 'Atelier de jardinage de l\'école Breuil Arboretum-Ornement', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (66, 'Atelier de jardinage du 15ème arrondissement Centre-Est', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (67, 'Atelier de jardinage du 15ème arrondissement Nord-Ouest', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (68, 'Atelier de jardinage du 11ème arrondissement Ouest', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (69, 'Atelier de jardinage du 12ème arrondissement Nord', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (70, 'Atelier de jardinage du 12ème arrondissement Ouest', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (71, 'Atelier de jardinage du 14ème arrondissement Nord', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (72, 'Atelier de jardinage du 14ème arrondissement Sud', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (73, 'Atelier de jardinage du 15ème arrondissement Nord-Est', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (74, 'Atelier de jardinage du 15ème arrondissement Sud Est', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (75, 'Atelier de jardinage du 19ème arrondissement Nord', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (76, 'Atelier de jardinage du 19ème arrondissement Ouest', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (77, 'Atelier de jardinage de l\'école Breuil Roseraie-Potager-Verger', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (78, 'Atelier de jardinage du 13ème arrondissement Sud', '');
 
 -- unittree_unit_sector
 INSERT INTO unittree_unit_sector (id_unit, id_sector) VALUES (0, 12);
@@ -490,13 +411,6 @@ INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (82, 7
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (83, 79, 'Division du Bois de Boulogne', 'SA - Division du Bois de Boulogne');
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (84, 79, 'Division du Bois de Vincennes', 'SA - Division du Bois de Vincennes');
 
--- unittree_sector
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (80, 'SA - Division des plantations EST', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (81, 'SA - Division des plantations NORD', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (82, 'SA - Division des plantations SUD', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (83, 'SA - Division du Bois de Boulogne', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (84, 'SA - Division du Bois de Vincennes', '');
-
 -- unittree_unit_sector
 INSERT INTO unittree_unit_sector (id_unit, id_sector) VALUES (0, 80);
 INSERT INTO unittree_unit_sector (id_unit, id_sector) VALUES (0, 81);
@@ -536,16 +450,6 @@ INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (90, 8
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (91, 85, 'Conservation de Montmartre', 'SC - Conservation de Montmartre');
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (92, 85, 'Conservation de Père-Lachaise', 'SC - Conservation de Père-Lachaise');
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (93, 85, 'Conservation de Montparnasse', 'SC - Conservation de Montparnasse');
-
--- unittree_sector
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (86, 'SC - Conservation de Bagneux', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (87, 'SC - Conservation de Ivry', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (88, 'SC - Conservation de Thiais', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (89, 'SC - Conservation de Pantin', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (90, 'SC - Conservation de Saint-Ouen', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (91, 'SC - Conservation de Montmartre', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (92, 'SC - Conservation de PÞre-Lachaise', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (93, 'SC - Conservation de Montparnasse', '');
 
 -- unittree_unit_sector
 INSERT INTO unittree_unit_sector (id_unit, id_sector) VALUES (0, 86);
@@ -603,21 +507,6 @@ INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (104, 
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (105, 94, 'Division 20e', 'SEJ - Division 20e');
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (106, 94, 'Division 5e 6e 7e', 'SEJ - Division 5e 6e 7e');
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (107, 94, 'Division 8e 9e 10e', 'SEJ - Division 8e 9e 10e');
-
--- unittree_sector
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (95, 'SEJ - Division 11e', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (96, 'SEJ - Division 12e', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (97, 'SEJ - Division 13e', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (98, 'SEJ - Division 14e', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (99, 'SEJ - Division 15e', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (100, 'SEJ - Division 16e', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (101, 'SEJ - Division 17e', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (102, 'SEJ - Division 18e', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (103, 'SEJ - Division 19e', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (104, 'SEJ - Division 1e 2e 3e 4e', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (105, 'SEJ - Division 20e', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (106, 'SEJ - Division 5e 6e 7e', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (107, 'SEJ - Division 8e 9e 10e', '');
 
 -- unittree_unit_sector
 INSERT INTO unittree_unit_sector (id_unit, id_sector) VALUES (0, 95);

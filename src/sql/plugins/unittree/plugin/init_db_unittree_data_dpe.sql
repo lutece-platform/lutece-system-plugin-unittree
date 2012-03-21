@@ -11,12 +11,6 @@ INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (111, 
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (112, 109, '3e arrondissement', '3e arrondissement');
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (113, 109, '4e arrondissement', '4e arrondissement');
 
--- unittree_sector
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (110, '1er arrondissement', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (111, '2e arrondissement', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (112, '3e arrondissement', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (113, '4e arrondissement', '');
-
 -- unittree_unit_sector
 INSERT INTO unittree_unit_sector (id_unit, id_sector) VALUES (0, 110);
 INSERT INTO unittree_unit_sector (id_unit, id_sector) VALUES (0, 111);
@@ -48,12 +42,6 @@ INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (115, 
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (116, 114, 'St. Victor-Jardin des plantes', 'St. Victor-Jardin des plantes');
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (117, 114, 'St. Germain des Prés-Monnaie-Odéon', 'St. Germain des Prés-Monnaie-Odéon');
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (118, 114, 'ND. des Champs', 'ND. des Champs');
-
--- unittree_sector
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (115, 'Sorbonne-Val de Grâce', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (116, 'St. Victor-Jardin des plantes', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (117, 'St. Germain des Prés-Monnaie-Odéon', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (118, 'ND. des Champs', '');
 
 -- unittree_unit_sector
 INSERT INTO unittree_unit_sector (id_unit, id_sector) VALUES (0, 115);
@@ -88,14 +76,6 @@ INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (122, 
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (123, 119, 'Triangle d\'or', 'Triangle d\'or');
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (124, 119, 'Hoche-Friedland-Parc Monceau-St. Philippe du Roule', 'Hoche-Friedland-Parc Monceau-St. Philippe du Roule');
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (125, 119, 'Elysée-Madeleine-Europe-Mairie', 'Elysée-Madeleine-Europe-Mairie');
-
--- unittree_sector
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (120, 'St Thomas d\'Aquin-Invalides', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (121, 'Ecole Militaire', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (122, 'Gros caillou', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (123, 'Triangle d\'or', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (124, 'Hoche-Friedland-Parc Monceau-St. Philippe du Roule', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (125, 'Elysée-Madeleine-Europe-Mairie', '');
 
 -- unittree_unit_sector
 INSERT INTO unittree_unit_sector (id_unit, id_sector) VALUES (0, 120);
@@ -137,12 +117,6 @@ INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (128, 
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (129, 126, 'St.Paul-LariboisiÞre-Porte St Martin', 'St.Paul-LariboisiÞre-Porte St Martin');
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (130, 126, 'Temple-St.Louis-Château d\'eau', 'Temple-St.Louis-Château d\'eau');
 
--- unittree_sector
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (127, 'Clichy-Trinité-Lorette-Martyrs-Trudaine-Maubeuge', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (128, 'Provence-Opéra-Lafayette-Richer', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (129, 'St.Paul-LariboisiÞre-Porte St Martin', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (130, 'Temple-St.Louis-Château d\'eau', '');
-
 -- unittree_unit_sector
 INSERT INTO unittree_unit_sector (id_unit, id_sector) VALUES (0, 127);
 INSERT INTO unittree_unit_sector (id_unit, id_sector) VALUES (0, 128);
@@ -174,11 +148,6 @@ INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (132, 
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (133, 131, 'République-St.Ambroise-Bastille-Popincourt', 'République-St.Ambroise-Bastille-Popincourt');
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (134, 131, 'Belleville-Saint.Maur', 'Belleville-Saint.Maur');
 
--- unittree_sector
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (132, 'Leon Blum-Folie Regnault-Nation-A.Dumas', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (133, 'République-St.Ambroise-Bastille-Popincourt', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (134, 'Belleville-Saint.Maur', '');
-
 -- unittree_unit_sector
 INSERT INTO unittree_unit_sector (id_unit, id_sector) VALUES (0, 132);
 INSERT INTO unittree_unit_sector (id_unit, id_sector) VALUES (0, 133);
@@ -205,11 +174,6 @@ INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (135, 
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (136, 135, 'Aligre-Gare de Lyon', 'Aligre-Gare de Lyon');
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (137, 135, 'Nation-Picpus-Jardin de Reuilly-Bercy', 'Nation-Picpus-Jardin de Reuilly-Bercy');
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (138, 135, 'Picpus sud-Bel Air nord et sud', 'Picpus sud-Bel Air nord et sud');
-
--- unittree_sector
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (136, 'Aligre-Gare de Lyon', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (137, 'Nation-Picpus-Jardin de Reuilly-Bercy', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (138, 'Picpus sud-Bel Air nord et sud', '');
 
 -- unittree_unit_sector
 INSERT INTO unittree_unit_sector (id_unit, id_sector) VALUES (0, 136);
@@ -238,12 +202,6 @@ INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (140, 
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (141, 139, 'Butte aux cailles-Mouchez-Peupliers-Brillat-Rungis', 'Butte aux cailles-Mouchez-Peupliers-Brillat-Rungis');
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (142, 139, 'Nationale-Deux moulins-Olympiades-Choisy', 'Nationale-Deux moulins-Olympiades-Choisy');
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (143, 139, 'Patay-Massena-BibliothÞque-Dunois-J.d\'Arc', 'Patay-Massena-BibliothÞque-Dunois-J.d\'Arc');
-
--- unittree_sector
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (140, 'Croulebarbe-Salpêtrière-Austerlitz', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (141, 'Butte aux cailles-Mouchez-Peupliers-Brillat-Rungis', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (142, 'Nationale-Deux moulins-Olympiades-Choisy', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (143, 'Patay-Massena-BibliothÞque-Dunois-J.d\'Arc', '');
 
 -- unittree_unit_sector
 INSERT INTO unittree_unit_sector (id_unit, id_sector) VALUES (0, 140);
@@ -276,11 +234,6 @@ INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (145, 
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (146, 144, 'Montparnasse-Raspail-Pernety', 'Montparnasse-Raspail-Pernety');
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (147, 144, 'Didot-Pte de Vanves-J.Moulin-Pte d\'Orléans', 'Didot-Pte de Vanves-J.Moulin-Pte d\'Orléans');
 
--- unittree_sector
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (145, 'MoutonDuvernet-Montsouris-Dareau', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (146, 'Montparnasse-Raspail-Pernety', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (147, 'Didot-Pte de Vanves-J.Moulin-Pte d\'Orléans', '');
-
 -- unittree_unit_sector
 INSERT INTO unittree_unit_sector (id_unit, id_sector) VALUES (0, 145);
 INSERT INTO unittree_unit_sector (id_unit, id_sector) VALUES (0, 146);
@@ -307,11 +260,6 @@ INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (148, 
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (149, 148, 'Boucicault-Citroen-Vaugirard-Parc des expositions-G.Brassens', 'Boucicault-Citroen-Vaugirard-Parc des expositions-G.Brassens');
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (150, 148, 'Alleray-Procession', 'Alleray-Procession');
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (151, 148, 'Dupleix-La Motte Piquet-Emeriau-Zola-Violet-Commerce', 'Dupleix-La Motte Piquet-Emeriau-Zola-Violet-Commerce');
-
--- unittree_sector
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (149, 'Boucicault-Citroen-Vaugirard-Parc des expositions-G.Brassens', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (150, 'Alleray-Procession', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (151, 'Dupleix-La Motte Piquet-Emeriau-Zola-Violet-Commerce', '');
 
 -- unittree_unit_sector
 INSERT INTO unittree_unit_sector (id_unit, id_sector) VALUES (0, 149);
@@ -340,11 +288,6 @@ INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (153, 
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (154, 152, 'Muette nord et sud', 'Muette nord et sud');
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (155, 152, 'Pte Dauphine-Chaillot', 'Pte Dauphine-Chaillot');
 
--- unittree_sector
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (153, 'Auteuil nord et sud', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (154, 'Muette nord et sud', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (155, 'Pte Dauphine-Chaillot', '');
-
 -- unittree_unit_sector
 INSERT INTO unittree_unit_sector (id_unit, id_sector) VALUES (0, 153);
 INSERT INTO unittree_unit_sector (id_unit, id_sector) VALUES (0, 154);
@@ -371,11 +314,6 @@ INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (156, 
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (157, 156, 'Ternes-Maillot Courcelles-Wagram', 'Ternes-Maillot Courcelles-Wagram');
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (158, 156, 'Champerret-Berthier-Pereire-Malesherbes-Legendre-Levis', 'Champerret-Berthier-Pereire-Malesherbes-Legendre-Levis');
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (159, 156, 'Batignolles-Cardinet-Fourche-Guy Moquet-Epinettes-Bessières', 'Batignolles-Cardinet-Fourche-Guy Moquet-Epinettes-Bessières');
-
--- unittree_sector
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (157, 'Ternes-Maillot Courcelles-Wagram', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (158, 'Champerret-Berthier-Pereire-Malesherbes-Legendre-Levis', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (159, 'Batignolles-Cardinet-Fourche-Guy Moquet-Epinettes-Bessières', '');
 
 -- unittree_unit_sector
 INSERT INTO unittree_unit_sector (id_unit, id_sector) VALUES (0, 157);
@@ -404,12 +342,6 @@ INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (161, 
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (162, 160, 'Goutte d\'or-Château Rouge-Amiraux-Simplon-Poissonniers', 'Goutte d\'or-Château Rouge-Amiraux-Simplon-Poissonniers');
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (163, 160, 'Cilgnancourt-Clignancourt-Jules Joffrin', 'Cilgnancourt-Clignancourt-Jules Joffrin');
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (164, 160, 'Grandes carrières-Clichy-Montmartre', 'Grandes carrières-Clichy-Montmartre');
-
--- unittree_sector
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (161, 'Charles Hermitte-Evangile-La Chapelle-Max Dormoy', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (162, 'Goutte d\'or-Château Rouge-Amiraux-Simplon-Poissonniers', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (163, 'Cilgnancourt-Clignancourt-Jules Joffrin', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (164, 'Grandes carrières-Clichy-Montmartre', '');
 
 -- unittree_unit_sector
 INSERT INTO unittree_unit_sector (id_unit, id_sector) VALUES (0, 161);
@@ -442,11 +374,6 @@ INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (166, 
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (167, 165, 'Bassin de la Villette-Secretan-Manin-Jaurès', 'Bassin de la Villette-Secretan-Manin-Jaurès');
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (168, 165, 'Flandres-Aubervilliers-Pont de Flandres', 'Flandres-Aubervilliers-Pont de Flandres');
 
--- unittree_sector
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (166, 'Place des fêtes-Porte des lilas', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (167, 'Bassin de la Villette-Secretan-Manin-Jaurès', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (168, 'Flandres-Aubervilliers-Pont de Flandres', '');
-
 -- unittree_unit_sector
 INSERT INTO unittree_unit_sector (id_unit, id_sector) VALUES (0, 166);
 INSERT INTO unittree_unit_sector (id_unit, id_sector) VALUES (0, 167);
@@ -473,11 +400,6 @@ INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (169, 
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (170, 168, 'Belleville-Telegraphe/Pelleport-St.Fargeau', 'Belleville-Telegraphe/Pelleport-St.Fargeau');
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (171, 168, 'Amandiers-Gambetta', 'Amandiers-Gambetta');
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (172, 168, 'Plaine-Lagny', 'Plaine-Lagny');
-
--- unittree_sector
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (170, 'Belleville-Telegraphe/Pelleport-St.Fargeau', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (171, 'Amandiers-Gambetta', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (172, 'Plaine-Lagny', '');
 
 -- unittree_unit_sector
 INSERT INTO unittree_unit_sector (id_unit, id_sector) VALUES (0, 170);

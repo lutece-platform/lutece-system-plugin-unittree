@@ -12,18 +12,6 @@ INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (182, 
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (183, 174, '3eme', '3eme');
 INSERT INTO unittree_unit (id_unit,	id_parent, label, description) VALUES (184, 174, '4eme', '4eme');
 
--- unittree_sector
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (175, '8eme', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (176, '5eme', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (177, '6eme', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (178, '7eme', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (179, '1er', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (180, '10eme', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (181, '2eme', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (182, '9eme', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (183, '3eme', '');
-INSERT INTO unittree_sector (id_sector, name, number_sector ) VALUES (184, '4eme', '');
-
 -- unittree_unit_sector
 INSERT INTO unittree_unit_sector (id_unit, id_sector) VALUES (0, 175);
 INSERT INTO unittree_unit_sector (id_unit, id_sector) VALUES (0, 176);
