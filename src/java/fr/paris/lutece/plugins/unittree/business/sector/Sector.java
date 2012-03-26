@@ -107,4 +107,9 @@ public class Sector
     {
     	return _strName + " - " + _strNumberSector;
     }
+    
+    public String getFormatNumberName(  )
+    {
+        return _strNumberSector + " - " + _strName;
+    }
 }
