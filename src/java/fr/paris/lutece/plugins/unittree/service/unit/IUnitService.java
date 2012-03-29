@@ -199,7 +199,6 @@ public interface IUnitService
 
     /**
      * See {@link #isAuthorized(Unit, String, AdminUser)}
-     * @param strResourceType the resource type
      * @param strIdResource the id resource
      * @param strPermission the permission
      * @param user the user
@@ -235,6 +234,12 @@ public interface IUnitService
      * Return all the Unit of the Sector
      * @param lIdSector id sector
      * @return all the Unit of the Sector
-     */
+     */ 
     List<Unit> findBySectorId( long lIdSector );
+
+    /**
+     * Return all the Unit with no children (level 0)
+     * @return all the Unit with no children (level 0)
+     */
+    List<Unit> getUnitWithNoChildren( );
 }

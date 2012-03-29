@@ -573,11 +573,20 @@ public class UnitService implements IUnitService
     /**
      * Find by sector id
      * @param lIdSector id sector
-     * Unit list found
+     * @return Unit list found
      */
     public List<Unit> findBySectorId( long lIdSector )
     {
         return _unitDAO.findBySectorId( lIdSector );
+    }
+
+    /**
+     * Return all the Unit with no children (level 0)
+     * @return all the Unit with no children (level 0)
+     */
+    public List<Unit> getUnitWithNoChildren( )
+    {
+        return _unitDAO.getUnitWithNoChildren( );
     }
 
 }

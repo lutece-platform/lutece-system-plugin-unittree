@@ -108,6 +108,10 @@ public class Sector
     	return _strName + " - " + _strNumberSector;
     }
     
+    /**
+     * To string representation (invert of {@link #getFormatNameNumber()}
+     * @eturn formatted string
+     */
     public String getFormatNumberName(  )
     {
         return _strNumberSector + " - " + _strName;
