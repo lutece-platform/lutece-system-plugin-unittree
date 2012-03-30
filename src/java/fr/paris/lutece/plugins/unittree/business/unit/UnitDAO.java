@@ -75,7 +75,7 @@ public class UnitDAO implements IUnitDAO
     private static final String SQL_QUERY_REMOVE_USERS_FROM_UNIT = " DELETE FROM unittree_unit_user WHERE id_unit = ? ";
     private static final String SQL_QUERY_CHECK_USER = " SELECT id_unit FROM unittree_unit_user WHERE id_user = ? ";
 
-    /** 
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -215,8 +215,8 @@ public class UnitDAO implements IUnitDAO
     }
 
     /**
-         * {@inheritDoc}
-         */
+     * {@inheritDoc}
+     */
     @Override
     public boolean hasSubUnits( int nIdUnit, Plugin plugin )
     {
@@ -476,7 +476,7 @@ public class UnitDAO implements IUnitDAO
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_SECTOR );
         daoUtil.setLong( 1, lIdSector );
         daoUtil.executeQuery(  );
-        
+
         while ( daoUtil.next(  ) )
         {
             int nIndex = 1;
@@ -486,6 +486,7 @@ public class UnitDAO implements IUnitDAO
             unit.setDescription( daoUtil.getString( nIndex++ ) );
             units.add( unit );
         }
+
         daoUtil.free(  );
 
         return units;
@@ -497,7 +498,7 @@ public class UnitDAO implements IUnitDAO
      */
     public List<Unit> getUnitWithNoChildren(  )
     {
-        List<Unit> units = new ArrayList<Unit>( );
+        List<Unit> units = new ArrayList<Unit>(  );
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_NO_CHILDREN );
         daoUtil.executeQuery(  );
 
@@ -510,9 +511,9 @@ public class UnitDAO implements IUnitDAO
             unit.setDescription( daoUtil.getString( nIndex++ ) );
             units.add( unit );
         }
-        daoUtil.free( );
+
+        daoUtil.free(  );
 
         return units;
     }
-
 }

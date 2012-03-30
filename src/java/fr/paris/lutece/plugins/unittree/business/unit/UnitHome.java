@@ -50,7 +50,7 @@ public final class UnitHome
 {
     private static final String BEAN_UNIT_DAO = "unittree.unitDAO";
     private static Plugin _plugin = PluginService.getPlugin( UnitTreePlugin.PLUGIN_NAME );
-    private static IUnitDAO _dao = (IUnitDAO) SpringContextService.getBean( BEAN_UNIT_DAO );
+    private static IUnitDAO _dao = SpringContextService.getBean( BEAN_UNIT_DAO );
 
     /**
      * Private constructor

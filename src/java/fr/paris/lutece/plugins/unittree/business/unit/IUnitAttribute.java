@@ -31,52 +31,32 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.unittree.business.action;
-
-import fr.paris.lutece.plugins.unittree.service.UnitTreePlugin;
-import fr.paris.lutece.portal.service.plugin.Plugin;
-import fr.paris.lutece.portal.service.plugin.PluginService;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
-
-import java.util.List;
+package fr.paris.lutece.plugins.unittree.business.unit;
 
 
 /**
  *
- * ActionHome
+ * This class represents the complementary attributes of an unit
+ * @param <T> The class object of the attribute
  *
  */
-public final class ActionHome
+public interface IUnitAttribute<T>
 {
-    private static final String BEAN_ACTION_DAO = "unittree.actionDAO";
-    private static Plugin _plugin = PluginService.getPlugin( UnitTreePlugin.PLUGIN_NAME );
-    private static IActionDAO _dao = SpringContextService.getBean( BEAN_ACTION_DAO );
+    /**
+     * Set the attribute
+     * @param attribute the attribute to set
+     */
+    void setAttribute( T attribute );
 
     /**
-     * Private constructor - this class need not be instantiated
+     * Get the attribute
+     * @return the attribute the attribute
      */
-    private ActionHome(  )
-    {
-    }
+    T getAttribute(  );
 
     /**
-     * Returns the list of allowed actions for a given action type
-     * @param strActionType the action type
-     * @return A list of actions for a given action type
+     * Get the attribute name
+     * @return the attribute name
      */
-    public static List<IAction> getActionsList( String strActionType )
-    {
-        return _dao.selectActions( strActionType, _plugin );
-    }
-
-    /**
-     * Load the list of actions
-     * @param strActionType the action type
-     * @param strPermission the permission
-     * @return The List of actions
-     */
-    public static List<IAction> selectFilterByPermission( String strActionType, String strPermission )
-    {
-        return _dao.selectFilterByPermission( strActionType, strPermission, _plugin );
-    }
+    String getAttributeName(  );
 }

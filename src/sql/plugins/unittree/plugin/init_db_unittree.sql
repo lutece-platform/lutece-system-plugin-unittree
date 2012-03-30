@@ -1,3 +1,6 @@
+TRUNCATE unittree_unit CASCADE;
+TRUNCATE unittree_action;
+
 --
 -- Dumping data for table unittree_unit
 --

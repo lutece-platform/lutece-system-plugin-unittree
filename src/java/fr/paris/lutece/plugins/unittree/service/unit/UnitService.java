@@ -38,8 +38,8 @@ import fr.paris.lutece.plugins.unittree.business.unit.IUnitDAO;
 import fr.paris.lutece.plugins.unittree.business.unit.Unit;
 import fr.paris.lutece.plugins.unittree.business.unit.UnitFilter;
 import fr.paris.lutece.plugins.unittree.business.unit.UnitHome;
+import fr.paris.lutece.plugins.unittree.service.UnitErrorException;
 import fr.paris.lutece.plugins.unittree.service.action.IActionService;
-import fr.paris.lutece.plugins.unittree.service.sector.ISectorService;
 import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.service.rbac.RBACService;
@@ -47,17 +47,22 @@ import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.util.ReferenceList;
 import fr.paris.lutece.util.xml.XmlUtil;
 
+import org.apache.commons.lang.StringUtils;
+
+import org.springframework.transaction.annotation.Transactional;
+
 import java.io.FileInputStream;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import javax.inject.Inject;
+
+import javax.servlet.http.HttpServletRequest;
+
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.transaction.annotation.Transactional;
 
 
 /**
@@ -88,24 +93,23 @@ public class UnitService implements IUnitService
     @Inject
     private IUnitUserService _unitUserService;
     @Inject
-    private ISectorService _sectorService;
-    @Inject
     private IActionService _actionService;
     @Inject
     private IUnitDAO _unitDAO;
+
     // GET
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Unit getUnit( int nIdUnit, boolean bGetSectors )
+    public Unit getUnit( int nIdUnit, boolean bGetAdditionalInfos )
     {
         Unit unit = UnitHome.findByPrimaryKey( nIdUnit );
 
-        if ( ( unit != null ) && bGetSectors )
+        if ( ( unit != null ) && bGetAdditionalInfos )
         {
-            unit.setListIdsSector( _sectorService.getIdsSectorByIdUnit( nIdUnit ) );
+            UnitAttributeManager.populate( unit );
         }
 
         return unit;
@@ -115,22 +119,22 @@ public class UnitService implements IUnitService
      * {@inheritDoc}
      */
     @Override
-    public Unit getRootUnit( boolean bGetSectors )
+    public Unit getRootUnit( boolean bGetAdditionalInfos )
     {
-        return getUnit( Unit.ID_ROOT, bGetSectors );
+        return getUnit( Unit.ID_ROOT, bGetAdditionalInfos );
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Unit getUnitByIdUser( int nIdUser, boolean bGetSectors )
+    public Unit getUnitByIdUser( int nIdUser, boolean bGetAdditionalInfos )
     {
         Unit unit = UnitHome.findByIdUser( nIdUser );
 
-        if ( bGetSectors && ( unit != null ) )
+        if ( bGetAdditionalInfos && ( unit != null ) )
         {
-            unit.setListIdsSector( _sectorService.getIdsSectorByIdUnit( unit.getIdUnit(  ) ) );
+            UnitAttributeManager.populate( unit );
         }
 
         return unit;
@@ -140,17 +144,17 @@ public class UnitService implements IUnitService
     * {@inheritDoc}
     */
     @Override
-    public List<Unit> getAllUnits( boolean bGetSectors )
+    public List<Unit> getAllUnits( boolean bGetAdditionalInfos )
     {
         List<Unit> listUnits = UnitHome.findAll(  );
 
-        if ( bGetSectors )
+        if ( bGetAdditionalInfos )
         {
             for ( Unit unit : listUnits )
             {
                 if ( unit != null )
                 {
-                    unit.setListIdsSector( _sectorService.getIdsSectorByIdUnit( unit.getIdUnit(  ) ) );
+                    UnitAttributeManager.populate( unit );
                 }
             }
         }
@@ -162,22 +166,22 @@ public class UnitService implements IUnitService
      * {@inheritDoc}
      */
     @Override
-    public List<Unit> getUnitsFirstLevel( boolean bGetSectors )
+    public List<Unit> getUnitsFirstLevel( boolean bGetAdditionalInfos )
     {
-        return getSubUnits( Unit.ID_ROOT, bGetSectors );
+        return getSubUnits( Unit.ID_ROOT, bGetAdditionalInfos );
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<Unit> getSubUnits( int nIdUnit, boolean bGetSectors )
+    public List<Unit> getSubUnits( int nIdUnit, boolean bGetAdditionalInfos )
     {
         // If the ID unit == -1, then only return the root unit
         if ( nIdUnit == Unit.ID_NULL )
         {
             List<Unit> listUnits = new ArrayList<Unit>(  );
-            listUnits.add( getRootUnit( bGetSectors ) );
+            listUnits.add( getRootUnit( bGetAdditionalInfos ) );
 
             return listUnits;
         }
@@ -187,13 +191,13 @@ public class UnitService implements IUnitService
 
         List<Unit> listUnits = UnitHome.findByFilter( uFilter );
 
-        if ( bGetSectors )
+        if ( bGetAdditionalInfos )
         {
             for ( Unit unit : listUnits )
             {
                 if ( unit != null )
                 {
-                    unit.setListIdsSector( _sectorService.getIdsSectorByIdUnit( unit.getIdUnit(  ) ) );
+                    UnitAttributeManager.populate( unit );
                 }
             }
         }
@@ -328,8 +332,8 @@ public class UnitService implements IUnitService
     }
 
     /**
-         * {@inheritDoc}
-         */
+     * {@inheritDoc}
+     */
     @Override
     public boolean isParent( Unit unitParent, Unit unitRef )
     {
@@ -357,12 +361,12 @@ public class UnitService implements IUnitService
     }
 
     /**
-    * {@inheritDoc}
-    */
+     * {@inheritDoc}
+     */
     @Override
     public boolean canCreateSubUnit( int nIdUnit )
     {
-        return hasSubUnits( nIdUnit ) || !_sectorService.hasSectors( nIdUnit );
+        return hasSubUnits( nIdUnit ) || UnitAttributeManager.canCreateSubUnit( nIdUnit );
     }
 
     /**
@@ -407,8 +411,8 @@ public class UnitService implements IUnitService
     }
 
     /**
-         * {@inheritDoc}
-         */
+     * {@inheritDoc}
+     */
     @Override
     public boolean isAuthorized( String strIdUnit, String strPermission, AdminUser user )
     {
@@ -430,14 +434,15 @@ public class UnitService implements IUnitService
      */
     @Override
     @Transactional( "unittree.transactionManager" )
-    public int createUnit( Unit unit )
+    public int createUnit( Unit unit, HttpServletRequest request )
+        throws UnitErrorException
     {
         int nIdUnit = Unit.ID_NULL;
 
         if ( unit != null )
         {
             nIdUnit = UnitHome.create( unit );
-            addSectorsToUnit( unit );
+            UnitAttributeManager.doCreateUnit( unit, request );
 
             return nIdUnit;
         }
@@ -450,14 +455,15 @@ public class UnitService implements IUnitService
      */
     @Override
     @Transactional( "unittree.transactionManager" )
-    public void removeUnit( int nIdUnit )
+    public void removeUnit( int nIdUnit, HttpServletRequest request )
     {
         if ( ( nIdUnit != Unit.ID_ROOT ) && !hasSubUnits( nIdUnit ) )
         {
+            UnitAttributeManager.doRemoveUnit( nIdUnit, request );
+
             // Remove users
             _unitUserService.removeUsersFromUnit( nIdUnit );
-            // Remove sectors
-            removeSectors( getUnit( nIdUnit, false ) );
+
             UnitHome.remove( nIdUnit );
         }
     }
@@ -467,18 +473,12 @@ public class UnitService implements IUnitService
      */
     @Override
     @Transactional( "unittree.transactionManager" )
-    public void updateUnit( Unit unit )
+    public void updateUnit( Unit unit, HttpServletRequest request )
+        throws UnitErrorException
     {
         if ( unit != null )
         {
-            // Only update sectors if the unit does not have sub units
-            if ( !hasSubUnits( unit.getIdUnit(  ) ) )
-            {
-                // First remove the sectors
-                removeSectors( unit );
-                // Then add the sector to the unit
-                addSectorsToUnit( unit );
-            }
+            UnitAttributeManager.doModifyUnit( unit, request );
 
             // Update unit information
             UnitHome.update( unit );
@@ -517,63 +517,9 @@ public class UnitService implements IUnitService
     }
 
     /**
-     * Add the sectors to the unit and to its parent
-     * @param unit the unit
-     */
-    private void addSectorsToUnit( Unit unit )
-    {
-        if ( unit != null )
-        {
-            // First create the link unit-sector to the current unit
-            _sectorService.addSectorsToUnit( unit, unit.getListIdsSector(  ) );
-
-            // Then add the link to the unit parent
-            Unit unitParent = getUnit( unit.getIdParent(  ), true );
-
-            while ( ( unitParent != null ) && ( unitParent.getIdUnit(  ) != Unit.ID_NULL ) )
-            {
-                // Build the list of ids to add : the sector must not be added twice
-                List<Integer> listIdsToAdd = unit.getListIdsSector(  );
-                listIdsToAdd.removeAll( unitParent.getListIdsSector(  ) );
-                _sectorService.addSectorsToUnit( unitParent, listIdsToAdd );
-
-                unitParent = getUnit( unitParent.getIdParent(  ), true );
-            }
-        }
-    }
-
-    /**
-     * Remove the sectors from a given unit and its parents
-     * @param unit the unit
-     */
-    private void removeSectors( Unit unit )
-    {
-        if ( unit != null )
-        {
-            List<Integer> listIdsToRemove = _sectorService.getIdsSectorByIdUnit( unit.getIdUnit(  ) );
-
-            // First remove the sectors from the parent unit
-            Unit unitParent = getUnit( unit.getIdParent(  ), false );
-
-            while ( ( unitParent != null ) && ( unitParent.getIdUnit(  ) != Unit.ID_NULL ) )
-            {
-                for ( int nIdSector : listIdsToRemove )
-                {
-                    _sectorService.removeSector( unitParent.getIdUnit(  ), nIdSector );
-                }
-
-                unitParent = getUnit( unitParent.getIdParent(  ), false );
-            }
-
-            // Then remove the sectors from the unit
-            _sectorService.removeSectorsFromUnit( unit.getIdUnit(  ) );
-        }
-    }
-
-    /**
      * Find by sector id
      * @param lIdSector id sector
-     * @return Unit list found
+     * @return list of Unit found
      */
     public List<Unit> findBySectorId( long lIdSector )
     {
@@ -584,9 +530,8 @@ public class UnitService implements IUnitService
      * Return all the Unit with no children (level 0)
      * @return all the Unit with no children (level 0)
      */
-    public List<Unit> getUnitWithNoChildren( )
+    public List<Unit> getUnitWithNoChildren(  )
     {
-        return _unitDAO.getUnitWithNoChildren( );
+        return _unitDAO.getUnitWithNoChildren(  );
     }
-
 }

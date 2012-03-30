@@ -31,62 +31,34 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.unittree.business.action;
-
-import fr.paris.lutece.portal.service.spring.SpringContextService;
-import fr.paris.lutece.portal.service.util.AppLogService;
-
-import org.springframework.beans.factory.BeanDefinitionStoreException;
-import org.springframework.beans.factory.CannotLoadBeanClassException;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+package fr.paris.lutece.plugins.unittree.business.unit;
 
 
 /**
  *
- * This factory is used for :
- * <ul>
- * <li>
- * creating new instance of {@link IAction} depending of the action type
- * </li>
- * </ul>
+ * AbstractUnitAttribute
+ * @param <T> The class object of the attribute
  *
  */
-public class ActionFactory implements IActionFactory
+public abstract class AbstractUnitAttribute<T> implements IUnitAttribute<T>
 {
+    private T _attribute;
+
     /**
      * {@inheritDoc}
      */
     @Override
-    public IAction newAction( String strActionType )
+    public void setAttribute( T attribute )
     {
-        IAction action = null;
+        _attribute = attribute;
+    }
 
-        try
-        {
-            action = SpringContextService.getBean( strActionType );
-        }
-        catch ( BeanDefinitionStoreException e )
-        {
-            AppLogService.debug( "ActionFactory ERROR : could not load bean '" + e.getBeanName(  ) + "' - CAUSE : " +
-                e.getMessage(  ) );
-        }
-        catch ( NoSuchBeanDefinitionException e )
-        {
-            AppLogService.debug( "ActionFactory ERROR : could not load bean '" + e.getBeanName(  ) + "' - CAUSE : " +
-                e.getMessage(  ) );
-        }
-        catch ( CannotLoadBeanClassException e )
-        {
-            AppLogService.debug( "ActionFactory ERROR : could not load bean '" + e.getBeanName(  ) + "' - CAUSE : " +
-                e.getMessage(  ) );
-        }
-
-        // If no action is defined for strActionType, then create a DefaultAction
-        if ( action == null )
-        {
-            action = new DefaultAction(  );
-        }
-
-        return action;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public T getAttribute(  )
+    {
+        return _attribute;
     }
 }

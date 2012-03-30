@@ -36,9 +36,10 @@ package fr.paris.lutece.plugins.unittree.web;
 import fr.paris.lutece.plugins.unittree.business.action.UnitAction;
 import fr.paris.lutece.plugins.unittree.business.action.UnitUserAction;
 import fr.paris.lutece.plugins.unittree.business.unit.Unit;
-import fr.paris.lutece.plugins.unittree.service.sector.ISectorService;
+import fr.paris.lutece.plugins.unittree.service.UnitErrorException;
 import fr.paris.lutece.plugins.unittree.service.unit.IUnitService;
 import fr.paris.lutece.plugins.unittree.service.unit.IUnitUserService;
+import fr.paris.lutece.plugins.unittree.service.unit.UnitAttributeManager;
 import fr.paris.lutece.plugins.unittree.service.unit.UnitResourceIdService;
 import fr.paris.lutece.plugins.unittree.service.unit.UnitUserAttributeManager;
 import fr.paris.lutece.plugins.unittree.web.action.IUnitPluginAction;
@@ -92,7 +93,6 @@ public class UnitJspBean extends PluginAdminPageJspBean
 
     // BEAN
     private static final String BEAN_UNIT_USER_SERVICE = "unittree.unitUserService";
-    private static final String BEAN_SECTOR_SERVICE = "unittree.sectorService";
 
     // PROPERTIES
     private static final String PROPERTY_MANAGE_UNITS_PAGE_TITLE = "unittree.manageUnits.pageTitle";
@@ -121,9 +121,8 @@ public class UnitJspBean extends PluginAdminPageJspBean
     private static final String MARK_LIST_UNIT_USER_PLUGIN_ACTIONS = "listUnitUserPluginActions";
     private static final String MARK_UNIT = "unit";
     private static final String MARK_USER = "user";
+    private static final String MARK_LIST_UNIT_ATTRIBUTES = "listUnitAttributes";
     private static final String MARK_LIST_UNIT_USER_ATTRIBUTES = "listUnitUserAttributes";
-    private static final String MARK_LIST_SECTORS = "listSectors";
-    private static final String MARK_HAS_SUB_UNITS = "hasSubUnits";
 
     // PARAMETERS
     private static final String PARAMETER_CANCEL = "cancel";
@@ -134,7 +133,6 @@ public class UnitJspBean extends PluginAdminPageJspBean
     private static final String PARAMETER_SESSION = "session";
     private static final String PARAMETER_SELECT_SUB_UNITS = "selectSubUnits";
     private static final String PARAMETER_ID_SELECTED_UNIT = "idSelectedUnit";
-    private static final String PARAMETER_ID_SECTOR = "idSector";
 
     // TEMPLATES
     private static final String TEMPLATE_MANAGE_UNITS = "/admin/plugins/unittree/manage_units.html";
@@ -157,9 +155,8 @@ public class UnitJspBean extends PluginAdminPageJspBean
     private static final String XSL_PARAMETER_ID_CURRENT_UNIT = "id-current-unit";
 
     // SERVICES
-    private IUnitService _unitService = (IUnitService) SpringContextService.getBean( IUnitService.BEAN_UNIT_SERVICE );
-    private IUnitUserService _unitUserService = (IUnitUserService) SpringContextService.getBean( BEAN_UNIT_USER_SERVICE );
-    private ISectorService _sectorService = (ISectorService) SpringContextService.getBean( BEAN_SECTOR_SERVICE );
+    private IUnitService _unitService = SpringContextService.getBean( IUnitService.BEAN_UNIT_SERVICE );
+    private IUnitUserService _unitUserService = SpringContextService.getBean( BEAN_UNIT_USER_SERVICE );
     private IUnitSearchFields _unitUserSearchFields = new UnitUserSearchFields(  );
 
     // GET
@@ -281,7 +278,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
         }
 
         model.put( MARK_PARENT_UNIT, unitParent );
-        model.put( MARK_LIST_SECTORS, _sectorService.findAll(  ) );
+        UnitAttributeManager.fillModel( request, getUser(  ), model, MARK_LIST_UNIT_ATTRIBUTES );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CREATE_UNIT, getLocale(  ), model );
 
@@ -321,24 +318,11 @@ public class UnitJspBean extends PluginAdminPageJspBean
         }
 
         Unit parentUnit = _unitService.getUnit( unit.getIdParent(  ), false );
-        boolean bHasSubUnits = _unitService.hasSubUnits( unit.getIdUnit(  ) );
 
         Map<String, Object> model = new HashMap<String, Object>(  );
         model.put( MARK_UNIT, unit );
         model.put( MARK_PARENT_UNIT, parentUnit );
-
-        if ( !bHasSubUnits )
-        {
-            // If the unit does not have sub units, then display all sectors
-            model.put( MARK_LIST_SECTORS, _sectorService.findAll(  ) );
-        }
-        else
-        {
-            // Otherwise, only display the associated sectors
-            model.put( MARK_LIST_SECTORS, _sectorService.findByIdUnit( unit.getIdUnit(  ) ) );
-        }
-
-        model.put( MARK_HAS_SUB_UNITS, bHasSubUnits );
+        UnitAttributeManager.fillModel( request, getUser(  ), model, MARK_LIST_UNIT_ATTRIBUTES );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MODIFY_UNIT, getLocale(  ), model );
 
@@ -600,8 +584,18 @@ public class UnitJspBean extends PluginAdminPageJspBean
         }
 
         Unit unit = new Unit(  );
+
         // Populate the bean
         populate( unit, request );
+
+        try
+        {
+            UnitAttributeManager.populate( unit, request );
+        }
+        catch ( UnitErrorException ue )
+        {
+            return AdminMessageService.getMessageUrl( request, ue.getI18nErrorMessage(  ), AdminMessage.TYPE_STOP );
+        }
 
         // Check mandatory fields
         Set<ConstraintViolation<Unit>> constraintViolations = BeanValidationUtil.validate( unit );
@@ -611,31 +605,16 @@ public class UnitJspBean extends PluginAdminPageJspBean
             return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
         }
 
-        // Ids sector
-        String[] strIdsSectors = request.getParameterValues( PARAMETER_ID_SECTOR );
-
-        if ( ( strIdsSectors != null ) && ( strIdsSectors.length > 0 ) )
-        {
-            for ( String strIdSector : strIdsSectors )
-            {
-                if ( StringUtils.isNotBlank( strIdSector ) && StringUtils.isNumeric( strIdSector ) )
-                {
-                    int nIdSector = Integer.parseInt( strIdSector );
-                    unit.addIdSector( nIdSector );
-                }
-            }
-        }
-
         try
         {
-            _unitService.createUnit( unit );
+            _unitService.createUnit( unit, request );
         }
         catch ( Exception ex )
         {
             // Something wrong happened... a database check might be needed
             AppLogService.error( ex.getMessage(  ) + " when creating an unit ", ex );
             // Revert
-            _unitService.removeUnit( unit.getIdUnit(  ) );
+            _unitService.removeUnit( unit.getIdUnit(  ), request );
 
             return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_GENERIC_MESSAGE, AdminMessage.TYPE_ERROR );
         }
@@ -688,6 +667,15 @@ public class UnitJspBean extends PluginAdminPageJspBean
         // Populate the bean
         populate( unit, request );
 
+        try
+        {
+            UnitAttributeManager.populate( unit, request );
+        }
+        catch ( UnitErrorException ue )
+        {
+            return AdminMessageService.getMessageUrl( request, ue.getI18nErrorMessage(  ), AdminMessage.TYPE_STOP );
+        }
+
         // Check mandatory fields
         Set<ConstraintViolation<Unit>> constraintViolations = BeanValidationUtil.validate( unit );
 
@@ -696,24 +684,9 @@ public class UnitJspBean extends PluginAdminPageJspBean
             return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
         }
 
-        // Ids sector
-        String[] strIdsSectors = request.getParameterValues( PARAMETER_ID_SECTOR );
-
-        if ( ( strIdsSectors != null ) && ( strIdsSectors.length > 0 ) )
-        {
-            for ( String strIdSector : strIdsSectors )
-            {
-                if ( StringUtils.isNotBlank( strIdSector ) && StringUtils.isNumeric( strIdSector ) )
-                {
-                    int nIdSector = Integer.parseInt( strIdSector );
-                    unit.addIdSector( nIdSector );
-                }
-            }
-        }
-
         try
         {
-            _unitService.updateUnit( unit );
+            _unitService.updateUnit( unit, request );
         }
         catch ( Exception ex )
         {
@@ -765,7 +738,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
 
             try
             {
-                _unitService.removeUnit( nIdUnit );
+                _unitService.removeUnit( nIdUnit, request );
             }
             catch ( Exception ex )
             {

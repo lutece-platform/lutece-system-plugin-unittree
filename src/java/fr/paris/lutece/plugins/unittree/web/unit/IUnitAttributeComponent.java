@@ -31,52 +31,39 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.unittree.business.action;
+package fr.paris.lutece.plugins.unittree.web.unit;
 
-import fr.paris.lutece.plugins.unittree.service.UnitTreePlugin;
-import fr.paris.lutece.portal.service.plugin.Plugin;
-import fr.paris.lutece.portal.service.plugin.PluginService;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
+import fr.paris.lutece.portal.business.user.AdminUser;
 
-import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 
 /**
  *
- * ActionHome
+ * IUnitUserAttributeComponent
  *
  */
-public final class ActionHome
+public interface IUnitAttributeComponent
 {
-    private static final String BEAN_ACTION_DAO = "unittree.actionDAO";
-    private static Plugin _plugin = PluginService.getPlugin( UnitTreePlugin.PLUGIN_NAME );
-    private static IActionDAO _dao = SpringContextService.getBean( BEAN_ACTION_DAO );
+    /**
+     * Fill the model of the unit user attribute component
+     * @param request the HTTP request
+     * @param user the current user
+     * @param model the model
+     */
+    void fillModel( HttpServletRequest request, AdminUser user, Map<String, Object> model );
 
     /**
-     * Private constructor - this class need not be instantiated
+     * Get the template
+     * @return the template
      */
-    private ActionHome(  )
-    {
-    }
+    String getTemplate(  );
 
     /**
-     * Returns the list of allowed actions for a given action type
-     * @param strActionType the action type
-     * @return A list of actions for a given action type
+     * Get the name
+     * @return the name
      */
-    public static List<IAction> getActionsList( String strActionType )
-    {
-        return _dao.selectActions( strActionType, _plugin );
-    }
-
-    /**
-     * Load the list of actions
-     * @param strActionType the action type
-     * @param strPermission the permission
-     * @return The List of actions
-     */
-    public static List<IAction> selectFilterByPermission( String strActionType, String strPermission )
-    {
-        return _dao.selectFilterByPermission( strActionType, strPermission, _plugin );
-    }
+    String getName(  );
 }

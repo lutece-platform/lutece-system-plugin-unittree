@@ -35,15 +35,18 @@ package fr.paris.lutece.plugins.unittree.service.unit;
 
 import fr.paris.lutece.plugins.unittree.business.action.IAction;
 import fr.paris.lutece.plugins.unittree.business.unit.Unit;
+import fr.paris.lutece.plugins.unittree.service.UnitErrorException;
 import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.util.ReferenceList;
+
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Locale;
 
-import javax.xml.transform.Source;
+import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.transaction.annotation.Transactional;
+import javax.xml.transform.Source;
 
 
 /**
@@ -60,47 +63,47 @@ public interface IUnitService
     /**
      * Get the unit
      * @param nIdUnit the id unit
-     * @param bGetIdsSector true if it must get the ids sector
+     * @param bGetAdditionalInfos true if it must get the additional infos
      * @return an instance of {@link Unit}
      */
-    Unit getUnit( int nIdUnit, boolean bGetIdsSector );
+    Unit getUnit( int nIdUnit, boolean bGetAdditionalInfos );
 
     /**
      * Get the root unit
-     * @param bGetIdsSector true if it must get the ids sector
+     * @param bGetAdditionalInfos true if it must get the ids sector
      * @return an instance of {@link Unit}
      */
-    Unit getRootUnit( boolean bGetIdsSector );
+    Unit getRootUnit( boolean bGetAdditionalInfos );
 
     /**
      * Get the unit by id user
      * @param nIdUser the id user
-     * @param bGetSectors true if it must get the ids sector
+     * @param bGetAdditionalInfos true if it must get the ids sector
      * @return an instance of {@link Unit}
      */
-    Unit getUnitByIdUser( int nIdUser, boolean bGetSectors );
+    Unit getUnitByIdUser( int nIdUser, boolean bGetAdditionalInfos );
 
     /**
      * Get all units
-     * @param bGetIdsSector true if it must get the ids sector
+     * @param bGetAdditionalInfos true if it must get the ids sector
      * @return a list of {@link Unit}
      */
-    List<Unit> getAllUnits( boolean bGetIdsSector );
+    List<Unit> getAllUnits( boolean bGetAdditionalInfos );
 
     /**
      * Get the units first level
-     * @param bGetIdsSector true if it must get the ids sector
+     * @param bGetAdditionalInfos true if it must get the ids sector
      * @return a list of {@link Unit}
      */
-    List<Unit> getUnitsFirstLevel( boolean bGetIdsSector );
+    List<Unit> getUnitsFirstLevel( boolean bGetAdditionalInfos );
 
     /**
      * Get the sub units from a given id unit
      * @param nIdUnit the id unit
-     * @param bGetIdsSector true if it must get the ids sector
+     * @param bGetAdditionalInfos true if it must get the ids sector
      * @return a list of {@link Unit}
      */
-    List<Unit> getSubUnits( int nIdUnit, boolean bGetIdsSector );
+    List<Unit> getSubUnits( int nIdUnit, boolean bGetAdditionalInfos );
 
     /**
      * Get the list of actions
@@ -211,35 +214,42 @@ public interface IUnitService
     /**
     * Create a unit
     * @param unit the unit
+    * @param request the HTTP request
     * @return the id unit
+    * @throws UnitErrorException exception if there is an application error
     */
     @Transactional( "unittree.transactionManager" )
-    int createUnit( Unit unit );
+    int createUnit( Unit unit, HttpServletRequest request )
+        throws UnitErrorException;
 
     /**
      * Update the unit
      * @param unit the unit
+     * @param request the HTTP request
+     * @throws UnitErrorException exception if there is an application error
      */
     @Transactional( "unittree.transactionManager" )
-    void updateUnit( Unit unit );
+    void updateUnit( Unit unit, HttpServletRequest request )
+        throws UnitErrorException;
 
     /**
      * Remove the unit only if the unit does not have sub units
      * @param nIdUnit the id unit
+     * @param request the HTTP request
      */
     @Transactional( "unittree.transactionManager" )
-    void removeUnit( int nIdUnit );
+    void removeUnit( int nIdUnit, HttpServletRequest request );
 
     /**
      * Return all the Unit of the Sector
      * @param lIdSector id sector
      * @return all the Unit of the Sector
-     */ 
+     */
     List<Unit> findBySectorId( long lIdSector );
 
     /**
      * Return all the Unit with no children (level 0)
      * @return all the Unit with no children (level 0)
      */
-    List<Unit> getUnitWithNoChildren( );
+    List<Unit> getUnitWithNoChildren(  );
 }

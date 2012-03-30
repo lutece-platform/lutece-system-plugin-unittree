@@ -139,7 +139,7 @@ public class UnitResourceIdService extends ResourceIdService
      */
     public ReferenceList getResourceIdList( Locale locale )
     {
-        IUnitService unitService = (IUnitService) SpringContextService.getBean( IUnitService.BEAN_UNIT_SERVICE );
+        IUnitService unitService = SpringContextService.getBean( IUnitService.BEAN_UNIT_SERVICE );
         ReferenceList listResources = new ReferenceList(  );
 
         for ( Unit unit : unitService.getAllUnits( false ) )
@@ -160,7 +160,7 @@ public class UnitResourceIdService extends ResourceIdService
     {
         if ( StringUtils.isNotBlank( strId ) && StringUtils.isNumeric( strId ) )
         {
-            IUnitService unitService = (IUnitService) SpringContextService.getBean( IUnitService.BEAN_UNIT_SERVICE );
+            IUnitService unitService = SpringContextService.getBean( IUnitService.BEAN_UNIT_SERVICE );
             int nIdUnit = Integer.parseInt( strId );
             Unit unit = unitService.getUnit( nIdUnit, false );
 

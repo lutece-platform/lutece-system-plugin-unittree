@@ -35,12 +35,13 @@ package fr.paris.lutece.plugins.unittree.business.unit;
 
 import fr.paris.lutece.portal.service.rbac.RBACResource;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.hibernate.validator.constraints.NotBlank;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.validator.constraints.NotBlank;
 
 /**
  *
@@ -59,7 +60,7 @@ public class Unit implements RBACResource
     private String _strLabel;
     @NotBlank
     private String _strDescription;
-    private List<Integer> _listIdsSector = new ArrayList<Integer>(  );
+    private Map<String, IUnitAttribute> _mapAttributes = new HashMap<String, IUnitAttribute>(  );
 
     /**
      * Get the id unit
@@ -134,59 +135,32 @@ public class Unit implements RBACResource
     }
 
     /**
-     * Set the list of ids sector
-     * @param listIdsSector the list of ids sector
-     */
-    public void setListIdsSector( List<Integer> listIdsSector )
-    {
-        this._listIdsSector = listIdsSector;
-    }
-
-    /**
-     * Get the list of ids sector
-     * @return the list of ids sector
-     */
-    public List<Integer> getListIdsSector(  )
-    {
-        return _listIdsSector;
-    }
-
-    /**
-     * Add the id sector
-     * @param nIdSector the id sector
-     */
-    public void addIdSector( int nIdSector )
-    {
-        if ( _listIdsSector == null )
-        {
-            _listIdsSector = new ArrayList<Integer>(  );
-        }
-
-        _listIdsSector.add( nIdSector );
-    }
-
-    /**
-     * Check if the unit has the given id sector
-     * @param nIdSector the id sector
-     * @return true if the unit has the id sector, false otherwise
-     */
-    public boolean hasIdSector( int nIdSector )
-    {
-        if ( ( _listIdsSector != null ) && !_listIdsSector.isEmpty(  ) )
-        {
-            return _listIdsSector.contains( nIdSector );
-        }
-
-        return false;
-    }
-
-    /**
      * Check if the unit is the root unit
      * @return true if the unit is the root unit, false otherwise
      */
     public boolean isRoot(  )
     {
         return _nIdUnit == ID_ROOT;
+    }
+
+    /**
+     * Get the attribute from a given key
+     * @param <T> the class of the attribute
+     * @param strKey the key of the attribute
+     * @return the attribute
+     */
+    public <T> IUnitAttribute<T> getAttribute( String strKey )
+    {
+        return (IUnitAttribute<T>) _mapAttributes.get( strKey );
+    }
+
+    /**
+     * Add an attribute
+     * @param attribute the attribute to add
+     */
+    public void addAttribute( IUnitAttribute<?> attribute )
+    {
+        _mapAttributes.put( attribute.getAttributeName(  ), attribute );
     }
 
     /**
