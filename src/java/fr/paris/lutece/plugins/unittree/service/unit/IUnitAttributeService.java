@@ -50,19 +50,15 @@ public interface IUnitAttributeService
     * Do create the additional attributes of the given unit
     * @param unit the unit
     * @param request the HTTP request
-    * @throws UnitErrorException exception if there are errors (ex: mandatory fields)
     */
-    void doCreateUnit( Unit unit, HttpServletRequest request )
-        throws UnitErrorException;
+    void doCreateUnit( Unit unit, HttpServletRequest request );
 
     /**
      * Do modify the additional attributes of the given unit
      * @param unit the unit
      * @param request the HTTP request
-     * @throws UnitErrorException exception if there are errors (ex: mandatory fields)
      */
-    void doModifyUnit( Unit unit, HttpServletRequest request )
-        throws UnitErrorException;
+    void doModifyUnit( Unit unit, HttpServletRequest request );
 
     /**
      * Do remove the additional attributes

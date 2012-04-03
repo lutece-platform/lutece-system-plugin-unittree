@@ -126,10 +126,8 @@ public final class UnitAttributeManager
      * Do create the additional attributes of the given unit
      * @param unit the unit
      * @param request the HTTP request
-     * @throws UnitErrorException exception if there are errors (ex: mandatory fields)
      */
     public static void doCreateUnit( Unit unit, HttpServletRequest request )
-        throws UnitErrorException
     {
         for ( IUnitAttributeService service : UnitAttributeManager.getListUnitAttributeService(  ) )
         {
@@ -141,10 +139,8 @@ public final class UnitAttributeManager
      * Do modify the additional attributes of the given unit
      * @param unit the unit
      * @param request the HTTP request
-     * @throws UnitErrorException exception if there are errors (ex: mandatory fields)
      */
     public static void doModifyUnit( Unit unit, HttpServletRequest request )
-        throws UnitErrorException
     {
         for ( IUnitAttributeService service : UnitAttributeManager.getListUnitAttributeService(  ) )
         {

@@ -35,14 +35,17 @@ package fr.paris.lutece.plugins.unittree.web.action;
 
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 
+import java.io.Serializable;
+
 
 /**
  *
  * DefaultUnitSearchFields
  *
  */
-public abstract class DefaultUnitSearchFields implements IUnitSearchFields
+public abstract class DefaultUnitSearchFields implements IUnitSearchFields, Serializable
 {
+    private static final long serialVersionUID = 7400229591290783994L;
     private static final String PROPERTY_ITEM_PER_PAGE = "unittree.itemsPerPage";
     private int _nItemsPerPage;
     private int _nDefaultItemsPerPage = AppPropertiesService.getPropertyInt( PROPERTY_ITEM_PER_PAGE, 50 );

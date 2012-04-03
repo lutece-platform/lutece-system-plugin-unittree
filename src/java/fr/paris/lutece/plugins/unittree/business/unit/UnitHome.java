@@ -192,4 +192,23 @@ public final class UnitHome
     {
         return _dao.isUserInUnit( nIdUser, _plugin );
     }
+
+    /**
+     * Return all the Unit with no children (level 0)
+     * @return all the Unit with no children (level 0)
+     */
+    public static List<Unit> getUnitWithNoChildren(  )
+    {
+        return _dao.getUnitWithNoChildren( _plugin );
+    }
+
+    /**
+     * Find the sector id
+     * @param nIdSector the id sector
+     * @return a list of {@link Unit}
+     */
+    public static List<Unit> findBySectorId( int nIdSector )
+    {
+        return _dao.findBySectorId( nIdSector, _plugin );
+    }
 }

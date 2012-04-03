@@ -34,7 +34,6 @@
 package fr.paris.lutece.plugins.unittree.service.unit;
 
 import fr.paris.lutece.plugins.unittree.business.action.IAction;
-import fr.paris.lutece.plugins.unittree.business.unit.IUnitDAO;
 import fr.paris.lutece.plugins.unittree.business.unit.Unit;
 import fr.paris.lutece.plugins.unittree.business.unit.UnitFilter;
 import fr.paris.lutece.plugins.unittree.business.unit.UnitHome;
@@ -94,8 +93,6 @@ public class UnitService implements IUnitService
     private IUnitUserService _unitUserService;
     @Inject
     private IActionService _actionService;
-    @Inject
-    private IUnitDAO _unitDAO;
 
     // GET
 
@@ -310,14 +307,33 @@ public class UnitService implements IUnitService
     }
 
     /**
-     * Gets the XSL to display user spaces tree
-     * @return The XSL to display user spaces tree
+     * {@inheritDoc}
      */
+    @Override
     public Source getTreeXsl(  )
     {
         FileInputStream fis = AppPathService.getResourceAsStream( PATH_XSL, FILE_TREE_XSL );
 
         return new StreamSource( fis );
+    }
+
+    /**
+     * Find by sector id
+     * @param nIdSector id sector
+     * @return list of Unit found
+     */
+    public List<Unit> findBySectorId( int nIdSector )
+    {
+        return UnitHome.findBySectorId( nIdSector );
+    }
+
+    /**
+     * Return all the Unit with no children (level 0)
+     * @return all the Unit with no children (level 0)
+     */
+    public List<Unit> getUnitWithNoChildren(  )
+    {
+        return UnitHome.getUnitWithNoChildren(  );
     }
 
     // CHECKS
@@ -514,24 +530,5 @@ public class UnitService implements IUnitService
         }
 
         XmlUtil.endElement( sbXML, TAG_UNIT );
-    }
-
-    /**
-     * Find by sector id
-     * @param lIdSector id sector
-     * @return list of Unit found
-     */
-    public List<Unit> findBySectorId( long lIdSector )
-    {
-        return _unitDAO.findBySectorId( lIdSector );
-    }
-
-    /**
-     * Return all the Unit with no children (level 0)
-     * @return all the Unit with no children (level 0)
-     */
-    public List<Unit> getUnitWithNoChildren(  )
-    {
-        return _unitDAO.getUnitWithNoChildren(  );
     }
 }

@@ -66,4 +66,11 @@ public interface IUnitAttributeComponent
      * @return the name
      */
     String getName(  );
+
+    /**
+     * Check if the component is displayed in the creation/modification
+     * unit form
+     * @return true if it is displayed in the unit form, false otherwise
+     */
+    boolean isDisplayedInUnitForm(  );
 }

@@ -66,6 +66,8 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class UnitUserSearchFields extends DefaultUnitSearchFields
 {
+    private static final long serialVersionUID = -4692457181851661527L;
+
     // PARAMETERS
     private static final String PARAMETER_ID_UNIT = "idUnit";
     private static final String PARAMETER_SESSION = "session";

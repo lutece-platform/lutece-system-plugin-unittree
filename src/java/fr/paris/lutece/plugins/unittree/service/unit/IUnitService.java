@@ -135,6 +135,19 @@ public interface IUnitService
      */
     Source getTreeXsl(  );
 
+    /**
+     * Find by sector id
+     * @param nIdSector id sector
+     * @return list of Unit found
+     */
+    List<Unit> findBySectorId( int nIdSector );
+
+    /**
+     * Return all the Unit with no children (level 0)
+     * @return all the Unit with no children (level 0)
+     */
+    List<Unit> getUnitWithNoChildren(  );
+
     // CHECKS
 
     /**
@@ -239,17 +252,4 @@ public interface IUnitService
      */
     @Transactional( "unittree.transactionManager" )
     void removeUnit( int nIdUnit, HttpServletRequest request );
-
-    /**
-     * Return all the Unit of the Sector
-     * @param lIdSector id sector
-     * @return all the Unit of the Sector
-     */
-    List<Unit> findBySectorId( long lIdSector );
-
-    /**
-     * Return all the Unit with no children (level 0)
-     * @return all the Unit with no children (level 0)
-     */
-    List<Unit> getUnitWithNoChildren(  );
 }

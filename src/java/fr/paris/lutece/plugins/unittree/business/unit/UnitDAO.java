@@ -279,6 +279,7 @@ public class UnitDAO implements IUnitDAO
     /**
      * {@inheritDoc}
      */
+    @Override
     public List<Unit> selectByFilter( UnitFilter cmFilter, Plugin plugin )
     {
         List<Unit> listUnits = new ArrayList<Unit>(  );
@@ -383,6 +384,57 @@ public class UnitDAO implements IUnitDAO
         return bIsUserInAnUnit;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Unit> findBySectorId( int nIdSector, Plugin plugin )
+    {
+        List<Unit> listUnits = new ArrayList<Unit>(  );
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_SECTOR, plugin );
+        daoUtil.setInt( 1, nIdSector );
+        daoUtil.executeQuery(  );
+
+        while ( daoUtil.next(  ) )
+        {
+            int nIndex = 1;
+            Unit unit = new Unit(  );
+            unit.setIdUnit( daoUtil.getInt( nIndex++ ) );
+            unit.setLabel( daoUtil.getString( nIndex++ ) );
+            unit.setDescription( daoUtil.getString( nIndex++ ) );
+            listUnits.add( unit );
+        }
+
+        daoUtil.free(  );
+
+        return listUnits;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Unit> getUnitWithNoChildren( Plugin plugin )
+    {
+        List<Unit> listUnits = new ArrayList<Unit>(  );
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_NO_CHILDREN, plugin );
+        daoUtil.executeQuery(  );
+
+        while ( daoUtil.next(  ) )
+        {
+            int nIndex = 1;
+            Unit unit = new Unit(  );
+            unit.setIdUnit( daoUtil.getInt( nIndex++ ) );
+            unit.setLabel( daoUtil.getString( nIndex++ ) );
+            unit.setDescription( daoUtil.getString( nIndex++ ) );
+            listUnits.add( unit );
+        }
+
+        daoUtil.free(  );
+
+        return listUnits;
+    }
+
     // PRIVATE METHODS
 
     /**
@@ -465,55 +517,5 @@ public class UnitDAO implements IUnitDAO
         {
             daoUtil.setString( nIndex, uFilter.getDescription(  ) );
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public List<Unit> findBySectorId( long lIdSector )
-    {
-        List<Unit> units = new ArrayList<Unit>(  );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_SECTOR );
-        daoUtil.setLong( 1, lIdSector );
-        daoUtil.executeQuery(  );
-
-        while ( daoUtil.next(  ) )
-        {
-            int nIndex = 1;
-            Unit unit = new Unit(  );
-            unit.setIdUnit( daoUtil.getInt( nIndex++ ) );
-            unit.setLabel( daoUtil.getString( nIndex++ ) );
-            unit.setDescription( daoUtil.getString( nIndex++ ) );
-            units.add( unit );
-        }
-
-        daoUtil.free(  );
-
-        return units;
-    }
-
-    /**
-     * Return all the Unit with no children (level 0)
-     * @return all the Unit with no children (level 0)
-     */
-    public List<Unit> getUnitWithNoChildren(  )
-    {
-        List<Unit> units = new ArrayList<Unit>(  );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_NO_CHILDREN );
-        daoUtil.executeQuery(  );
-
-        while ( daoUtil.next(  ) )
-        {
-            int nIndex = 1;
-            Unit unit = new Unit(  );
-            unit.setIdUnit( daoUtil.getInt( nIndex++ ) );
-            unit.setLabel( daoUtil.getString( nIndex++ ) );
-            unit.setDescription( daoUtil.getString( nIndex++ ) );
-            units.add( unit );
-        }
-
-        daoUtil.free(  );
-
-        return units;
     }
 }

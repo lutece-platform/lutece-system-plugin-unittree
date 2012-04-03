@@ -144,6 +144,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
 
     // JSP
     private static final String JSP_MANAGE_UNITS = "ManageUnits.jsp";
+    private static final String JSP_MODIFY_UNIT = "ModifyUnit.jsp";
     private static final String JSP_MOVE_USER = "MoveUser.jsp";
     private static final String JSP_URL_MANAGE_UNITS = "jsp/admin/plugins/unittree/ManageUnits.jsp";
     private static final String JSP_URL_DO_REMOVE_UNIT = "jsp/admin/plugins/unittree/DoRemoveUnit.jsp";
@@ -253,8 +254,6 @@ public class UnitJspBean extends PluginAdminPageJspBean
     {
         setPageTitleProperty( PROPERTY_CREATE_UNIT_PAGE_TITLE );
 
-        Map<String, Object> model = new HashMap<String, Object>(  );
-
         Unit unitParent = null;
         String strIdParent = request.getParameter( PARAMETER_ID_UNIT );
 
@@ -277,6 +276,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
             throw new AccessDeniedException( strErrorMessage );
         }
 
+        Map<String, Object> model = new HashMap<String, Object>(  );
         model.put( MARK_PARENT_UNIT, unitParent );
         UnitAttributeManager.fillModel( request, getUser(  ), model, MARK_LIST_UNIT_ATTRIBUTES );
 
@@ -565,6 +565,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
         String strCancel = request.getParameter( PARAMETER_CANCEL );
         String strIdParent = request.getParameter( PARAMETER_ID_PARENT );
 
+        // The user has clicked on the cancel button => redirect to the manage page
         if ( StringUtils.isNotBlank( strCancel ) || StringUtils.isBlank( strIdParent ) ||
                 !StringUtils.isNumeric( strIdParent ) )
         {
@@ -619,7 +620,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
             return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_GENERIC_MESSAGE, AdminMessage.TYPE_ERROR );
         }
 
-        UrlItem url = new UrlItem( JSP_MANAGE_UNITS );
+        UrlItem url = new UrlItem( JSP_MODIFY_UNIT );
         url.addParameter( PARAMETER_ID_UNIT, unit.getIdUnit(  ) );
 
         return url.getUrl(  );
@@ -635,6 +636,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
         String strCancel = request.getParameter( PARAMETER_CANCEL );
         String strIdUnit = request.getParameter( PARAMETER_ID_UNIT );
 
+        // The user has clicked on the cancel button => redirect to the manage page
         if ( StringUtils.isNotBlank( strCancel ) )
         {
             UrlItem url = new UrlItem( JSP_MANAGE_UNITS );
@@ -696,7 +698,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
             return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_GENERIC_MESSAGE, AdminMessage.TYPE_ERROR );
         }
 
-        UrlItem url = new UrlItem( JSP_MANAGE_UNITS );
+        UrlItem url = new UrlItem( JSP_MODIFY_UNIT );
         url.addParameter( PARAMETER_ID_UNIT, unit.getIdUnit(  ) );
 
         return url.getUrl(  );

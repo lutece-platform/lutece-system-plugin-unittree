@@ -17,13 +17,13 @@
     		</p>
     		<#if listUnitAttributes?? && listUnitAttributes?has_content>
 				<#list listUnitAttributes as unitAttribute>
-					<#if unitAttribute.template?has_content>
+					<#if unitAttribute.template?has_content && unitAttribute.displayedInUnitForm>
 						<#include unitAttribute.template />
 					</#if>
 				</#list>
 			</#if>
     		<p>
-   				<input type="submit" name="create" class="button" value="#i18n{portal.util.labelCreate}" />
+   				<input type="submit" name="save" class="button" value="#i18n{portal.util.labelCreate}" />
     			<input type="submit" name="cancel" class="button" value="#i18n{portal.util.labelCancel}" />
     		</p>
     	</form>
