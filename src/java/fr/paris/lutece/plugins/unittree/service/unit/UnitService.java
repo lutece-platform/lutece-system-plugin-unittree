@@ -208,8 +208,6 @@ public class UnitService implements IUnitService
     @Override
     public List<IAction> getListActions( String strActionType, Locale locale, Unit unit, AdminUser user )
     {
-        List<IAction> listActions = new ArrayList<IAction>(  );
-
         // If the user is admin, then no need to filter by permission
         if ( user.isAdmin(  ) && ( unit != null ) )
         {
@@ -227,32 +225,34 @@ public class UnitService implements IUnitService
 
         Unit unitUser = getUnitByIdUser( user.getUserId(  ), false );
 
+        List<IAction> listActions = new ArrayList<IAction>(  );
+
         if ( ( unitUser != null ) && ( unit != null ) )
         {
-            // First fetch the RBAC resource on which the actions will be filtered
-            Unit targetUnit = null;
-
-            // If the user is in the current unit, then get the list of actions of the current unit
-            if ( unitUser.getIdUnit(  ) == unit.getIdUnit(  ) )
-            {
-                targetUnit = unit;
-            }
-
-            // If the user is in a parent unit of the current unit, then get the list of actions of the parent unit
-            else if ( isParent( unitUser, unit ) )
-            {
-                targetUnit = unitUser;
-            }
-
             // If the unit has sectors and does not have sub units, then remove 'CREATE' action
             if ( !canCreateSubUnit( unit.getIdUnit(  ) ) )
             {
-                listActions = _actionService.getListActions( strActionType, locale, targetUnit, user,
+                listActions = _actionService.getListActions( strActionType, locale, unit, user,
                         UnitResourceIdService.PERMISSION_CREATE );
             }
             else
             {
-                listActions = _actionService.getListActions( strActionType, locale, targetUnit, user );
+                listActions = _actionService.getListActions( strActionType, locale, unit, user );
+            }
+
+            // If the user is in a parent unit of the current unit, then add the list of actions of the parent unit to the list
+            if ( isParent( unitUser, unit ) )
+            {
+                List<IAction> listParentUnitActions = _actionService.getListActions( strActionType, locale, unitUser,
+                        user );
+
+                for ( IAction parentUnitAction : listParentUnitActions )
+                {
+                    if ( !listActions.contains( parentUnitAction ) )
+                    {
+                        listActions.add( parentUnitAction );
+                    }
+                }
             }
         }
 
@@ -279,10 +279,11 @@ public class UnitService implements IUnitService
 
         if ( unit != null )
         {
-            ReferenceList listSubUnits = ReferenceList.convert( getSubUnits( nIdUnit, false ), ATTRIBUTE_ID_UNIT,
-                    ATTRIBUTE_LABEL, true );
             String strLabelParentUnit = I18nService.getLocalizedString( PROPERTY_LABEL_PARENT_UNIT, locale );
+            ReferenceList listSubUnits = new ReferenceList(  );
             listSubUnits.addItem( unit.getIdParent(  ), strLabelParentUnit );
+            listSubUnits.addAll( ReferenceList.convert( getSubUnits( nIdUnit, false ), ATTRIBUTE_ID_UNIT,
+                    ATTRIBUTE_LABEL, true ) );
 
             return listSubUnits;
         }

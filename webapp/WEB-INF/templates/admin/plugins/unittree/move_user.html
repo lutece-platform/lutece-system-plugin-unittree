@@ -8,13 +8,36 @@
     		</p>
     		<p>
     			<label>#i18n{unittree.moveUser.labelUnit} : </label>
-   				<@combo name="idSelectedUnit" default_value=unit.idUnit! items=listSubUnits />
-   				<input type="submit" name="selectSubUnits" class="button" value="#i18n{unittree.moveUser.btnSelectSubUnits}" />
     		</p>
+    		<br />
+    		<#if listSubUnits?? && listSubUnits?has_content>
+    			<div class="highlight-box" >
+    				<#if unitParent??>
+    					<#assign idParent = unitParent.idUnit>
+    				<#else>
+    					<#assign idParent = -1>
+    				</#if>
+   					<p>
+    					<a href="jsp/admin/plugins/unittree/DoMoveUser.jsp?selectSubUnits=selectSubUnits&amp;idUser=${user.userId!}&amp;idUnit=${unit.idUnit!}&amp;idSelectedUnit=${idParent!}">
+   							<img src="images/admin/skin/actions/up.png" alt="#i18n{unittree.moveUser.labelMoveUp}" title="#i18n{unittree.moveUser.labelMoveUp}" />
+   							#i18n{unittree.moveUser.labelMoveUp}
+   						</a>
+   					</p>
+    				<#list listSubUnits as subUnit>
+    					<p>
+	   						<input type="radio" name="idSelectedUnit" value="${subUnit.idUnit!}" />
+	   						<a href="jsp/admin/plugins/unittree/DoMoveUser.jsp?selectSubUnits=selectSubUnits&amp;idUser=${user.userId!}&amp;idUnit=${unit.idUnit!}&amp;idSelectedUnit=${subUnit.idUnit!}">
+	   							${subUnit.label!}
+	   						</a>
+	   					</p>
+    				</#list>
+    			</div>
+    		</#if>
+    		
     		<p>
     			<input type="hidden" name="idUnit" value="${unit.idUnit!}" />
     			<input type="hidden" name="idUser" value="${user.userId!}" />
-   				<input type="submit" name="create" class="button" value="#i18n{unittree.moveUser.btnMove}" />
+   				<input type="submit" name="move" class="button" value="#i18n{unittree.moveUser.btnMove}" />
     			<input type="submit" name="cancel" class="button" value="#i18n{portal.util.labelCancel}" />
     		</p>
     	</form>

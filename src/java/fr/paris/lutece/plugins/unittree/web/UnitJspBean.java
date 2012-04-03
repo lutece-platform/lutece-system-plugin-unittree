@@ -61,7 +61,6 @@ import fr.paris.lutece.portal.web.constants.Messages;
 import fr.paris.lutece.portal.web.pluginaction.DefaultPluginActionResult;
 import fr.paris.lutece.portal.web.pluginaction.IPluginActionResult;
 import fr.paris.lutece.portal.web.pluginaction.PluginActionManager;
-import fr.paris.lutece.util.ReferenceList;
 import fr.paris.lutece.util.UniqueIDGenerator;
 import fr.paris.lutece.util.beanvalidation.BeanValidationUtil;
 import fr.paris.lutece.util.html.HtmlTemplate;
@@ -120,6 +119,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
     private static final String MARK_LIST_UNIT_USER_ACTIONS = "listUnitUserActions";
     private static final String MARK_LIST_UNIT_USER_PLUGIN_ACTIONS = "listUnitUserPluginActions";
     private static final String MARK_UNIT = "unit";
+    private static final String MARK_UNIT_PARENT = "unitParent";
     private static final String MARK_USER = "user";
     private static final String MARK_LIST_UNIT_ATTRIBUTES = "listUnitAttributes";
     private static final String MARK_LIST_UNIT_USER_ATTRIBUTES = "listUnitUserAttributes";
@@ -496,7 +496,8 @@ public class UnitJspBean extends PluginAdminPageJspBean
             throw new AccessDeniedException( strErrorMessage );
         }
 
-        ReferenceList listSubUnits = null;
+        List<Unit> listSubUnits = null;
+        Unit unitParent = null;
         String strIdSelectedUnit = request.getParameter( PARAMETER_ID_SELECTED_UNIT );
 
         if ( StringUtils.isNotBlank( strIdSelectedUnit ) &&
@@ -504,17 +505,33 @@ public class UnitJspBean extends PluginAdminPageJspBean
                 Integer.toString( Unit.ID_NULL ).equals( strIdSelectedUnit ) ) )
         {
             int nIdSelectedUnit = Integer.parseInt( strIdSelectedUnit );
-            listSubUnits = _unitService.getSubUnitsAsReferenceList( nIdSelectedUnit, getLocale(  ) );
+            Unit selectedUnit = _unitService.getUnit( nIdSelectedUnit, false );
+
+            if ( selectedUnit != null )
+            {
+                unitParent = _unitService.getUnit( selectedUnit.getIdParent(  ), false );
+            }
+
+            listSubUnits = _unitService.getSubUnits( nIdSelectedUnit, false );
         }
 
         if ( listSubUnits == null )
         {
-            listSubUnits = _unitService.getSubUnitsAsReferenceList( unit.getIdParent(  ), getLocale(  ) );
+            // We need to get the unit parent parent
+            unitParent = _unitService.getUnit( unit.getIdParent(  ), false );
+
+            if ( unitParent != null )
+            {
+                unitParent = _unitService.getUnit( unitParent.getIdParent(  ), false );
+            }
+
+            listSubUnits = _unitService.getSubUnits( unit.getIdParent(  ), false );
         }
 
         Map<String, Object> model = new HashMap<String, Object>(  );
 
         model.put( MARK_UNIT, unit );
+        model.put( MARK_UNIT_PARENT, unitParent );
         model.put( MARK_USER, user );
         model.put( MARK_LIST_SUB_UNITS, listSubUnits );
 
@@ -910,6 +927,12 @@ public class UnitJspBean extends PluginAdminPageJspBean
             url.addParameter( PARAMETER_ID_SELECTED_UNIT, strIdSelectedUnit );
 
             return url.getUrl(  );
+        }
+
+        // The user must have the permission to move on both units (from and to)
+        if ( !_unitService.isAuthorized( strIdSelectedUnit, UnitResourceIdService.PERMISSION_MOVE_USER, getUser(  ) ) )
+        {
+            return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP );
         }
 
         int nIdUser = Integer.parseInt( strIdUser );

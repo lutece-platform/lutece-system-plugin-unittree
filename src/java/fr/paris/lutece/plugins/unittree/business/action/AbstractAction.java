@@ -187,4 +187,48 @@ public abstract class AbstractAction implements IAction
     {
         _strPermission = strPermission;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode(  )
+    {
+        final int prime = 31;
+        int result = 1;
+        result = ( prime * result ) + _nIdAction;
+
+        return result;
+    }
+
+    /**
+    * {@inheritDoc}
+    */
+    @Override
+    public boolean equals( Object obj )
+    {
+        if ( this == obj )
+        {
+            return true;
+        }
+
+        if ( obj == null )
+        {
+            return false;
+        }
+
+        if ( getClass(  ) != obj.getClass(  ) )
+        {
+            return false;
+        }
+
+        AbstractAction other = (AbstractAction) obj;
+
+        if ( _nIdAction != other._nIdAction )
+        {
+            return false;
+        }
+
+        return true;
+    }
 }
