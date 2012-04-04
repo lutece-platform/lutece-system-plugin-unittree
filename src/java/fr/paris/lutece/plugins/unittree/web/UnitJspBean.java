@@ -123,6 +123,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
     private static final String MARK_USER = "user";
     private static final String MARK_LIST_UNIT_ATTRIBUTES = "listUnitAttributes";
     private static final String MARK_LIST_UNIT_USER_ATTRIBUTES = "listUnitUserAttributes";
+    private static final String MARK_MAP_ID_USER_UNIT = "mapIdUserUnit";
 
     // PARAMETERS
     private static final String PARAMETER_CANCEL = "cancel";
@@ -218,13 +219,18 @@ public class UnitJspBean extends PluginAdminPageJspBean
         Map<String, Object> model = new HashMap<String, Object>(  );
 
         // Add elements for user search form in the model
-        List<AdminUser> listUsers = _unitUserService.getUsers( unit.getIdUnit(  ) );
+        Map<String, Unit> mapIdUserUnit = new HashMap<String, Unit>(  );
+        _unitUserSearchFields.setInDepthSearch( request );
+
+        List<AdminUser> listUsers = _unitUserService.getUsers( unit.getIdUnit(  ), mapIdUserUnit,
+                _unitUserSearchFields.isInDepthSearch(  ) );
         String strBaseUrl = AppPathService.getBaseUrl( request ) + JSP_URL_MANAGE_UNITS;
         _unitUserSearchFields.fillModelForUserSearchForm( listUsers, strBaseUrl, request, model, unit );
 
         model.put( MARK_UNIT_TREE, strHtmlUnitsTree );
         model.put( MARK_UNIT, unit );
         model.put( MARK_LIST_SUB_UNITS, _unitService.getSubUnits( unit.getIdUnit(  ), false ) );
+        model.put( MARK_MAP_ID_USER_UNIT, mapIdUserUnit );
 
         // Add actions in the model
         model.put( MARK_LIST_UNIT_ACTIONS,

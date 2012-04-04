@@ -26,7 +26,7 @@
 		<h2>#i18n{unittree.manageUnits.labelListUsers}</h2>
 		
 		<#-- SEARCH USER FORM-->
-		<@searchAdminUsersForm urlAction="jsp/admin/plugins/unittree/ManageUnits.jsp" />
+		<@searchAdminUsersForm urlAction="jsp/admin/plugins/unittree/ManageUnits.jsp" displayInDepthOption=true />
 		
 		<#-- LIST ASSIGNED USERS -->
 		<form method="post" action="jsp/admin/plugins/unittree/ManageUnits.jsp">
@@ -46,6 +46,9 @@
 						#i18n{unittree.manageUnits.labelAccessCode}
 						<@sort jsp_url="jsp/admin/plugins/unittree/ManageUnits.jsp" attribute="accessCode${additionnalAttribute!}" />
 					</th>
+					<th>
+						#i18n{unittree.manageUnits.labelAssociatedUnit}
+					</th>
 					<th>#i18n{unittree.manageUnits.labelActions}</th>
 				</tr>
 				<#if listUsers?? && listUsers?has_content>
@@ -54,6 +57,14 @@
 							<td>${user.firstName!}</td>
 							<td>${user.lastName!}</td>
 							<td>${user.accessCode!}</td>
+							<td>
+								<#if mapIdUserUnit["" + user.userId]??>
+									<#assign userSubUnit = mapIdUserUnit["" + user.userId]>
+									<a href="jsp/admin/plugins/unittree/ManageUnits.jsp?idUnit=${userSubUnit.idUnit!}">
+										${userSubUnit.label!}
+									</a>
+								</#if>
+							</td>
 							<td>
 								<#if listUnitUserActions?? && listUnitUserActions?has_content>
 									<#list listUnitUserActions as unitUserAction>

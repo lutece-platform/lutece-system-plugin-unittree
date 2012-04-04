@@ -78,6 +78,7 @@ public class UnitUserSearchFields extends DefaultUnitSearchFields
     private static final String MARK_PAGINATOR = "paginator";
     private static final String MARK_NB_ITEMS_PER_PAGE = "nb_items_per_page";
     private static final String MARK_SEARCH_ADMIN_USER_FILTER = "search_admin_user_filter";
+    private static final String MARK_IS_IN_DEPTH_SEARCH = "isInDepthSearch";
 
     // MESSAGES
     private static final String MESSAGE_ERROR_USER_NOT_LOGGED = "unittree.message.error.userNotLogged";
@@ -149,19 +150,14 @@ public class UnitUserSearchFields extends DefaultUnitSearchFields
         }
 
         // SORT
-        String strSortedAttributeName = request.getParameter( Parameters.SORTED_ATTRIBUTE_NAME );
-        String strAscSort = null;
+        this.setSortedAttributeName( request );
 
-        if ( strSortedAttributeName != null )
+        if ( getSortedAttributeName(  ) != null )
         {
-            strAscSort = request.getParameter( Parameters.SORTED_ASC );
+            this.setAscSort( request );
 
-            if ( StringUtils.isNotBlank( strAscSort ) )
-            {
-                boolean bIsAscSort = Boolean.parseBoolean( strAscSort );
-
-                Collections.sort( listFilteredUsers, new AttributeComparator( strSortedAttributeName, bIsAscSort ) );
-            }
+            Collections.sort( listFilteredUsers,
+                new AttributeComparator( getSortedAttributeName(  ), this.isAscSort(  ) ) );
         }
 
         this.setCurrentPageIndex( Paginator.getPageIndex( request, Paginator.PARAMETER_PAGE_INDEX,
@@ -169,14 +165,10 @@ public class UnitUserSearchFields extends DefaultUnitSearchFields
         this.setItemsPerPage( Paginator.getItemsPerPage( request, Paginator.PARAMETER_ITEMS_PER_PAGE,
                 this.getItemsPerPage(  ), this.getDefaultItemsPerPage(  ) ) );
 
-        if ( strSortedAttributeName != null )
+        if ( getSortedAttributeName(  ) != null )
         {
-            url.addParameter( Parameters.SORTED_ATTRIBUTE_NAME, strSortedAttributeName );
-        }
-
-        if ( strAscSort != null )
-        {
-            url.addParameter( Parameters.SORTED_ASC, strAscSort );
+            url.addParameter( Parameters.SORTED_ATTRIBUTE_NAME, getSortedAttributeName(  ) );
+            url.addParameter( Parameters.SORTED_ASC, Boolean.toString( this.isAscSort(  ) ) );
         }
 
         url.addParameter( PARAMETER_ID_UNIT, unit.getIdUnit(  ) );
@@ -202,5 +194,6 @@ public class UnitUserSearchFields extends DefaultUnitSearchFields
         model.put( MARK_SEARCH_ADMIN_USER_FILTER, _auFilter );
         model.put( MARK_PAGINATOR, paginator );
         model.put( MARK_NB_ITEMS_PER_PAGE, Integer.toString( paginator.getItemsPerPage(  ) ) );
+        model.put( MARK_IS_IN_DEPTH_SEARCH, this.isInDepthSearch(  ) );
     }
 }

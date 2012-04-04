@@ -87,6 +87,30 @@ public interface IUnitSearchFields
     void setCurrentPageIndex( String strCurrentPageIndex );
 
     /**
+     * Set the sorted attribute name from the HTTP request
+     * @param request the HTTP request
+     */
+    void setSortedAttributeName( HttpServletRequest request );
+
+    /**
+     * Get the sorted attribute name
+     * @return the sorted attibute name
+     */
+    String getSortedAttributeName(  );
+
+    /**
+     * Set the asc sort from the HTTP request
+     * @param request the HTTP request
+     */
+    void setAscSort( HttpServletRequest request );
+
+    /**
+     * Check if it is an asc sort
+     * @return true if it is an asc sort, false otherwise
+     */
+    boolean isAscSort(  );
+
+    /**
      * Fill the model for the user search form
      * @param listUsers the list of users
      * @param strBaseUrl the base url
@@ -97,4 +121,18 @@ public interface IUnitSearchFields
      */
     void fillModelForUserSearchForm( List<AdminUser> listUsers, String strBaseUrl, HttpServletRequest request,
         Map<String, Object> model, Unit unit ) throws AccessDeniedException;
+
+    /**
+     * Check if if it an in depth search.
+     * <br />
+     * It will check if the request possesses the parameter <strong>isInDepthSearch</strong>
+     * @param request the HTTP request
+     */
+    void setInDepthSearch( HttpServletRequest request );
+
+    /**
+     * Check if it is an in depth search
+     * @return true if it is an in depth search, false otherwise
+     */
+    boolean isInDepthSearch(  );
 }

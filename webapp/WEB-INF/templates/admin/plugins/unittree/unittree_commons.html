@@ -1,4 +1,4 @@
-<#macro searchAdminUsersForm urlAction>
+<#macro searchAdminUsersForm urlAction displayInDepthOption>
 	<#-- BEGIN SEARCH FORM -->
 	<form method="post" name="search_users" action="${urlAction!}">
 		<div class="highlight-box">
@@ -63,6 +63,15 @@
 					</#switch>
 				</select>
 			</p>
+			<#if displayInDepthOption>
+				<p>
+					<label for="isInDepthSearch">#i18n{unittree.manageUnits.labelInDepthSearch} :</label>
+					<input type="checkbox" name="isInDepthSearch" value="1" id="isInDepthSearch" <#if isInDepthSearch>checked="checked"</#if> />
+					<br />
+					<label for="">&nbsp;</label>
+					#i18n{unittree.manageUnits.labelInDepthSearchComment}
+				</p>
+			</#if>
 			<p>
 				<input type="submit" value="#i18n{portal.users.manage_users.search_users.buttonSearch}" tabindex="6" class="button" name="search_is_search"/>
 			</p>

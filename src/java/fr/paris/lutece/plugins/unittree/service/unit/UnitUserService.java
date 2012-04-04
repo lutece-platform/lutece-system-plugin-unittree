@@ -33,6 +33,7 @@
  */
 package fr.paris.lutece.plugins.unittree.service.unit;
 
+import fr.paris.lutece.plugins.unittree.business.unit.Unit;
 import fr.paris.lutece.plugins.unittree.business.unit.UnitHome;
 import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.portal.business.user.AdminUserHome;
@@ -44,6 +45,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -55,6 +59,9 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class UnitUserService implements IUnitUserService
 {
+    @Inject
+    private IUnitService _unitService;
+
     // GET
 
     /**
@@ -67,28 +74,27 @@ public class UnitUserService implements IUnitUserService
     }
 
     /**
-     * {@inheritDoc}
-     */
+         * {@inheritDoc}
+         */
     @Override
-    public List<AdminUser> getUsers( int nIdUnit )
+    public List<AdminUser> getUsers( int nIdUnit, Map<String, Unit> mapIdUserUnit, boolean isInDepthSearch )
     {
-        List<AdminUser> listUsers = new ArrayList<AdminUser>(  );
-        List<Integer> listIdUsers = UnitHome.findIdsUser( nIdUnit );
+        List<AdminUser> listAdminUsers = new ArrayList<AdminUser>(  );
 
-        if ( ( listIdUsers != null ) && !listIdUsers.isEmpty(  ) )
+        // First add the users from the current unit
+        listAdminUsers.addAll( getUsers( nIdUnit, mapIdUserUnit ) );
+
+        if ( isInDepthSearch )
         {
-            for ( int nIdUser : listIdUsers )
+            // Then add the users from the sub units
+            for ( Unit subUnit : _unitService.getSubUnits( nIdUnit, false ) )
             {
-                AdminUser user = AdminUserHome.findByPrimaryKey( nIdUser );
-
-                if ( user != null )
-                {
-                    listUsers.add( user );
-                }
+                // Recursive function in order to get all users from all sub units of the unit
+                listAdminUsers.addAll( getUsers( subUnit.getIdUnit(  ), mapIdUserUnit, isInDepthSearch ) );
             }
         }
 
-        return listUsers;
+        return listAdminUsers;
     }
 
     /**
@@ -261,5 +267,34 @@ public class UnitUserService implements IUnitUserService
         }
 
         return false;
+    }
+
+    /**
+     * Get the list of {@link AdminUser} from a given id unit
+     * @param nIdUnit the id unit
+     * @param mapIdUserUnit the map of <idUser, Unit>
+     * @return a list of {@link AdminUser}
+     */
+    private List<AdminUser> getUsers( int nIdUnit, Map<String, Unit> mapIdUserUnit )
+    {
+        Unit unit = _unitService.getUnit( nIdUnit, false );
+        List<AdminUser> listUsers = new ArrayList<AdminUser>(  );
+        List<Integer> listIdUsers = UnitHome.findIdsUser( nIdUnit );
+
+        if ( ( listIdUsers != null ) && !listIdUsers.isEmpty(  ) )
+        {
+            for ( int nIdUser : listIdUsers )
+            {
+                AdminUser user = AdminUserHome.findByPrimaryKey( nIdUser );
+
+                if ( user != null )
+                {
+                    listUsers.add( user );
+                    mapIdUserUnit.put( Integer.toString( user.getUserId(  ) ), unit );
+                }
+            }
+        }
+
+        return listUsers;
     }
 }

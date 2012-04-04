@@ -50,6 +50,7 @@ public class UnitDAO implements IUnitDAO
     private static final String SQL_WHERE = " WHERE ";
     private static final String SQL_AND = " AND ";
     private static final String SQL_OR = " OR ";
+    private static final String SQL_ORDER_BY_LABEL_ASC = " ORDER BY label ASC ";
     private static final String SQL_FILTER_ID_PARENT = " id_parent = ? ";
     private static final String SQL_FILTER_LABEL = " label = ? ";
     private static final String SQL_FILTER_DESCRIPTION = " description = ? ";
@@ -64,8 +65,8 @@ public class UnitDAO implements IUnitDAO
     private static final String SQL_QUERY_DELETE = " DELETE FROM unittree_unit WHERE id_unit = ? ";
     private static final String SQL_QUERY_UPDATE = " UPDATE unittree_unit SET label = ?, description = ? WHERE id_unit = ? ";
     private static final String SQL_QUERY_HAS_SUB_UNIT = " SELECT id_unit FROM unittree_unit WHERE id_parent = ? ";
-    private static final String SQL_QUERY_SELECT_BY_SECTOR = "SELECT unittree_unit.id_unit, unittree_unit.label, unittree_unit.description FROM  unittree_sector, unittree_unit, unittree_unit_sector WHERE unittree_sector.id_sector = unittree_unit_sector.id_sector AND unittree_unit_sector.id_unit = unittree_unit.id_unit AND unittree_sector.id_sector = ?";
-    private static final String SQL_QUERY_SELECT_NO_CHILDREN = "SELECT id_unit, label, description FROM unittree_unit WHERE id_unit NOT IN(SELECT id_parent FROM unittree_unit) ORDER BY label";
+    private static final String SQL_QUERY_SELECT_BY_SECTOR = " SELECT unittree_unit.id_unit, unittree_unit.label, unittree_unit.description FROM  unittree_sector, unittree_unit, unittree_unit_sector WHERE unittree_sector.id_sector = unittree_unit_sector.id_sector AND unittree_unit_sector.id_unit = unittree_unit.id_unit AND unittree_sector.id_sector = ? ";
+    private static final String SQL_QUERY_SELECT_NO_CHILDREN = " SELECT id_unit, label, description FROM unittree_unit WHERE id_unit NOT IN(SELECT id_parent FROM unittree_unit) ";
 
     // Table unittree_unit_user
     private static final String SQL_QUERY_ADD_USER_TO_UNIT = " INSERT INTO unittree_unit_user ( id_unit, id_user ) VALUES ( ?, ? ) ";
@@ -181,7 +182,7 @@ public class UnitDAO implements IUnitDAO
     public List<Unit> selectAll( Plugin plugin )
     {
         List<Unit> listUnits = new ArrayList<Unit>(  );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ALL, plugin );
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ALL + SQL_ORDER_BY_LABEL_ASC, plugin );
         daoUtil.executeQuery(  );
 
         while ( daoUtil.next(  ) )
@@ -391,7 +392,7 @@ public class UnitDAO implements IUnitDAO
     public List<Unit> findBySectorId( int nIdSector, Plugin plugin )
     {
         List<Unit> listUnits = new ArrayList<Unit>(  );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_SECTOR, plugin );
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_SECTOR + SQL_ORDER_BY_LABEL_ASC, plugin );
         daoUtil.setInt( 1, nIdSector );
         daoUtil.executeQuery(  );
 
@@ -417,7 +418,7 @@ public class UnitDAO implements IUnitDAO
     public List<Unit> getUnitWithNoChildren( Plugin plugin )
     {
         List<Unit> listUnits = new ArrayList<Unit>(  );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_NO_CHILDREN, plugin );
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_NO_CHILDREN + SQL_ORDER_BY_LABEL_ASC, plugin );
         daoUtil.executeQuery(  );
 
         while ( daoUtil.next(  ) )
@@ -464,6 +465,8 @@ public class UnitDAO implements IUnitDAO
             nIndex = addSQLWhereOr( uFilter.isWideSearch(  ), sbSQL, nIndex );
             sbSQL.append( SQL_FILTER_DESCRIPTION );
         }
+
+        sbSQL.append( SQL_ORDER_BY_LABEL_ASC );
 
         return sbSQL.toString(  );
     }

@@ -33,11 +33,13 @@
  */
 package fr.paris.lutece.plugins.unittree.service.unit;
 
+import fr.paris.lutece.plugins.unittree.business.unit.Unit;
 import fr.paris.lutece.portal.business.user.AdminUser;
 
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -61,9 +63,11 @@ public interface IUnitUserService
     /**
      * Get the list of {@link AdminUser} from a given id unit
      * @param nIdUnit the id unit
+     * @param mapIdUserUnit the map of <idUser, Unit>
+     * @param isInDepthSearch true if it is an in depth search (search in the sub units too)
      * @return a list of {@link AdminUser}
      */
-    List<AdminUser> getUsers( int nIdUnit );
+    List<AdminUser> getUsers( int nIdUnit, Map<String, Unit> mapIdUserUnit, boolean isInDepthSearch );
 
     /**
      * Get the list of available users

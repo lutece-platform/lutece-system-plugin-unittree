@@ -34,8 +34,13 @@
 package fr.paris.lutece.plugins.unittree.web.action;
 
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
+import fr.paris.lutece.portal.web.constants.Parameters;
+
+import org.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;
+
+import javax.servlet.http.HttpServletRequest;
 
 
 /**
@@ -46,10 +51,21 @@ import java.io.Serializable;
 public abstract class DefaultUnitSearchFields implements IUnitSearchFields, Serializable
 {
     private static final long serialVersionUID = 7400229591290783994L;
+
+    // PROPERTIES
     private static final String PROPERTY_ITEM_PER_PAGE = "unittree.itemsPerPage";
+
+    // PARAMETERS
+    private static final String PARAMETER_SESSION = "session";
+    private static final String PARAMETER_IS_IN_DEPTH_SEARCH = "isInDepthSearch";
+
+    // VARIABLES
     private int _nItemsPerPage;
     private int _nDefaultItemsPerPage = AppPropertiesService.getPropertyInt( PROPERTY_ITEM_PER_PAGE, 50 );
     private String _strCurrentPageIndex;
+    private boolean _bIsInDepthSearch;
+    private String _strSortedAttributeName;
+    private boolean _bIsAscSort;
 
     /**
      * {@inheritDoc}
@@ -103,5 +119,68 @@ public abstract class DefaultUnitSearchFields implements IUnitSearchFields, Seri
     public void setItemsPerPage( int nItemsPerPage )
     {
         _nItemsPerPage = nItemsPerPage;
+    }
+
+    /**
+         * {@inheritDoc}
+         */
+    @Override
+    public void setInDepthSearch( HttpServletRequest request )
+    {
+        if ( StringUtils.isBlank( request.getParameter( PARAMETER_SESSION ) ) )
+        {
+            _bIsInDepthSearch = StringUtils.isNotBlank( request.getParameter( PARAMETER_IS_IN_DEPTH_SEARCH ) );
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isInDepthSearch(  )
+    {
+        return _bIsInDepthSearch;
+    }
+
+    /**
+         * {@inheritDoc}
+         */
+    @Override
+    public String getSortedAttributeName(  )
+    {
+        return _strSortedAttributeName;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setSortedAttributeName( HttpServletRequest request )
+    {
+        if ( StringUtils.isNotBlank( request.getParameter( Parameters.SORTED_ATTRIBUTE_NAME ) ) )
+        {
+            _strSortedAttributeName = request.getParameter( Parameters.SORTED_ATTRIBUTE_NAME );
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isAscSort(  )
+    {
+        return _bIsAscSort;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setAscSort( HttpServletRequest request )
+    {
+        if ( StringUtils.isNotBlank( request.getParameter( Parameters.SORTED_ASC ) ) )
+        {
+            _bIsAscSort = Boolean.parseBoolean( request.getParameter( Parameters.SORTED_ASC ) );
+        }
     }
 }
