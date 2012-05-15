@@ -78,6 +78,8 @@ public class UnitService implements IUnitService
     private static final String TAG_LABEL = "label";
     private static final String TAG_DESCRIPTION = "description";
     private static final String TAG_UNIT_CHILDREN = "unit-children";
+    private static final String CDATA_START = "<![CDATA[";
+    private static final String CDATA_END = "]]>";
 
     // PROPERTIES
     private static final String PROPERTY_LABEL_PARENT_UNIT = "unittree.moveUser.labelParentUnit";
@@ -513,8 +515,8 @@ public class UnitService implements IUnitService
     {
         XmlUtil.beginElement( sbXML, TAG_UNIT );
         XmlUtil.addElement( sbXML, TAG_ID_UNIT, unit.getIdUnit(  ) );
-        XmlUtil.addElement( sbXML, TAG_LABEL, unit.getLabel(  ) );
-        XmlUtil.addElement( sbXML, TAG_DESCRIPTION, unit.getDescription(  ) );
+        XmlUtil.addElement( sbXML, TAG_LABEL, CDATA_START + unit.getLabel(  ) + CDATA_END );
+        XmlUtil.addElement( sbXML, TAG_DESCRIPTION, CDATA_START + unit.getDescription(  ) + CDATA_END );
 
         List<Unit> listChildren = getSubUnits( unit.getIdUnit(  ), false );
 
