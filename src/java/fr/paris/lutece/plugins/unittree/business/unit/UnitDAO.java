@@ -65,8 +65,11 @@ public class UnitDAO implements IUnitDAO
     private static final String SQL_QUERY_DELETE = " DELETE FROM unittree_unit WHERE id_unit = ? ";
     private static final String SQL_QUERY_UPDATE = " UPDATE unittree_unit SET label = ?, description = ? WHERE id_unit = ? ";
     private static final String SQL_QUERY_HAS_SUB_UNIT = " SELECT id_unit FROM unittree_unit WHERE id_parent = ? ";
-    private static final String SQL_QUERY_SELECT_BY_SECTOR = " SELECT unittree_unit.id_unit, unittree_unit.label, unittree_unit.description FROM  unittree_sector, unittree_unit, unittree_unit_sector WHERE unittree_sector.id_sector = unittree_unit_sector.id_sector AND unittree_unit_sector.id_unit = unittree_unit.id_unit AND unittree_sector.id_sector = ? ";
-    private static final String SQL_QUERY_SELECT_NO_CHILDREN = " SELECT id_unit, label, description FROM unittree_unit WHERE id_unit NOT IN(SELECT id_parent FROM unittree_unit) ";
+    private static final String SQL_QUERY_SELECT_BY_SECTOR = " SELECT uu.id_unit, uu.id_parent, uu.label, uu.description " +
+        " FROM unittree_unit_sector uus INNER JOIN unittree_unit uu ON uus.id_unit = uu.id_unit" +
+        " INNER JOIN unittree_sector us ON us.id_sector = uus.id_sector WHERE us.id_sector = ? ";
+    private static final String SQL_QUERY_SELECT_NO_CHILDREN = " SELECT id_unit, id_parent, label, description " +
+        " FROM unittree_unit WHERE id_unit NOT IN(SELECT id_parent FROM unittree_unit) ";
 
     // Table unittree_unit_user
     private static final String SQL_QUERY_ADD_USER_TO_UNIT = " INSERT INTO unittree_unit_user ( id_unit, id_user ) VALUES ( ?, ? ) ";
@@ -401,6 +404,7 @@ public class UnitDAO implements IUnitDAO
             int nIndex = 1;
             Unit unit = new Unit(  );
             unit.setIdUnit( daoUtil.getInt( nIndex++ ) );
+            unit.setIdParent( daoUtil.getInt( nIndex++ ) );
             unit.setLabel( daoUtil.getString( nIndex++ ) );
             unit.setDescription( daoUtil.getString( nIndex++ ) );
             listUnits.add( unit );
@@ -427,6 +431,7 @@ public class UnitDAO implements IUnitDAO
             Unit unit = new Unit(  );
             unit.setIdUnit( daoUtil.getInt( nIndex++ ) );
             unit.setLabel( daoUtil.getString( nIndex++ ) );
+            unit.setIdParent( daoUtil.getInt( nIndex++ ) );
             unit.setDescription( daoUtil.getString( nIndex++ ) );
             listUnits.add( unit );
         }
