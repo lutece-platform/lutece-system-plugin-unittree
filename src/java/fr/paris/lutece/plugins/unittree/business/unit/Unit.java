@@ -35,8 +35,6 @@ package fr.paris.lutece.plugins.unittree.business.unit;
 
 import fr.paris.lutece.portal.service.rbac.RBACResource;
 
-import org.hibernate.validator.constraints.NotBlank;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -56,9 +54,9 @@ public class Unit implements RBACResource
     private int _nIdUnit;
     @NotNull
     private int _nIdParent;
-    @NotBlank
+    @NotNull
     private String _strLabel;
-    @NotBlank
+    @NotNull
     private String _strDescription;
     private Map<String, IUnitAttribute> _mapAttributes = new HashMap<String, IUnitAttribute>(  );
 
