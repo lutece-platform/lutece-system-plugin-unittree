@@ -46,28 +46,24 @@ import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.util.ReferenceList;
 import fr.paris.lutece.util.xml.XmlUtil;
 
-import org.apache.commons.lang.StringUtils;
-
-import org.springframework.transaction.annotation.Transactional;
-
 import java.io.FileInputStream;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import javax.inject.Inject;
-
 import javax.servlet.http.HttpServletRequest;
-
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 
+import org.apache.commons.lang.StringUtils;
+import org.springframework.transaction.annotation.Transactional;
+
 
 /**
- *
+ * 
  * UnitService
- *
+ * 
  */
 public class UnitService implements IUnitService
 {
@@ -127,25 +123,28 @@ public class UnitService implements IUnitService
      * {@inheritDoc}
      */
     @Override
-    public Unit getUnitByIdUser( int nIdUser, boolean bGetAdditionalInfos )
+    public List<Unit> getUnitsByIdUser( int nIdUser, boolean bGetAdditionalInfos )
     {
-        Unit unit = UnitHome.findByIdUser( nIdUser );
+        List<Unit> listUnit = UnitHome.findByIdUser( nIdUser );
 
-        if ( bGetAdditionalInfos && ( unit != null ) )
+        for ( Unit unit : listUnit )
         {
-            UnitAttributeManager.populate( unit );
+            if ( bGetAdditionalInfos && ( unit != null ) )
+            {
+                UnitAttributeManager.populate( unit );
+            }
         }
 
-        return unit;
+        return listUnit;
     }
 
     /**
-    * {@inheritDoc}
-    */
+     * {@inheritDoc}
+     */
     @Override
     public List<Unit> getAllUnits( boolean bGetAdditionalInfos )
     {
-        List<Unit> listUnits = UnitHome.findAll(  );
+        List<Unit> listUnits = UnitHome.findAll( );
 
         if ( bGetAdditionalInfos )
         {
@@ -179,13 +178,13 @@ public class UnitService implements IUnitService
         // If the ID unit == -1, then only return the root unit
         if ( nIdUnit == Unit.ID_NULL )
         {
-            List<Unit> listUnits = new ArrayList<Unit>(  );
+            List<Unit> listUnits = new ArrayList<Unit>( );
             listUnits.add( getRootUnit( bGetAdditionalInfos ) );
 
             return listUnits;
         }
 
-        UnitFilter uFilter = new UnitFilter(  );
+        UnitFilter uFilter = new UnitFilter( );
         uFilter.setIdParent( nIdUnit );
 
         List<Unit> listUnits = UnitHome.findByFilter( uFilter );
@@ -211,28 +210,25 @@ public class UnitService implements IUnitService
     public List<IAction> getListActions( String strActionType, Locale locale, Unit unit, AdminUser user )
     {
         // If the user is admin, then no need to filter by permission
-        if ( user.isAdmin(  ) && ( unit != null ) )
+        if ( user.isAdmin( ) && ( unit != null ) )
         {
             // If the unit has sectors and does not have sub units, then remove 'CREATE' action
-            if ( !canCreateSubUnit( unit.getIdUnit(  ) ) )
+            if ( !canCreateSubUnit( unit.getIdUnit( ) ) )
             {
                 return _actionService.getListActions( strActionType, locale, user,
-                    UnitResourceIdService.PERMISSION_CREATE );
+                        UnitResourceIdService.PERMISSION_CREATE );
             }
-            else
-            {
-                return _actionService.getListActions( strActionType, locale, user );
-            }
+            return _actionService.getListActions( strActionType, locale, user );
         }
 
-        Unit unitUser = getUnitByIdUser( user.getUserId(  ), false );
+        List<Unit> listUnits = getUnitsByIdUser( user.getUserId( ), false );
 
-        List<IAction> listActions = new ArrayList<IAction>(  );
+        List<IAction> listActions = new ArrayList<IAction>( );
 
-        if ( ( unitUser != null ) && ( unit != null ) )
+        if ( unit != null && listUnits.size( ) > 0 )
         {
             // If the unit has sectors and does not have sub units, then remove 'CREATE' action
-            if ( !canCreateSubUnit( unit.getIdUnit(  ) ) )
+            if ( !canCreateSubUnit( unit.getIdUnit( ) ) )
             {
                 listActions = _actionService.getListActions( strActionType, locale, unit, user,
                         UnitResourceIdService.PERMISSION_CREATE );
@@ -241,18 +237,24 @@ public class UnitService implements IUnitService
             {
                 listActions = _actionService.getListActions( strActionType, locale, unit, user );
             }
+        }
 
-            // If the user is in a parent unit of the current unit, then add the list of actions of the parent unit to the list
-            if ( isParent( unitUser, unit ) )
+        for ( Unit unitUser : listUnits )
+        {
+            if ( ( unitUser != null ) && ( unit != null ) )
             {
-                List<IAction> listParentUnitActions = _actionService.getListActions( strActionType, locale, unitUser,
-                        user );
-
-                for ( IAction parentUnitAction : listParentUnitActions )
+                // If the user is in a parent unit of the current unit, then add the list of actions of the parent unit to the list
+                if ( isParent( unitUser, unit ) )
                 {
-                    if ( !listActions.contains( parentUnitAction ) )
+                    List<IAction> listParentUnitActions = _actionService.getListActions( strActionType, locale,
+                            unitUser, user );
+
+                    for ( IAction parentUnitAction : listParentUnitActions )
                     {
-                        listActions.add( parentUnitAction );
+                        if ( !listActions.contains( parentUnitAction ) )
+                        {
+                            listActions.add( parentUnitAction );
+                        }
                     }
                 }
             }
@@ -270,8 +272,8 @@ public class UnitService implements IUnitService
         // If parent id == -1, then its sub units is the root unit
         if ( nIdUnit == Unit.ID_NULL )
         {
-            ReferenceList listSubUnits = new ReferenceList(  );
-            listSubUnits.addItem( Unit.ID_ROOT, getRootUnit( false ).getLabel(  ) );
+            ReferenceList listSubUnits = new ReferenceList( );
+            listSubUnits.addItem( Unit.ID_ROOT, getRootUnit( false ).getLabel( ) );
 
             return listSubUnits;
         }
@@ -282,38 +284,38 @@ public class UnitService implements IUnitService
         if ( unit != null )
         {
             String strLabelParentUnit = I18nService.getLocalizedString( PROPERTY_LABEL_PARENT_UNIT, locale );
-            ReferenceList listSubUnits = new ReferenceList(  );
-            listSubUnits.addItem( unit.getIdParent(  ), strLabelParentUnit );
+            ReferenceList listSubUnits = new ReferenceList( );
+            listSubUnits.addItem( unit.getIdParent( ), strLabelParentUnit );
             listSubUnits.addAll( ReferenceList.convert( getSubUnits( nIdUnit, false ), ATTRIBUTE_ID_UNIT,
                     ATTRIBUTE_LABEL, true ) );
 
             return listSubUnits;
         }
 
-        return new ReferenceList(  );
+        return new ReferenceList( );
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public String getXMLUnits(  )
+    public String getXMLUnits( )
     {
-        StringBuffer sbXML = new StringBuffer(  );
+        StringBuffer sbXML = new StringBuffer( );
         XmlUtil.beginElement( sbXML, TAG_UNITS );
 
         getXMLUnit( sbXML, getRootUnit( false ) );
 
         XmlUtil.endElement( sbXML, TAG_UNITS );
 
-        return sbXML.toString(  );
+        return sbXML.toString( );
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Source getTreeXsl(  )
+    public Source getTreeXsl( )
     {
         FileInputStream fis = AppPathService.getResourceAsStream( PATH_XSL, FILE_TREE_XSL );
 
@@ -334,9 +336,9 @@ public class UnitService implements IUnitService
      * Return all the Unit with no children (level 0)
      * @return all the Unit with no children (level 0)
      */
-    public List<Unit> getUnitWithNoChildren(  )
+    public List<Unit> getUnitWithNoChildren( )
     {
-        return UnitHome.getUnitWithNoChildren(  );
+        return UnitHome.getUnitWithNoChildren( );
     }
 
     // CHECKS
@@ -358,21 +360,21 @@ public class UnitService implements IUnitService
     {
         if ( ( unitParent != null ) && ( unitRef != null ) )
         {
-            if ( unitParent.getIdUnit(  ) == unitRef.getIdParent(  ) )
+            if ( unitParent.getIdUnit( ) == unitRef.getIdParent( ) )
             {
                 return true;
             }
 
-            Unit nextUnitParent = getUnit( unitRef.getIdParent(  ), false );
+            Unit nextUnitParent = getUnit( unitRef.getIdParent( ), false );
 
-            while ( ( nextUnitParent != null ) && ( nextUnitParent.getIdUnit(  ) != Unit.ID_NULL ) )
+            while ( ( nextUnitParent != null ) && ( nextUnitParent.getIdUnit( ) != Unit.ID_NULL ) )
             {
-                if ( unitParent.getIdUnit(  ) == nextUnitParent.getIdUnit(  ) )
+                if ( unitParent.getIdUnit( ) == nextUnitParent.getIdUnit( ) )
                 {
                     return true;
                 }
 
-                nextUnitParent = getUnit( nextUnitParent.getIdParent(  ), false );
+                nextUnitParent = getUnit( nextUnitParent.getIdParent( ), false );
             }
         }
 
@@ -395,34 +397,38 @@ public class UnitService implements IUnitService
     public boolean isAuthorized( Unit unit, String strPermission, AdminUser user )
     {
         // 1) The given user is admin
-        if ( user.isAdmin(  ) )
+        if ( user.isAdmin( ) )
         {
             return true;
         }
 
         // 2) unitUser == null : The given user does not belong to any unit
-        Unit unitUser = getUnitByIdUser( user.getUserId(  ), false );
+        List<Unit> listUnits = getUnitsByIdUser( user.getUserId( ), false );
 
-        if ( ( unitUser != null ) && ( unit != null ) )
+        if ( unit != null )
         {
             Unit targetUnit = null;
-
-            // 3) The given user belongs to the given unit
-            if ( unitUser.getIdUnit(  ) == unit.getIdUnit(  ) )
+            for ( Unit unitUser : listUnits )
             {
-                targetUnit = unit;
-            }
-
-            // 4) The given user belongs to a parent unit of the given unit
-            else if ( isParent( unitUser, unit ) )
-            {
-                targetUnit = unitUser;
-            }
-
-            // 5) targetUnit == null : The given user belongs to an unit who is not a parent unit of the given unit
-            if ( targetUnit != null )
-            {
-                return RBACService.isAuthorized( targetUnit, strPermission, user );
+                // 3) The given user belongs to the given unit
+                if ( unitUser.getIdUnit( ) == unit.getIdUnit( ) )
+                {
+                    targetUnit = unit;
+                }
+                // 4) The given user belongs to a parent unit of the given unit
+                else if ( isParent( unitUser, unit ) )
+                {
+                    targetUnit = unitUser;
+                }
+                // 5) targetUnit == null : The given user belongs to an unit who is not a parent unit of the given unit
+                if ( targetUnit != null )
+                {
+                    if ( RBACService.isAuthorized( targetUnit, strPermission, user ) )
+                    {
+                        return true;
+                    }
+                    targetUnit = null;
+                }
             }
         }
 
@@ -453,8 +459,7 @@ public class UnitService implements IUnitService
      */
     @Override
     @Transactional( "unittree.transactionManager" )
-    public int createUnit( Unit unit, HttpServletRequest request )
-        throws UnitErrorException
+    public int createUnit( Unit unit, HttpServletRequest request ) throws UnitErrorException
     {
         int nIdUnit = Unit.ID_NULL;
 
@@ -492,8 +497,7 @@ public class UnitService implements IUnitService
      */
     @Override
     @Transactional( "unittree.transactionManager" )
-    public void updateUnit( Unit unit, HttpServletRequest request )
-        throws UnitErrorException
+    public void updateUnit( Unit unit, HttpServletRequest request ) throws UnitErrorException
     {
         if ( unit != null )
         {
@@ -514,13 +518,13 @@ public class UnitService implements IUnitService
     private void getXMLUnit( StringBuffer sbXML, Unit unit )
     {
         XmlUtil.beginElement( sbXML, TAG_UNIT );
-        XmlUtil.addElement( sbXML, TAG_ID_UNIT, unit.getIdUnit(  ) );
-        XmlUtil.addElement( sbXML, TAG_LABEL, CDATA_START + unit.getLabel(  ) + CDATA_END );
-        XmlUtil.addElement( sbXML, TAG_DESCRIPTION, CDATA_START + unit.getDescription(  ) + CDATA_END );
+        XmlUtil.addElement( sbXML, TAG_ID_UNIT, unit.getIdUnit( ) );
+        XmlUtil.addElement( sbXML, TAG_LABEL, CDATA_START + unit.getLabel( ) + CDATA_END );
+        XmlUtil.addElement( sbXML, TAG_DESCRIPTION, CDATA_START + unit.getDescription( ) + CDATA_END );
 
-        List<Unit> listChildren = getSubUnits( unit.getIdUnit(  ), false );
+        List<Unit> listChildren = getSubUnits( unit.getIdUnit( ), false );
 
-        if ( ( listChildren != null ) && !listChildren.isEmpty(  ) )
+        if ( ( listChildren != null ) && !listChildren.isEmpty( ) )
         {
             XmlUtil.beginElement( sbXML, TAG_UNIT_CHILDREN );
 

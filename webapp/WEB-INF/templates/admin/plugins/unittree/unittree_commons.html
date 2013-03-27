@@ -63,6 +63,12 @@
 					</#switch>
 				</select>
 			</p>
+			<#if multi_affection_enabled?? && multi_affection_enabled>
+				<p>
+					<label for="status">#i18n{unittree.addUsers.labelMultiAffectedUsers} :</label>
+					<input type="checkbox" name="filterAffectedUsers" id="filterAffectedUsers" value="true" <#if filterAffectedUsers?? && filterAffectedUsers >checked="checked"</#if> />
+				</p>
+			</#if>
 			<#if displayInDepthOption>
 				<p>
 					<label for="isInDepthSearch">#i18n{unittree.manageUnits.labelInDepthSearch} :</label>

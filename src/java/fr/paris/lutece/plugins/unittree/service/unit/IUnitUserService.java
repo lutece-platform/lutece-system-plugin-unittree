@@ -36,18 +36,18 @@ package fr.paris.lutece.plugins.unittree.service.unit;
 import fr.paris.lutece.plugins.unittree.business.unit.Unit;
 import fr.paris.lutece.portal.business.user.AdminUser;
 
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.transaction.annotation.Transactional;
+
 
 /**
- *
+ * 
  * IUnitUserService
- *
+ * 
  */
 public interface IUnitUserService
 {
@@ -64,17 +64,34 @@ public interface IUnitUserService
      * Get the list of {@link AdminUser} from a given id unit
      * @param nIdUnit the id unit
      * @param mapIdUserUnit the map of <idUser, Unit>
-     * @param isInDepthSearch true if it is an in depth search (search in the sub units too)
+     * @param isInDepthSearch true if it is an in depth search (search in the
+     *            sub units too)
      * @return a list of {@link AdminUser}
      */
     List<AdminUser> getUsers( int nIdUnit, Map<String, Unit> mapIdUserUnit, boolean isInDepthSearch );
 
     /**
-     * Get the list of available users
+     * Get the list of available users for a given unit.
+     * current user can administer.
      * @param currentUser the current user
+     * @param nIdUnit The id of the unit
+     * @return a list of {@link AdminUser}. If multi affectation is not enabled,
+     *         return users that can be administered by the current user and
+     *         that are not associated with any unit. Otherwise returns users
+     *         that are not associated directly or transitively to the unit and
+     *         that the current user can administer.
+     */
+    List<AdminUser> getAvailableUsers( AdminUser currentUser, int nIdUnit );
+
+    /**
+     * Get the list of available users for a given unit.
+     * @param currentUser The current user
+     * @param nIdUnit The id of the unit
+     * @param bMultiAffectationEnabled True to include users already associated
+     *            to a unit, false to ignore them.
      * @return a list of {@link AdminUser}
      */
-    List<AdminUser> getAvailableUsers( AdminUser currentUser );
+    List<AdminUser> getAvailableUsers( AdminUser currentUser, int nIdUnit, boolean bMultiAffectationEnabled );
 
     // PROCESS
 
@@ -105,11 +122,12 @@ public interface IUnitUserService
     // CHECKS
 
     /**
-     * Check if the given user is in an unit
+     * Check if the given user is in a given unit
      * @param nIdUser the id user
-     * @return true if the user is in an unit, false otherwises
+     * @param nIdUnit The id of the unit
+     * @return true if the user is in an unit, false otherwise
      */
-    boolean isUserInUnit( int nIdUser );
+    boolean isUserInUnit( int nIdUser, int nIdUnit );
 
     // CRUD
 
@@ -123,11 +141,12 @@ public interface IUnitUserService
     boolean addUserToUnit( int nIdUnit, int nIdUser );
 
     /**
-     * Remove the user from an unit
+     * Remove the user from a unit
      * @param nIdUser the id user
+     * @param nIdUnit The id of the unit
      */
     @Transactional( "unittree.transactionManager" )
-    void removeUserFromUnit( int nIdUser );
+    void removeUserFromUnit( int nIdUser, int nIdUnit );
 
     /**
      * Remove users from a given id unit
@@ -135,4 +154,12 @@ public interface IUnitUserService
      */
     @Transactional( "unittree.transactionManager" )
     void removeUsersFromUnit( int nIdUnit );
+
+    /**
+     * Check if users can be affected to several units at the same time or not
+     * @return True if multi affectation is enabled, false otherwise. If the
+     *         property is not defined, the default value is used which is
+     *         false.
+     */
+    boolean isMultiAffectationEnabled( );
 }

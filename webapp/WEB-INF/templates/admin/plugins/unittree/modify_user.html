@@ -8,7 +8,11 @@
     		</p>
     		<p>
     			<label>#i18n{unittree.modifyUser.labelUnit} : </label>
-   				<strong>${unit.label!}</strong>
+   				<strong>
+   					<#list units as unit>
+   						${unit.label!}<#if unit_has_next>, </#if>
+   					</#list>
+   				</strong>
     		</p>
     		<#if listUnitUserAttributes?? && listUnitUserAttributes?has_content>
 				<#list listUnitUserAttributes as unitUserAttribute>
@@ -19,7 +23,7 @@
 			</#if>
 			<div class="clear">&nbsp;</div>
     		<p>
-    			<input type="hidden" name="idUnit" value="${unit.idUnit!}" />
+    			<input type="hidden" name="idUnit" value="${unit}" />
     			<input type="hidden" name="idUser" value="${user.userId!}" />
    				<input type="submit" name="create" class="button" value="#i18n{portal.util.labelModify}" />
     			<input type="submit" name="cancel" class="button" value="#i18n{portal.util.labelCancel}" />

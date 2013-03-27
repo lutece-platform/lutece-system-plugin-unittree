@@ -45,10 +45,10 @@ import java.util.List;
 public interface IUnitDAO
 {
     /**
-    * Get new primary key
-    * @param plugin the plugin
-    * @return a new primary key
-    */
+     * Get new primary key
+     * @param plugin the plugin
+     * @return a new primary key
+     */
     int newPrimaryKey( Plugin plugin );
 
     /**
@@ -63,9 +63,9 @@ public interface IUnitDAO
      * Load an unit by id user
      * @param nIdUser the id user
      * @param plugin the plugin
-     * @return an instance of {@link Unit}
+     * @return a list of {@link Unit}
      */
-    Unit selectByIdUser( int nIdUser, Plugin plugin );
+    List<Unit> selectByIdUser( int nIdUser, Plugin plugin );
 
     /**
      * Select all units
@@ -138,17 +138,19 @@ public interface IUnitDAO
     /**
      * Check if the user is in the unit
      * @param nIdUser the id user
+     * @param nIdUnit The id of the unit
      * @param plugin the plugin
      * @return true if the user is in the unit, false otherwise
      */
-    boolean isUserInUnit( int nIdUser, Plugin plugin );
+    boolean isUserInUnit( int nIdUser, int nIdUnit, Plugin plugin );
 
     /**
      * Remove a given user from the unit
      * @param nIdUser the id user
+     * @param nIdUnit The id of the unit
      * @param plugin the plugin
      */
-    void removeUserFromUnit( int nIdUser, Plugin plugin );
+    void removeUserFromUnit( int nIdUser, int nIdUnit, Plugin plugin );
 
     /**
      * Remove users from a given id unit

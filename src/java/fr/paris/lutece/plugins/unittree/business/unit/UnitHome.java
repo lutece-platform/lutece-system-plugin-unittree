@@ -74,7 +74,7 @@ public final class UnitHome
      * @param nIdUser the id user
      * @return an instance of {@link Unit}
      */
-    public static Unit findByIdUser( int nIdUser )
+    public static List<Unit> findByIdUser( int nIdUser )
     {
         return _dao.selectByIdUser( nIdUser, _plugin );
     }
@@ -147,12 +147,13 @@ public final class UnitHome
     }
 
     /**
-     * Remove an unit from a given id user
+     * Remove a user from a unit
      * @param nIdUser the id user
+     * @param nIdUnit The id of the unit
      */
-    public static void removeUserFromUnit( int nIdUser )
+    public static void removeUserFromUnit( int nIdUser, int nIdUnit )
     {
-        _dao.removeUserFromUnit( nIdUser, _plugin );
+        _dao.removeUserFromUnit( nIdUser, nIdUnit, _plugin );
     }
 
     /**
@@ -184,13 +185,14 @@ public final class UnitHome
     }
 
     /**
-     * Check if the user is in the unit
+     * Check if the user is in a given unit
      * @param nIdUser the id user
+     * @param nIdUnit The id of the unit
      * @return true if the user is in the unit, false otherwise
      */
-    public static boolean isUserInUnit( int nIdUser )
+    public static boolean isUserInUnit( int nIdUser, int nIdUnit )
     {
-        return _dao.isUserInUnit( nIdUser, _plugin );
+        return _dao.isUserInUnit( nIdUser, nIdUnit, _plugin );
     }
 
     /**

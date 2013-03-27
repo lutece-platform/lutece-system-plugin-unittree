@@ -39,20 +39,19 @@ import fr.paris.lutece.plugins.unittree.service.UnitErrorException;
 import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.util.ReferenceList;
 
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
-
 import javax.xml.transform.Source;
+
+import org.springframework.transaction.annotation.Transactional;
 
 
 /**
- *
+ * 
  * IUnitService
- *
+ * 
  */
 public interface IUnitService
 {
@@ -79,9 +78,9 @@ public interface IUnitService
      * Get the unit by id user
      * @param nIdUser the id user
      * @param bGetAdditionalInfos true if it must get the ids sector
-     * @return an instance of {@link Unit}
+     * @return a list of {@link Unit}
      */
-    Unit getUnitByIdUser( int nIdUser, boolean bGetAdditionalInfos );
+    List<Unit> getUnitsByIdUser( int nIdUser, boolean bGetAdditionalInfos );
 
     /**
      * Get all units
@@ -127,13 +126,13 @@ public interface IUnitService
      * Get the XML units
      * @return an XML
      */
-    String getXMLUnits(  );
+    String getXMLUnits( );
 
     /**
      * Get the XSL of the tree
      * @return the XSL
      */
-    Source getTreeXsl(  );
+    Source getTreeXsl( );
 
     /**
      * Find by sector id
@@ -146,7 +145,7 @@ public interface IUnitService
      * Return all the Unit with no children (level 0)
      * @return all the Unit with no children (level 0)
      */
-    List<Unit> getUnitWithNoChildren(  );
+    List<Unit> getUnitWithNoChildren( );
 
     // CHECKS
 
@@ -160,15 +159,14 @@ public interface IUnitService
     /**
      * Check if the first unit in parameter is parent of the second
      * unit in parameter
-     * @param unitParent the unit parent ?
-     * @param unitRef of the unit ?
+     * @param unitParent the parent unit
+     * @param unitRef the unit to check
      * @return true if there is a parent link between those two units
      */
     boolean isParent( Unit unitParent, Unit unitRef );
 
     /**
-     * Check if the given id unit, we can create sub unit.
-     * <br />
+     * Check if the given id unit, we can create sub unit. <br />
      * Return false if the unit does not have sub units and has sectors
      * @param nIdUnit the id unit
      * @return true if we can create sub unit, false otherwise
@@ -177,34 +175,26 @@ public interface IUnitService
 
     /**
      * Check if the given user is authorized to do the action
-     * for a given unit.
-     * <br />
+     * for a given unit. <br />
      * This method calls the service RBACService to check the permission.
      * However, the resource on which the permission must be checked is not
-     * necessarily the given unit. It may be a parent unit of the given unit.
-     * <br />
+     * necessarily the given unit. It may be a parent unit of the given unit. <br />
      * There are 5 cases to handle :
      * <ul>
      * <li>
-     *                 1) The given user is admin
-     *                 => The user is always authorized
-     * </li>
+     * 1) The given user is admin => The user is always authorized</li>
      * <li>
-     *                 2) The given user does not belong to any unit
-     *                 => The user is not authorized
-     * </li>
+     * 2) The given user does not belong to any unit => The user is not
+     * authorized</li>
      * <li>
-     *                 3) The given user belongs to the given unit
-     *                 => Check with RBACService with the given unit
-     * </li>
+     * 3) The given user belongs to the given unit => Check with RBACService
+     * with the given unit</li>
      * <li>
-     *                 4) The given user belongs to a parent unit of the given unit
-     *                 => Check with RBACService with the parent unit
-     * </li>
+     * 4) The given user belongs to a parent unit of the given unit => Check
+     * with RBACService with the parent unit</li>
      * <li>
-     *                 5) The given user belongs to an unit who is not a parent unit of the given unit
-     *                 => The user is not authorized
-     * </li>
+     * 5) The given user belongs to an unit who is not a parent unit of the
+     * given unit => The user is not authorized</li>
      * </ul>
      * @param unit the unit
      * @param strPermission the permission
@@ -225,15 +215,14 @@ public interface IUnitService
     // CRUD OPERATIONS
 
     /**
-    * Create a unit
-    * @param unit the unit
-    * @param request the HTTP request
-    * @return the id unit
-    * @throws UnitErrorException exception if there is an application error
-    */
+     * Create a unit
+     * @param unit the unit
+     * @param request the HTTP request
+     * @return the id unit
+     * @throws UnitErrorException exception if there is an application error
+     */
     @Transactional( "unittree.transactionManager" )
-    int createUnit( Unit unit, HttpServletRequest request )
-        throws UnitErrorException;
+    int createUnit( Unit unit, HttpServletRequest request ) throws UnitErrorException;
 
     /**
      * Update the unit
@@ -242,8 +231,7 @@ public interface IUnitService
      * @throws UnitErrorException exception if there is an application error
      */
     @Transactional( "unittree.transactionManager" )
-    void updateUnit( Unit unit, HttpServletRequest request )
-        throws UnitErrorException;
+    void updateUnit( Unit unit, HttpServletRequest request ) throws UnitErrorException;
 
     /**
      * Remove the unit only if the unit does not have sub units
