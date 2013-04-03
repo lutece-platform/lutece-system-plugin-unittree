@@ -53,22 +53,24 @@
 				</tr>
 				<#if listUsers?? && listUsers?has_content>
 					<#list listUsers as user>
+						<#if mapIdUserUnit["" + user.userId]??>
+							<#assign userUnit = mapIdUserUnit["" + user.userId]>
+						<#else>
+							<#assign userUnit = unit>
+						</#if>
 						<tr>
 							<td>${user.firstName!}</td>
 							<td>${user.lastName!}</td>
 							<td>${user.accessCode!}</td>
 							<td>
-								<#if mapIdUserUnit["" + user.userId]??>
-									<#assign userSubUnit = mapIdUserUnit["" + user.userId]>
-									<a href="jsp/admin/plugins/unittree/ManageUnits.jsp?idUnit=${userSubUnit.idUnit!}">
-										${userSubUnit.label!}
-									</a>
-								</#if>
+								<a href="jsp/admin/plugins/unittree/ManageUnits.jsp?idUnit=${userUnit.idUnit!}">
+									${userUnit.label!}
+								</a>
 							</td>
 							<td>
 								<#if listUnitUserActions?? && listUnitUserActions?has_content>
 									<#list listUnitUserActions as unitUserAction>
-										<a href="${unitUserAction.url!}?idUnit=${unit.idUnit!}&amp;idUser=${user.userId!}">
+										<a href="${unitUserAction.url!}?idUnit=${userUnit.idUnit!}&amp;idUser=${user.userId!}">
 			                				<img src="${unitUserAction.iconUrl!}" alt="${unitUserAction.name!}" title="${unitUserAction.name!}" />
 			                			</a>
 									</#list>
