@@ -240,4 +240,14 @@ public interface IUnitService
      */
     @Transactional( "unittree.transactionManager" )
     void removeUnit( int nIdUnit, HttpServletRequest request );
+
+    /**
+     * Change the parent of a unit.
+     * @param unitToMove The unit to change the parent of.
+     * @param newUnitParent The new parent of the unit
+     * @return True if the sub tree was successfully move, false if the new
+     *         parent is a child of the unit.
+     */
+    @Transactional( "unittree.transactionManager" )
+    boolean moveSubTree( Unit unitToMove, Unit newUnitParent );
 }

@@ -60,7 +60,7 @@ public final class UnitAttributeManager
     }
 
     /**
-     * Get the list of unit user attribute components
+     * Get the list of unit attribute components
      * @return a list of {@link IUnitAttributeComponent}
      */
     public static List<IUnitAttributeComponent> getListUnitAttributeComponents(  )
@@ -87,7 +87,7 @@ public final class UnitAttributeManager
     }
 
     /**
-     * Get the list of unit user attribute services
+     * Get the list of unit attribute services
      * @return a list of {@link IUnitUserAttributeService}
      */
     public static List<IUnitAttributeService> getListUnitAttributeService(  )
@@ -177,5 +177,18 @@ public final class UnitAttributeManager
         }
 
         return true;
+    }
+
+    /**
+     * Update attributes to change the parent of a unit.
+     * @param unitToMove The unit to change the parent of.
+     * @param newUnitParent The new parent of the unit
+     */
+    public static void moveSubTree( Unit unitToMove, Unit newUnitParent )
+    {
+        for ( IUnitAttributeService service : UnitAttributeManager.getListUnitAttributeService( ) )
+        {
+            service.moveSubTree( unitToMove, newUnitParent );
+        }
     }
 }

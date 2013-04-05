@@ -508,6 +508,24 @@ public class UnitService implements IUnitService
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional( "unittree.transactionManager" )
+    public boolean moveSubTree( Unit unitToMove, Unit newUnitParent )
+    {
+        if ( unitToMove != null && newUnitParent != null && unitToMove.getIdUnit( ) != newUnitParent.getIdUnit( )
+                && !isParent( unitToMove, newUnitParent ) )
+        {
+            UnitAttributeManager.moveSubTree( unitToMove, newUnitParent );
+            unitToMove.setIdParent( newUnitParent.getIdUnit( ) );
+            UnitHome.updateParent( unitToMove.getIdUnit( ), newUnitParent.getIdUnit( ) );
+            return true;
+        }
+        return false;
+    }
+
     // PRIVATE METHODS
 
     /**

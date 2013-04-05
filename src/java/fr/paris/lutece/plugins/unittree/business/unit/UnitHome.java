@@ -213,4 +213,15 @@ public final class UnitHome
     {
         return _dao.findBySectorId( nIdSector, _plugin );
     }
+
+    /**
+     * Update the parent of a unit
+     * @param nIdUnitToMove The id of the unit to change the parent of.
+     * @param nIdNewParent The id of the new parent of the unit.
+     * @param _plugin The plugin
+     */
+    public static void updateParent( int nIdUnitToMove, int nIdNewParent )
+    {
+        _dao.updateParent( nIdUnitToMove, nIdNewParent, _plugin );
+    }
 }

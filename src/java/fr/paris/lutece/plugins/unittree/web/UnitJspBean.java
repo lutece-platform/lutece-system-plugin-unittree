@@ -66,6 +66,7 @@ import fr.paris.lutece.util.beanvalidation.BeanValidationUtil;
 import fr.paris.lutece.util.html.HtmlTemplate;
 import fr.paris.lutece.util.url.UrlItem;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -98,6 +99,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
     private static final String PROPERTY_ADD_USERS_PAGE_TITLE = "unittree.addUsers.pageTitle";
     private static final String PROPERTY_MODIFY_USER_PAGE_TITLE = "unittree.modifyUser.pageTitle";
     private static final String PROPERTY_MOVE_USER_PAGE_TITLE = "unittree.moveUser.pageTitle";
+    private static final String PROPERTY_MOVE_UNIT_PAGE_TITLE = "unittree.moveSubTree.pageTitle";
 
     // MESSAGES
     private static final String MESSAGE_ERROR_GENERIC_MESSAGE = "unittree.message.error.genericMessage";
@@ -108,6 +110,8 @@ public class UnitJspBean extends PluginAdminPageJspBean
     private static final String MESSAGE_CONFIRM_REMOVE_UNIT = "unittree.message.removeUnit";
     private static final String MESSAGE_CONFIRM_REMOVE_USER = "unittree.message.removeUser";
     private static final String MESSAGE_ACCESS_DENIED = "unittree.message.accessDenied";
+    private static final String MESSAGE_SUB_TREE_MOVED = "unittree.moveSubTree.subTreeMoved";
+    private static final String MESSAGE_CANT_MOVE_SUB_TREE_TO_CHILD = "unittree.moveSubTree.cantMoveSubTreeToChild";
 
     // MARKS
     private static final String MARK_UNIT_TREE = "unitTree";
@@ -117,6 +121,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
     private static final String MARK_LIST_UNIT_USER_ACTIONS = "listUnitUserActions";
     private static final String MARK_LIST_UNIT_USER_PLUGIN_ACTIONS = "listUnitUserPluginActions";
     private static final String MARK_UNIT = "unit";
+    private static final String MARK_UNIT_TO_MOVE = "unitToMove";
     private static final String MARK_UNITS = "units";
     private static final String MARK_UNIT_PARENT = "unitParent";
     private static final String MARK_USER = "user";
@@ -136,6 +141,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
     private static final String PARAMETER_SELECT_SUB_UNITS = "selectSubUnits";
     private static final String PARAMETER_ID_SELECTED_UNIT = "idSelectedUnit";
     private static final String PARAMETER_FILTER_AFFECTED_USERS = "filterAffectedUsers";
+    private static final String PARAMETER_ID_UNIT_PARENT = "idUnitParent";
 
     // TEMPLATES
     private static final String TEMPLATE_MANAGE_UNITS = "/admin/plugins/unittree/manage_units.html";
@@ -144,6 +150,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
     private static final String TEMPLATE_ADD_USERS = "/admin/plugins/unittree/add_users.html";
     private static final String TEMPLATE_MODIFY_USER = "/admin/plugins/unittree/modify_user.html";
     private static final String TEMPLATE_MOVE_USER = "/admin/plugins/unittree/move_user.html";
+    private static final String TEMPLATE_MOVE_SUB_UNIT = "admin/plugins/unittree/move_sub_tree.html";
 
     // JSP
     private static final String JSP_MANAGE_UNITS = "ManageUnits.jsp";
@@ -1037,6 +1044,108 @@ public class UnitJspBean extends PluginAdminPageJspBean
         url.addParameter( PARAMETER_ID_UNIT, nIdUnit );
 
         return url.getUrl( );
+    }
+
+    /**
+     * Get a page to change the parent of a unit
+     * @param request The request
+     * @return The HTML code to display
+     * @throws AccessDeniedException if the user is not allowed to access the
+     *             feature
+     */
+    public String getMoveSubTree( HttpServletRequest request ) throws AccessDeniedException
+    {
+        setPageTitleProperty( PROPERTY_MOVE_UNIT_PAGE_TITLE );
+
+        String strIdUnitToMove = request.getParameter( PARAMETER_ID_UNIT );
+        String strIdUnit = request.getParameter( PARAMETER_ID_UNIT_PARENT );
+        Unit unitToMove = _unitService.getUnit( Integer.parseInt( strIdUnitToMove ), false );
+        int nIdUnit = Unit.ID_NULL;
+
+        if ( StringUtils.isNotBlank( strIdUnit ) )
+        {
+            nIdUnit = Integer.parseInt( strIdUnit );
+        }
+        else
+        {
+            nIdUnit = unitToMove.getIdParent( );
+        }
+        Unit unit = _unitService.getUnit( nIdUnit, false );
+
+        // Check permissions
+        if ( !_unitService.isAuthorized( unitToMove, UnitResourceIdService.PERMISSION_MOVE_UNIT, getUser( ) ) )
+        {
+            String strErrorMessage = I18nService.getLocalizedString( MESSAGE_ACCESS_DENIED, getLocale( ) );
+            throw new AccessDeniedException( strErrorMessage );
+        }
+
+        List<Unit> listSubUnits = null;
+
+        if ( unit == null )
+        {
+            Unit rootUnit = _unitService.getRootUnit( false );
+            listSubUnits = new ArrayList<Unit>( );
+            if ( unitToMove.getIdUnit( ) != rootUnit.getIdUnit( ) )
+            {
+                listSubUnits.add( rootUnit );
+            }
+        }
+        else
+        {
+            listSubUnits = _unitService.getSubUnits( unit.getIdUnit( ), false );
+
+            // We check that the unit to move is not contained in the sub unit list.
+            for ( Unit subUnit : listSubUnits )
+            {
+                if ( subUnit.getIdUnit( ) == unitToMove.getIdUnit( ) )
+                {
+                    listSubUnits.remove( subUnit );
+                    break;
+                }
+            }
+        }
+
+        Map<String, Object> model = new HashMap<String, Object>( );
+
+        model.put( MARK_UNIT_TO_MOVE, unitToMove );
+        model.put( MARK_UNIT, unit );
+        model.put( MARK_LIST_SUB_UNITS, listSubUnits );
+
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MOVE_SUB_UNIT, getLocale( ), model );
+
+        return getAdminPage( template.getHtml( ) );
+    }
+
+    /**
+     * Do change the parent of a unit
+     * @param request The request
+     * @return The next URL to display
+     */
+    public String doMoveSubTree( HttpServletRequest request )
+    {
+        String strCancel = request.getParameter( PARAMETER_CANCEL );
+        String strIdUnitToMove = request.getParameter( PARAMETER_ID_UNIT );
+        if ( StringUtils.isNotEmpty( strCancel ) )
+        {
+            UrlItem urlItem = new UrlItem( AppPathService.getBaseUrl( request ) + JSP_URL_MANAGE_UNITS );
+            urlItem.addParameter( PARAMETER_ID_UNIT, strIdUnitToMove );
+            return urlItem.getUrl( );
+        }
+        String strIdUnitParent = request.getParameter( PARAMETER_ID_UNIT_PARENT );
+
+        int nIdUnitToMove = Integer.parseInt( strIdUnitToMove );
+        int nIdUnitParent = Integer.parseInt( strIdUnitParent );
+        Unit unitToMove = _unitService.getUnit( nIdUnitToMove, false );
+        Unit unitParent = _unitService.getUnit( nIdUnitParent, false );
+        if ( _unitService.moveSubTree( unitToMove, unitParent ) )
+        {
+            UrlItem urlItem = new UrlItem( JSP_URL_MANAGE_UNITS );
+            urlItem.addParameter( PARAMETER_ID_UNIT, unitToMove.getIdUnit( ) );
+            return AdminMessageService.getMessageUrl( request, MESSAGE_SUB_TREE_MOVED, urlItem.getUrl( ),
+                    AdminMessage.TYPE_INFO );
+        }
+        return AdminMessageService
+                .getMessageUrl( request, MESSAGE_CANT_MOVE_SUB_TREE_TO_CHILD, AdminMessage.TYPE_ERROR );
     }
 
     // PRIVATE METHODS

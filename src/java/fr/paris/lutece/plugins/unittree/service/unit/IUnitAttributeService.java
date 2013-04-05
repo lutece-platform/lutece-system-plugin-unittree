@@ -88,4 +88,11 @@ public interface IUnitAttributeService
      * @return true if the unit can create sub unit
      */
     boolean canCreateSubUnit( int nIdUnit );
+
+    /**
+     * Update attributes to change the parent of a unit.
+     * @param unitToMove The unit to change the parent of.
+     * @param newUnitParent The new parent of the unit
+     */
+    void moveSubTree( Unit unitToMove, Unit newUnitParent );
 }

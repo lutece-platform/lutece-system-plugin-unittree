@@ -21,3 +21,6 @@ INSERT INTO unittree_action (id_action,name_key,description_key,action_url,icon_
 (5,'unittree.user.action.moveUser.name','unittree.user.action.moveUser.description','jsp/admin/plugins/unittree/MoveUser.jsp','images/admin/skin/plugins/unittree/actions/move_user.png','MOVE_USER', 'unittree.unitUserAction');
 INSERT INTO unittree_action (id_action,name_key,description_key,action_url,icon_url,action_permission,action_type) VALUES 
 (6,'unittree.user.action.removeUser.name','unittree.user.action.removeUser.description','jsp/admin/plugins/unittree/RemoveUser.jsp','images/admin/skin/actions/delete.png','REMOVE_USER', 'unittree.unitUserAction');
+
+INSERT INTO unittree_action (id_action,name_key,description_key,action_url,icon_url,action_permission,action_type) VALUES 
+(10,'unittree.unit.action.moveSubTree.name','unittree.unit.action.moveSubTree.description','jsp/admin/plugins/unittree/MoveSubTree.jsp','images/admin/skin/plugins/unittree/actions/move_user.png','MOVE_SUB_TREE', 'unittree.unitAction');

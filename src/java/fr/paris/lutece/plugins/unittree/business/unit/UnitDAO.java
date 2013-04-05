@@ -79,6 +79,7 @@ public class UnitDAO implements IUnitDAO
     private static final String SQL_QUERY_REMOVE_USER_FROM_UNIT = " DELETE FROM unittree_unit_user WHERE id_user = ? AND id_unit = ? ";
     private static final String SQL_QUERY_REMOVE_USERS_FROM_UNIT = " DELETE FROM unittree_unit_user WHERE id_unit = ? ";
     private static final String SQL_QUERY_CHECK_USER = " SELECT id_unit FROM unittree_unit_user WHERE id_user = ? AND id_unit = ? ";
+    private static final String SQL_QUERY_UPDATE_UNIT_PARENT = " UPDATE unittree_unit SET id_parent = ? WHERE id_unit = ? ";
 
     /**
      * {@inheritDoc}
@@ -443,6 +444,19 @@ public class UnitDAO implements IUnitDAO
         daoUtil.free( );
 
         return listUnits;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void updateParent( int nIdUnitToMove, int nIdNewParent, Plugin plugin )
+    {
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE_UNIT_PARENT, plugin );
+        daoUtil.setInt( 1, nIdNewParent );
+        daoUtil.setInt( 2, nIdUnitToMove );
+        daoUtil.executeUpdate( );
+        daoUtil.free( );
     }
 
     // PRIVATE METHODS

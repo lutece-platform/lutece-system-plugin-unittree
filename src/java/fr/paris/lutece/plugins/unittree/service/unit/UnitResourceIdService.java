@@ -42,9 +42,9 @@ import fr.paris.lutece.portal.service.rbac.ResourceTypeManager;
 import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.util.ReferenceList;
 
-import org.apache.commons.lang.StringUtils;
-
 import java.util.Locale;
+
+import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -65,6 +65,7 @@ public class UnitResourceIdService extends ResourceIdService
     public static final String PERMISSION_ADD_USER = "ADD_USER";
     public static final String PERMISSION_MODIFY_USER = "MODIFY_USER";
     public static final String PERMISSION_MOVE_USER = "MOVE_USER";
+    public static final String PERMISSION_MOVE_UNIT = "MOVE_UNIT";
     public static final String PERMISSION_REMOVE_USER = "REMOVE_USER";
     private static final String PROPERTY_LABEL_RESOURCE_TYPE = "unittree.unit.resourceType";
     private static final String PROPERTY_LABEL_CREATE = "unittree.unit.permission.label.create";
@@ -74,6 +75,7 @@ public class UnitResourceIdService extends ResourceIdService
     private static final String PROPERTY_LABEL_MODIFY_USER = "unittree.unit.permission.label.modifyUser";
     private static final String PROPERTY_LABEL_MOVE_USER = "unittree.unit.permission.label.moveUser";
     private static final String PROPERTY_LABEL_REMOVE_USER = "unittree.unit.permission.label.removeUser";
+    private static final String PROPERTY_LABEL_MOVE_UNIT = "unittree.unit.action.moveSubTree.name";
 
     /**
      * Constructor
@@ -127,6 +129,11 @@ public class UnitResourceIdService extends ResourceIdService
         p = new Permission(  );
         p.setPermissionKey( PERMISSION_REMOVE_USER );
         p.setPermissionTitleKey( PROPERTY_LABEL_REMOVE_USER );
+        rt.registerPermission( p );
+
+        p = new Permission( );
+        p.setPermissionKey( PERMISSION_MOVE_UNIT );
+        p.setPermissionTitleKey( PROPERTY_LABEL_MOVE_UNIT );
         rt.registerPermission( p );
 
         ResourceTypeManager.registerResourceType( rt );

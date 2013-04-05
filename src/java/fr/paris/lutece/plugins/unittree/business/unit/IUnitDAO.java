@@ -173,4 +173,12 @@ public interface IUnitDAO
      * @return all the Unit with no children (level 0)
      */
     List<Unit> getUnitWithNoChildren( Plugin plugin );
+
+    /**
+     * Update the parent of a unit
+     * @param nIdUnitToMove The id of the unit to change the parent of.
+     * @param nIdNewParent The id of the new parent of the unit.
+     * @param plugin The plugin
+     */
+    void updateParent( int nIdUnitToMove, int nIdNewParent, Plugin plugin );
 }
