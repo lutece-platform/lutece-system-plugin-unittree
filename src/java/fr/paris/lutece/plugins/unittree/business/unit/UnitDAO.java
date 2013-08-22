@@ -485,7 +485,7 @@ public class UnitDAO implements IUnitDAO
 
         if ( uFilter.containsDescription( ) )
         {
-            nIndex = addSQLWhereOr( uFilter.isWideSearch( ), sbSQL, nIndex );
+            addSQLWhereOr( uFilter.isWideSearch( ), sbSQL, nIndex );
             sbSQL.append( SQL_FILTER_DESCRIPTION );
         }
 

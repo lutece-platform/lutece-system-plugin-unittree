@@ -89,6 +89,8 @@ public class UnitJspBean extends PluginAdminPageJspBean
 {
     public static final String RIGHT_MANAGE_UNITS = "UNITS_MANAGEMENT";
 
+    private static final long serialVersionUID = 5997434357453313400L;
+
     // BEAN
     private static final String BEAN_UNIT_USER_SERVICE = "unittree.unitUserService";
 
