@@ -1,33 +1,38 @@
-<div class="content-box" >
-    <h2>#i18n{unittree.modifyUser.pageTitle}</h2>
-    <div class="content-box-content">
-    	<form method="post" action="jsp/admin/plugins/unittree/DoModifyUser.jsp">
-    		<p>
-    			<label>#i18n{unittree.modifyUser.labelUser} : </label>
-    			<strong>${user.accessCode!}</strong>
-    		</p>
-    		<p>
-    			<label>#i18n{unittree.modifyUser.labelUnit} : </label>
-   				<strong>
-   					<#list units as unit>
-   						${unit.label!}<#if unit_has_next>, </#if>
-   					</#list>
-   				</strong>
-    		</p>
-    		<#if listUnitUserAttributes?? && listUnitUserAttributes?has_content>
-				<#list listUnitUserAttributes as unitUserAttribute>
-					<#if unitUserAttribute.template?has_content>
-						<#include unitUserAttribute.template />
-					</#if>
-				</#list>
-			</#if>
-			<div class="clear">&nbsp;</div>
-    		<p>
-    			<input type="hidden" name="idUnit" value="${unit}" />
-    			<input type="hidden" name="idUser" value="${user.userId!}" />
-   				<input type="submit" name="create" class="button" value="#i18n{portal.util.labelModify}" />
-    			<input type="submit" name="cancel" class="button" value="#i18n{portal.util.labelCancel}" />
-    		</p>
-    	</form>
-	</div>
-</div>
+<form class="form-horizontal" method="post" action="jsp/admin/plugins/unittree/DoModifyUser.jsp">
+	<fieldset>
+		<legend>#i18n{unittree.modifyUser.pageTitle}</legend>
+		<div class="control-group">
+			<label class="control-label">#i18n{unittree.modifyUser.labelUser} : </label>
+			<div class="controls">
+				<strong>${user.accessCode!}</strong>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">#i18n{unittree.modifyUser.labelUnit} : </label>
+  			<div class="controls">
+				<strong>
+  					<#list units as unit>
+  						${unit.label!}<#if unit_has_next>, </#if>
+  					</#list>
+  				</strong>
+  			</div>
+		</div>
+		<#if listUnitUserAttributes?? && listUnitUserAttributes?has_content>
+			<#list listUnitUserAttributes as unitUserAttribute>
+				<#if unitUserAttribute.template?has_content>
+					<#include unitUserAttribute.template />
+				</#if>
+			</#list>
+		</#if>
+		<div class="form-actions">
+			<input type="hidden" name="idUnit" value="${unit}" />
+			<input type="hidden" name="idUser" value="${user.userId!}" />
+  			<button type="submit" name="create" class="btn btn-primary btn-small" value="#i18n{portal.util.labelModify}" >
+  				<i class="icon-white icon-ok">&nbsp;</i>&nbsp;#i18n{portal.util.labelModify}
+  			</button>
+			<button type="submit" name="cancel" class="btn btn-small" value="#i18n{portal.util.labelCancel}" >
+				<i class="icon-remove-circle">&nbsp;</i>&nbsp;#i18n{portal.util.labelModify}
+			</button>
+		</div>
+	</fieldset>
+</form>

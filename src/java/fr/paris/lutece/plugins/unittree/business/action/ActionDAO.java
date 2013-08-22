@@ -75,7 +75,7 @@ public class ActionDAO implements IActionDAO
             action.setNameKey( daoUtil.getString( nIndex++ ) );
             action.setDescriptionKey( daoUtil.getString( nIndex++ ) );
             action.setUrl( daoUtil.getString( nIndex++ ) );
-            action.setIconUrl( daoUtil.getString( nIndex++ ) );
+            action.setIcon( daoUtil.getString( nIndex++ ) );
             action.setPermission( daoUtil.getString( nIndex++ ) );
             action.setActionType( daoUtil.getString( nIndex ) );
 
@@ -109,7 +109,7 @@ public class ActionDAO implements IActionDAO
             action.setNameKey( daoUtil.getString( nIndex++ ) );
             action.setDescriptionKey( daoUtil.getString( nIndex++ ) );
             action.setUrl( daoUtil.getString( nIndex++ ) );
-            action.setIconUrl( daoUtil.getString( nIndex++ ) );
+            action.setIcon( daoUtil.getString( nIndex++ ) );
             action.setPermission( daoUtil.getString( nIndex++ ) );
             action.setActionType( daoUtil.getString( nIndex ) );
 

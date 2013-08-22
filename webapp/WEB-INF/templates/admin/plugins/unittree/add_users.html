@@ -1,7 +1,7 @@
-<div id="left">
-	<div class="content-box">
-		<h2>#i18n{unittree.addUsers.labelUnit}</h2>
-		<table>
+<div class="span4">
+	<legend>#i18n{unittree.addUsers.labelUnit}</legend>
+	<div class="well">
+		<table class="table">
 			<tr>
 				<th>#i18n{unittree.addUsers.labelLabel}</th>
 			</tr>
@@ -17,60 +17,61 @@
 		</table>
 	</div>
 </div>
-<div id="right">
-	<div class="content-box">
-		<h2>#i18n{unittree.addUsers.labelUsers}</h2>
-		
-		<#-- SEARCH USER FORM-->
-		<@searchAdminUsersForm urlAction="jsp/admin/plugins/unittree/AddUsers.jsp" displayInDepthOption=false />
-		
-		<#-- ADD USER FORM -->
-		<form method="post" action="jsp/admin/plugins/unittree/DoAddUsers.jsp">
-			<#assign additionnalAttribute = "&session=session&idUnit=" + unit.idUnit! + sort_search_attribute!>
-			<table>
-				<tr>
-					<th>&nbsp;</th>
-					<th>
-						#i18n{unittree.addUsers.labelFirstName}
-						<@sort jsp_url="jsp/admin/plugins/unittree/AddUsers.jsp" attribute="firstName${additionnalAttribute!}" />
-					</th>
-					<th>
-						#i18n{unittree.addUsers.labelLastName}
-						<@sort jsp_url="jsp/admin/plugins/unittree/AddUsers.jsp" attribute="lastName${additionnalAttribute!}" />
-					</th>
-					<th>
-						#i18n{unittree.addUsers.labelAccessCode}
-						<@sort jsp_url="jsp/admin/plugins/unittree/AddUsers.jsp" attribute="accessCode${additionnalAttribute!}" />
-					</th>
-				</tr>
-				<#if listUsers?? && listUsers?has_content>
-					<#list listUsers as user>
-						<tr>
-							<td><input type="checkbox" name="idUsers" value="${user.userId!}" /></td>
-							<td>${user.firstName!}</td>
-							<td>${user.lastName!}</td>
-							<td>${user.accessCode!}</td>
-						</tr>
-					</#list>
-				</#if>
-			</table>
-			<#if listUnitUserAttributes?? && listUnitUserAttributes?has_content>
-				<fieldset>
-					<legend>#i18n{unittree.addUsers.labelValueToAffectToUsers}</legend>
-					<#list listUnitUserAttributes as unitUserAttribute>
-						<#if unitUserAttribute.template?has_content>
-							<#include unitUserAttribute.template />
-						</#if>
-					</#list>
-				</fieldset>
+<div class="span7">
+	<legend>#i18n{unittree.addUsers.labelUsers}</legend>
+	
+	<#-- SEARCH USER FORM-->
+	<@searchAdminUsersForm urlAction="jsp/admin/plugins/unittree/AddUsers.jsp" displayInDepthOption=false />
+	
+	<#-- ADD USER FORM -->
+	<form class="form-horizontal" method="post" action="jsp/admin/plugins/unittree/DoAddUsers.jsp">
+		<#assign additionnalAttribute = "&session=session&idUnit=" + unit.idUnit! + sort_search_attribute!>
+		<table class="table table-striped">
+			<tr>
+				<th>&nbsp;</th>
+				<th>
+					#i18n{unittree.addUsers.labelFirstName}
+					<@sort jsp_url="jsp/admin/plugins/unittree/AddUsers.jsp" attribute="firstName${additionnalAttribute!}" />
+				</th>
+				<th>
+					#i18n{unittree.addUsers.labelLastName}
+					<@sort jsp_url="jsp/admin/plugins/unittree/AddUsers.jsp" attribute="lastName${additionnalAttribute!}" />
+				</th>
+				<th>
+					#i18n{unittree.addUsers.labelAccessCode}
+					<@sort jsp_url="jsp/admin/plugins/unittree/AddUsers.jsp" attribute="accessCode${additionnalAttribute!}" />
+				</th>
+			</tr>
+			<#if listUsers?? && listUsers?has_content>
+				<#list listUsers as user>
+					<tr>
+						<td><input type="checkbox" name="idUsers" value="${user.userId!}" /></td>
+						<td>${user.firstName!}</td>
+						<td>${user.lastName!}</td>
+						<td>${user.accessCode!}</td>
+					</tr>
+				</#list>
 			</#if>
-			<div class="clear">&nbsp;</div>
-			<p>
-				<input type="hidden" name="idUnit" value="${unit.idUnit!}" />
-				<input type="submit" name="addUsers" value="#i18n{unittree.addUsers.btnAdd}" class="button" />
-				<input type="submit" name="cancel" value="#i18n{portal.util.labelCancel}" class="button" />
-			</p>
-		</form>
-		<@paginationAdmin paginator=paginator />
-	</div>
+		</table>
+		<#if listUnitUserAttributes?? && listUnitUserAttributes?has_content>
+			<fieldset>
+				<legend>#i18n{unittree.addUsers.labelValueToAffectToUsers}</legend>
+				<#list listUnitUserAttributes as unitUserAttribute>
+					<#if unitUserAttribute.template?has_content>
+						<#include unitUserAttribute.template />
+					</#if>
+				</#list>
+			</fieldset>
+		</#if>
+		<div class="form-actions">
+			<input type="hidden" name="idUnit" value="${unit.idUnit!}" />
+			<button type="submit" name="addUsers" value="#i18n{unittree.addUsers.btnAdd}" class="btn btn-primary btn-small" >
+				<i class="icon-white icon-plus">&nbsp;</i>&nbsp;#i18n{unittree.addUsers.btnAdd}
+			</button>
+			<button type="submit" name="cancel" value="#i18n{portal.util.labelCancel}" class="btn btn-small" >
+				<i class="icon-plus">&nbsp;</i>&nbsp;#i18n{portal.util.labelCancel}
+			</button>
+		</div>
+	</form>
+	<@paginationAdmin paginator=paginator />
 </div>

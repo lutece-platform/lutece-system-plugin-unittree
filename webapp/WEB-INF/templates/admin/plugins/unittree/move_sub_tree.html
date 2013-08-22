@@ -1,46 +1,49 @@
-<div class="content-box" >
-    <h2>#i18n{unittree.moveSubTree.pageTitle}</h2>
-    <div class="content-box-content">
-    	<form method="post" action="jsp/admin/plugins/unittree/DoMoveSubTree.jsp">
-    		<p>
-    			<label>#i18n{unittree.moveSubTree.labelUnitToMove} : </label>
-    			<strong>${unitToMove.label!}</strong>
-    		</p>
-    		<p>
+<form method="post" action="jsp/admin/plugins/unittree/DoMoveSubTree.jsp">
+	<fieldset>
+    	<legend>#i18n{unittree.moveSubTree.pageTitle}</legend>
+    		<div class="control-group">
+    			<label class="control-label">#i18n{unittree.moveSubTree.labelUnitToMove} : </label>
+    			<div class="controls">
+    				<strong>${unitToMove.label!}</strong>
+    			</div>
+    		</div>
+    		<div class="control-group">
     			<label>#i18n{unittree.moveUser.labelUnit} : </label>
-    		</p>
+    		</div>
     		<br />
-   			<div class="highlight-box" >
+   			<div class="control-group" >
    				<#if unit??>
    					<#assign idParent = unit.idParent>
    				<#else>
    					<#assign idParent = -1>
    				</#if>
-				<p>
-					<a href="jsp/admin/plugins/unittree/MoveSubTree.jsp?idUnit=${unitToMove.idUnit!}&amp;idUnitParent=${idParent}">
-						<img src="images/admin/skin/actions/up.png" alt="#i18n{unittree.moveUser.labelMoveUp}" title="#i18n{unittree.moveUser.labelMoveUp}" />
-						#i18n{unittree.moveUser.labelMoveUp}
+				<div class="control-group">
+					<a href="jsp/admin/plugins/unittree/MoveSubTree.jsp?idUnit=${unitToMove.idUnit!}&amp;idUnitParent=${idParent}" title="#i18n{unittree.moveUser.labelMoveUp}">
+						<i class="icon-folder-open">&nbsp;</i>&nbsp;#i18n{unittree.moveUser.labelMoveUp}
 					</a>
-				</p>
+				</div>
  				<#if listSubUnits?? && listSubUnits?has_content>
 	   				<#list listSubUnits as subUnit>
-	   					<p>
+	   					<div class="control-group">
 	   						<input type="radio" name="idUnitParent" value="${subUnit.idUnit!}" />
 	   						<a href="jsp/admin/plugins/unittree/MoveSubTree.jsp?idUnit=${unitToMove.idUnit!}&amp;idUnitParent=${subUnit.idUnit!}">
 	   							<img src="images/admin/skin/plugins/unittree/units/unit.png" alt="#i18n{unittree.moveUser.labelAccessTo}" title="#i18n{unittree.moveUser.labelAccessTo}" />
 	   							${subUnit.label!}
 	   						</a>
-	   					</p>
+	   					</div>
 	   				</#list>
 	   			<#else>
 	   				#i18n{unittree.moveSubTree.labelNoSuUnit}
    				</#if>
    			</div>
-    		<p>
+    		<div class="control-group">
     			<input type="hidden" name="idUnit" value="${unitToMove.idUnit!}" />
-   				<input type="submit" name="move" class="button" value="#i18n{unittree.moveUser.btnMove}" />
-    			<input type="submit" name="cancel" class="button" value="#i18n{portal.util.labelCancel}" />
-    		</p>
-    	</form>
-	</div>
-</div>
+   				<button type="submit" name="move" class="btn btn-primary btn-small" value="#i18n{unittree.moveUser.btnMove}" >
+   					<i class="icon-ok icon-white">&nbsp;</i>&nbsp;#i18n{unittree.moveUser.btnMove}
+   				</button>
+    			<button type="submit" name="cancel" class="btn btn-small" value="#i18n{portal.util.labelCancel}" >
+    				<i class="icon-remove-circle">&nbsp;</i>&nbsp;#i18n{portal.util.labelCancel}
+    			</button>
+    		</div>
+	</fieldset>
+</form>

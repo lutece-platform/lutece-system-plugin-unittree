@@ -116,13 +116,13 @@ public interface IAction extends Localizable, RBACAction
      * Returns the IconUrl
      * @return The IconUrl
      */
-    String getIconUrl(  );
+    String getIcon(  );
 
     /**
      * Sets the IconUrl
      * @param strIconUrl The IconUrl
      */
-    void setIconUrl( String strIconUrl );
+    void setIcon( String strIconUrl );
 
     /**
      * Returns the permission associated to the action

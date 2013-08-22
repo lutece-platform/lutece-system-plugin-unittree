@@ -50,7 +50,7 @@ public abstract class AbstractAction implements IAction
     private String _strNameKey;
     private String _strDescriptionKey;
     private Locale _locale;
-    private String _strIconUrl;
+    private String _strIcon;
     private String _strPermission;
 
     /**
@@ -153,21 +153,21 @@ public abstract class AbstractAction implements IAction
     }
 
     /**
-     * Returns the IconUrl
-     * @return The IconUrl
+     * Returns the icon
+     * @return The icon
      */
-    public String getIconUrl(  )
+    public String getIcon(  )
     {
-        return _strIconUrl;
+        return _strIcon;
     }
 
     /**
-     * Sets the IconUrl
-     * @param strIconUrl The IconUrl
+     * Sets the icon
+     * @param strIcon The icon
      */
-    public void setIconUrl( String strIconUrl )
+    public void setIcon( String strIcon )
     {
-        _strIconUrl = strIconUrl;
+        _strIcon = strIcon;
     }
 
     /**
