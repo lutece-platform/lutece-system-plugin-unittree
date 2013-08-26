@@ -11,7 +11,7 @@
 	            <tr>
 	                <td>
 	               		<#list listUnitActions as unitAction>
-	               			<a class="btn btn-primary btn-small" href="${unitAction.url!}?idUnit=${unit.idUnit!}" title="${unitAction.name!}">
+	               			<a class="btn <#if unitAction.nameKey?? && unitAction.nameKey == 'unittree.unit.action.deleteUnit.name'>btn-danger<#else>btn-primary</#if> btn-small" href="${unitAction.url!}?idUnit=${unit.idUnit!}" title="${unitAction.name!}">
 	               				<i class="icon-white ${unitAction.icon!}">&nbsp;</i>
 	               			</a>
 	               		</#list>
@@ -82,7 +82,7 @@
 						<td>
 							<#if listUnitUserActions?? && listUnitUserActions?has_content>
 								<#list listUnitUserActions as unitUserAction>
-									<a class="btn btn-small btn-primary" href="${unitUserAction.url!}?idUnit=${userUnit.idUnit!}&amp;idUser=${user.userId!}" title="${unitUserAction.name!}">
+									<a class="btn btn-small <#if unitUserAction.nameKey?? && unitUserAction.nameKey == 'unittree.user.action.removeUser.name'>btn-danger<#else>btn-primary</#if>" href="${unitUserAction.url!}?idUnit=${userUnit.idUnit!}&amp;idUser=${user.userId!}" title="${unitUserAction.name!}">
 						            	<i class="icon-white ${unitUserAction.icon!}" >&nbsp;</i>
 						            </a>
 								</#list>

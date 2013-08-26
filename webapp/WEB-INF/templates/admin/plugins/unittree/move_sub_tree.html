@@ -11,7 +11,7 @@
     			<label>#i18n{unittree.moveUser.labelUnit} : </label>
     		</div>
     		<br />
-   			<div class="control-group" >
+   			<div class="well control-group" >
    				<#if unit??>
    					<#assign idParent = unit.idParent>
    				<#else>
@@ -36,7 +36,7 @@
 	   				#i18n{unittree.moveSubTree.labelNoSuUnit}
    				</#if>
    			</div>
-    		<div class="control-group">
+    		<div class="form-actions">
     			<input type="hidden" name="idUnit" value="${unitToMove.idUnit!}" />
    				<button type="submit" name="move" class="btn btn-primary btn-small" value="#i18n{unittree.moveUser.btnMove}" >
    					<i class="icon-ok icon-white">&nbsp;</i>&nbsp;#i18n{unittree.moveUser.btnMove}
