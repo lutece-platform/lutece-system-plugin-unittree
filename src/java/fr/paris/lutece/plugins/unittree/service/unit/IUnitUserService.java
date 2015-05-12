@@ -36,18 +36,18 @@ package fr.paris.lutece.plugins.unittree.service.unit;
 import fr.paris.lutece.plugins.unittree.business.unit.Unit;
 import fr.paris.lutece.portal.business.user.AdminUser;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.transaction.annotation.Transactional;
-
 
 /**
- * 
+ *
  * IUnitUserService
- * 
+ *
  */
 public interface IUnitUserService
 {
@@ -161,5 +161,5 @@ public interface IUnitUserService
      *         property is not defined, the default value is used which is
      *         false.
      */
-    boolean isMultiAffectationEnabled( );
+    boolean isMultiAffectationEnabled(  );
 }

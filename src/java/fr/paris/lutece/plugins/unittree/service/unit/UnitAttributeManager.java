@@ -186,7 +186,7 @@ public final class UnitAttributeManager
      */
     public static void moveSubTree( Unit unitToMove, Unit newUnitParent )
     {
-        for ( IUnitAttributeService service : UnitAttributeManager.getListUnitAttributeService( ) )
+        for ( IUnitAttributeService service : UnitAttributeManager.getListUnitAttributeService(  ) )
         {
             service.moveSubTree( unitToMove, newUnitParent );
         }

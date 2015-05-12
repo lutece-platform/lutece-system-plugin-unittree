@@ -39,19 +39,20 @@ import fr.paris.lutece.plugins.unittree.service.UnitErrorException;
 import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.util.ReferenceList;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.transform.Source;
 
-import org.springframework.transaction.annotation.Transactional;
+import javax.xml.transform.Source;
 
 
 /**
- * 
+ *
  * IUnitService
- * 
+ *
  */
 public interface IUnitService
 {
@@ -126,13 +127,13 @@ public interface IUnitService
      * Get the XML units
      * @return an XML
      */
-    String getXMLUnits( );
+    String getXMLUnits(  );
 
     /**
      * Get the XSL of the tree
      * @return the XSL
      */
-    Source getTreeXsl( );
+    Source getTreeXsl(  );
 
     /**
      * Find by sector id
@@ -145,7 +146,7 @@ public interface IUnitService
      * Return all the Unit with no children (level 0)
      * @return all the Unit with no children (level 0)
      */
-    List<Unit> getUnitWithNoChildren( );
+    List<Unit> getUnitWithNoChildren(  );
 
     // CHECKS
 
@@ -222,7 +223,8 @@ public interface IUnitService
      * @throws UnitErrorException exception if there is an application error
      */
     @Transactional( "unittree.transactionManager" )
-    int createUnit( Unit unit, HttpServletRequest request ) throws UnitErrorException;
+    int createUnit( Unit unit, HttpServletRequest request )
+        throws UnitErrorException;
 
     /**
      * Update the unit
@@ -231,7 +233,8 @@ public interface IUnitService
      * @throws UnitErrorException exception if there is an application error
      */
     @Transactional( "unittree.transactionManager" )
-    void updateUnit( Unit unit, HttpServletRequest request ) throws UnitErrorException;
+    void updateUnit( Unit unit, HttpServletRequest request )
+        throws UnitErrorException;
 
     /**
      * Remove the unit only if the unit does not have sub units

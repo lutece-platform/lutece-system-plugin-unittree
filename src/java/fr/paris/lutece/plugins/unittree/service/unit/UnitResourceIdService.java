@@ -42,9 +42,9 @@ import fr.paris.lutece.portal.service.rbac.ResourceTypeManager;
 import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.util.ReferenceList;
 
-import java.util.Locale;
-
 import org.apache.commons.lang.StringUtils;
+
+import java.util.Locale;
 
 
 /**
@@ -131,7 +131,7 @@ public class UnitResourceIdService extends ResourceIdService
         p.setPermissionTitleKey( PROPERTY_LABEL_REMOVE_USER );
         rt.registerPermission( p );
 
-        p = new Permission( );
+        p = new Permission(  );
         p.setPermissionKey( PERMISSION_MOVE_UNIT );
         p.setPermissionTitleKey( PROPERTY_LABEL_MOVE_UNIT );
         rt.registerPermission( p );
