@@ -51,6 +51,7 @@ import fr.paris.lutece.portal.service.html.XmlTransformerService;
 import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.service.message.AdminMessage;
 import fr.paris.lutece.portal.service.message.AdminMessageService;
+import fr.paris.lutece.portal.service.plugin.PluginService;
 import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
 import fr.paris.lutece.portal.service.util.AppException;
@@ -133,6 +134,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
     private static final String MARK_MAP_ID_USER_UNIT = "mapIdUserUnit";
     private static final String MARK_MULTI_AFFECTATION_ENABLED = "multi_affection_enabled";
     private static final String MARK_FILTER_AFFECTED_USERS = "filterAffectedUsers";
+    private static final String MARK_ADMIN_AVATAR = "adminAvatar";
 
     // PARAMETERS
     private static final String PARAMETER_CANCEL = "cancel";
@@ -172,9 +174,9 @@ public class UnitJspBean extends PluginAdminPageJspBean
     private IUnitService _unitService = SpringContextService.getBean( IUnitService.BEAN_UNIT_SERVICE );
     private IUnitUserService _unitUserService = SpringContextService.getBean( BEAN_UNIT_USER_SERVICE );
     private IUnitSearchFields _unitUserSearchFields = new UnitUserSearchFields(  );
-
-    // GET
-
+    
+    private boolean _bAdminAvatar = PluginService.isPluginEnable( "adminavatar" );
+    
     /**
      * Get manage units
      * @param request the HTTP request
@@ -244,6 +246,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
         model.put( MARK_UNIT, unit );
         model.put( MARK_LIST_SUB_UNITS, _unitService.getSubUnits( unit.getIdUnit(  ), false ) );
         model.put( MARK_MAP_ID_USER_UNIT, mapIdUserUnit );
+        model.put( MARK_ADMIN_AVATAR , _bAdminAvatar );
 
         // Add actions in the model
         model.put( MARK_LIST_UNIT_ACTIONS,
@@ -430,6 +433,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
         model.put( MARK_UNIT, unit );
         model.put( MARK_MULTI_AFFECTATION_ENABLED, bMultiAffectationEnabled );
         model.put( MARK_FILTER_AFFECTED_USERS, !bIncludeMultiAffectedUsers );
+        model.put( MARK_ADMIN_AVATAR , _bAdminAvatar );
         UnitUserAttributeManager.fillModel( request, getUser(  ), model, MARK_LIST_UNIT_USER_ATTRIBUTES );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_ADD_USERS, getLocale(  ), model );
