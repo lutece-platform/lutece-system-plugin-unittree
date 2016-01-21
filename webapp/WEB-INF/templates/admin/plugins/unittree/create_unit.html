@@ -1,41 +1,51 @@
-<div class="content-box" >
-    	<form class="form-horizontal" method="post" action="jsp/admin/plugins/unittree/DoCreateUnit.jsp">
-    		<fieldset>
-    			<legend>#i18n{unittree.createUnit.pageTitle}</legend>
-    		<div class="control-group">
-    			<label class="control-label"for="idParent">#i18n{unittree.createUnit.labelParentUnit} : </label>
-    			<div class="controls">
-    				<strong>${parentUnit.label!}</strong>
-    				<input type="hidden" name="idParent" value="${parentUnit.idUnit!}" />
-    			</div>
-    		</div>
-    		<div class="control-group">
-    			<label class="control-label"for="label">#i18n{unittree.createUnit.labelLabel} * : </label>
-   				<div class="controls">
-    				<input type="text" size="20" maxlength="20" value="" name="label" />
-    			</div>
-    		</div>
-    		<div class="control-group">
-    			<label class="control-label"for="label">#i18n{unittree.createUnit.labelDescription} * : </label>
-   				<div class="controls">
-    				<input type="text" size="100" maxlength="100" value="" name="description" />
-    			</div>
-    		</div>
-    		<#if listUnitAttributes?? && listUnitAttributes?has_content>
-				<#list listUnitAttributes as unitAttribute>
-					<#if unitAttribute.template?has_content && unitAttribute.displayedInUnitForm>
-						<#include unitAttribute.template />
-					</#if>
-				</#list>
-			</#if>
-    		<div class="form-actions">
-   				<button type="submit" name="save" class="btn btn-small btn-primary" value="#i18n{portal.util.labelCreate}" >
-   					<i class="icon-white icon-ok">&nbsp;</i>&nbsp;#i18n{portal.util.labelCreate}
-   				</button>
-    			<button type="submit" name="cancel" class="btn btn-small" value="#i18n{portal.util.labelCancel}" >
-    				<i class="icon-remove-circle">&nbsp;</i>&nbsp;#i18n{portal.util.labelCancel}
-    			</button>
-    		</div>
-    		</fieldset>
-    	</form>
+<section class="content">
+  <div class="row">
+    <div class="col-md-offset-2 col-md-9">
+      <div class="box box-solid">
+        <div class="box-header with-border">
+          <h3 class="box-title">#i18n{unittree.createUnit.pageTitle}</h3>
+        </div>
+        <div class="box-body">
+          <form method="post" action="jsp/admin/plugins/unittree/DoCreateUnit.jsp">
+            <input type="hidden" name="idParent" value="${parentUnit.idUnit!}">
+            <div class="form-group">
+              <label class="col-xs-12 col-sm-2 control-label" for="idParent">#i18n{unittree.createUnit.labelParentUnit} : </label>
+              <div class="col-xs-12 col-sm-9">
+                <p class="form-control-static">${parentUnit.label!}</p>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-xs-12 col-sm-2 control-label" for="idParent">#i18n{unittree.createUnit.labelParentUnit}</label>
+          		<div class="col-xs-12 col-sm-9">
+                <input type="text" class="form-control" value="" name="label">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-xs-12 col-sm-2 control-label" for="label">#i18n{unittree.modifyUnit.labelLabel} *</label>
+          		<div class="col-xs-12 col-sm-9">
+                <input type="text" class="form-control" value="" name="description">
+              </div>
+            </div>
+            <#if listUnitAttributes?? && listUnitAttributes?has_content>
+              <#list listUnitAttributes as unitAttribute>
+                <#if unitAttribute.template?has_content && unitAttribute.displayedInUnitForm>
+                  <#include unitAttribute.template />
+                </#if>
+              </#list>
+            </#if>
+            <div class="form-group">
+              <div class="col-xs-12 col-sm-offset-2 col-sm-9">
+                <button type="submit" name="save" class="btn btn-primary" value="#i18n{portal.util.labelCreate}" >
+                  <i class="fa fa-check"></i> #i18n{portal.util.labelCreate}
+                </button>
+                <button type="submit" name="cancel" class="btn btn-default" value="#i18n{portal.util.labelCancel}" >
+                  <i class="fa fa-remove"></i> #i18n{portal.util.labelCancel}
+                </button>
+              </div>
+            </div>
+          </form>
+      </div>
+    </div>
+  </div>
 </div>
+</section>
