@@ -12,14 +12,14 @@
 		</ul>
 	</div>
 </xsl:template>
-    
+
 <xsl:template match="unit">
 	<xsl:variable name="index">
 		<xsl:value-of select="id-unit" />
 	</xsl:variable>
 	<li id="node-{$index}">
-		<img src="images/admin/skin/plugins/unittree/units/unit.png" alt="" hspace="5" />
-		<a href="jsp/admin/plugins/unittree/ManageUnits.jsp?idUnit={id-unit}">
+		<a href="jsp/admin/plugins/unittree/ManageUnits.jsp?idUnit={id-unit}" title="{description}">
+			<i class="fa fa-folder">&#160;</i>
 			<xsl:choose>
 				<xsl:when test="id-unit=$id-current-unit" >
 					<strong><xsl:value-of select="label" /></strong>
@@ -30,7 +30,7 @@
 			</xsl:choose>
 		</a>
 		<xsl:apply-templates select="unit-children" />
-	</li>  
+	</li>
 </xsl:template>
 
 <xsl:template match="unit-children">
@@ -38,7 +38,7 @@
 		<ul>
 			<xsl:apply-templates select="unit" />
 		</ul>
-	</xsl:if> 
+	</xsl:if>
 </xsl:template>
 
 </xsl:stylesheet>
