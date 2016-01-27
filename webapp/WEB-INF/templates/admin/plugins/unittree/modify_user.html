@@ -1,38 +1,54 @@
-<form class="form-horizontal" method="post" action="jsp/admin/plugins/unittree/DoModifyUser.jsp">
-	<fieldset>
-		<legend>#i18n{unittree.modifyUser.pageTitle}</legend>
-		<div class="control-group">
-			<label class="control-label">#i18n{unittree.modifyUser.labelUser} : </label>
-			<div class="controls">
-				<strong>${user.accessCode!}</strong>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">#i18n{unittree.modifyUser.labelUnit} : </label>
-  			<div class="controls">
-				<strong>
-  					<#list units as unit>
-  						${unit.label!}<#if unit_has_next>, </#if>
-  					</#list>
-  				</strong>
-  			</div>
-		</div>
-		<#if listUnitUserAttributes?? && listUnitUserAttributes?has_content>
-			<#list listUnitUserAttributes as unitUserAttribute>
-				<#if unitUserAttribute.template?has_content>
-					<#include unitUserAttribute.template />
-				</#if>
-			</#list>
-		</#if>
-		<div class="form-actions">
-			<input type="hidden" name="idUnit" value="${unit}" />
-			<input type="hidden" name="idUser" value="${user.userId!}" />
-  			<button type="submit" name="create" class="btn btn-primary btn-small" value="#i18n{portal.util.labelModify}" >
-  				<i class="icon-white icon-ok">&nbsp;</i>&nbsp;#i18n{portal.util.labelModify}
-  			</button>
-			<button type="submit" name="cancel" class="btn btn-small" value="#i18n{portal.util.labelCancel}" >
-				<i class="icon-remove-circle">&nbsp;</i>&nbsp;#i18n{portal.util.labelModify}
-			</button>
-		</div>
-	</fieldset>
-</form>
+<div class="row">
+  <div class="col-xs-12 col-sm-12">
+      <div class="box box-solid">
+        <div class="box-header with-border">
+          <h3 class="box-title">#i18n{unittree.modifyUser.pageTitle}</h3>
+        </div>
+        <div class="box-body">
+					<form class="form-horizontal" method="post" action="jsp/admin/plugins/unittree/DoModifyUser.jsp">
+						<input type="hidden" name="idUnit" value="${unit}">
+						<input type="hidden" name="idUser" value="${user.userId!}">
+						<div class="form-group">
+          		<label class="col-xs-12 col-sm-2 control-label" for="idParent">#i18n{unittree.modifyUser.labelUser}</label>
+          		<div class="col-xs-12 col-sm-9">
+          			<p class="form-control-static">${user.accessCode!}</p>
+          		</div>
+          	</div>
+						<div class="form-group">
+          		<label class="col-xs-12 col-sm-2 control-label" for="idParent">#i18n{unittree.modifyUser.labelUnit}</label>
+          		<div class="col-xs-12 col-sm-9">
+          			<p class="form-control-static">
+									<#list units as unit>
+										${unit.label!}<#if unit_has_next>, </#if>
+									</#list>
+								</p>
+          		</div>
+          	</div>
+						<#if listUnitUserAttributes?? && listUnitUserAttributes?has_content>
+							<#list listUnitUserAttributes as unitUserAttribute>
+								<#if unitUserAttribute.template?has_content>
+									<#include unitUserAttribute.template />
+								</#if>
+							</#list>
+						</#if>
+						<div class="form-group">
+							<div class="col-xs-12 col-sm-offset-2 col-sm-9">
+								<#if listUnitUserAttributes?? && listUnitUserAttributes?has_content>
+									<#list listUnitUserAttributes as unitUserAttribute>
+										<#if unitUserAttribute.template?has_content>
+								  		<button type="submit" name="create" class="btn btn-primary btn-sm" value="#i18n{portal.util.labelModify}" >
+								  			<i class="fa fa-check"></i> #i18n{portal.util.labelModify}
+								  		</button>
+											</#if>
+										</#list>
+									</#if>
+								<button type="submit" name="cancel" class="btn btn-default btn-sm" value="#i18n{portal.util.labelCancel}" >
+									<i class="fa fa-remove"></i> #i18n{portal.util.labelBack}
+								</button>
+							</div>
+						</div>
+					</form>
+				</div>
+	    </div>
+	  </div>
+	</div>
