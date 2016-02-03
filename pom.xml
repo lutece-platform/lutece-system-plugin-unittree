@@ -11,7 +11,7 @@
     <artifactId>plugin-unittree</artifactId>
     <packaging>lutece-plugin</packaging>
     <version>2.0.2-SNAPSHOT</version>
-    <name>Lutece Unit Tree plugin</name>
+    <name>Lutece unittree plugin</name>
 
     <repositories>
         <repository>
