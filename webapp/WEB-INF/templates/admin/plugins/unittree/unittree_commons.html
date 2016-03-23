@@ -99,7 +99,7 @@ $( function(){
 </script>
 </#macro>
 
-<#macro showPagination urlAction>
+<#macro showPagination urlAction=''>
 	<#-- BEGIN PAGINATOR FORM -->
 	<form method="post" name="search_users" action="${urlAction!}">
 		<@paginationAdmin paginator=paginator combo=1 form=0 />
