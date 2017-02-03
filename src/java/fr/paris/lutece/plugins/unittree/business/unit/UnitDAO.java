@@ -70,6 +70,8 @@ public class UnitDAO implements IUnitDAO
         " INNER JOIN unittree_sector us ON us.id_sector = uus.id_sector WHERE us.id_sector = ? ";
     private static final String SQL_QUERY_SELECT_NO_CHILDREN = " SELECT id_unit, id_parent, label, description " +
         " FROM unittree_unit WHERE id_unit NOT IN(SELECT id_parent FROM unittree_unit) ";
+    private static final String SQL_QUERY_SELECT_DIRECT_CHILDREN = "SELECT id_unit, id_parent, label, description " +
+        " FROM unittree_unit WHERE id_parent = ?";
 
     // Table unittree_unit_user
     private static final String SQL_QUERY_ADD_USER_TO_UNIT = " INSERT INTO unittree_unit_user ( id_unit, id_user ) VALUES ( ?, ? ) ";
@@ -240,8 +242,38 @@ public class UnitDAO implements IUnitDAO
 
         return bHasSubUnits;
     }
+    
 
     /**
+	 * {@inheritDoc}
+	 */
+    @Override
+    public List<Unit> getSubUnits( int nIdUnit, Plugin plugin )
+    {
+    	List<Unit> listUnits = new ArrayList<Unit>(  );
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_DIRECT_CHILDREN, plugin );
+        daoUtil.setInt( 1, nIdUnit );
+        daoUtil.executeQuery(  );
+
+        while ( daoUtil.next(  ) )
+        {
+            int nIndex = 1;
+
+            Unit unit = new Unit(  );
+            unit.setIdUnit( daoUtil.getInt( nIndex++ ) );
+            unit.setIdParent( daoUtil.getInt( nIndex++ ) );
+            unit.setLabel( daoUtil.getString( nIndex++ ) );
+            unit.setDescription( daoUtil.getString( nIndex ) );
+
+            listUnits.add( unit );
+        }
+
+        daoUtil.free(  );
+
+        return listUnits;
+    }
+
+	/**
      * {@inheritDoc}
      */
     @Override

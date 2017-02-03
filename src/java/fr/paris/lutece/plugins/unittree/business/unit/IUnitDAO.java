@@ -112,6 +112,14 @@ public interface IUnitDAO
      * @return true if the unit has sub units, false otherwise
      */
     boolean hasSubUnits( int nIdUnit, Plugin plugin );
+    
+    /**
+     * Retrieve list of direct children units
+     * @param nIdUnit the id unit
+     * @param plugin the plugin
+     * @return List of children units
+     */
+    List<Unit> getSubUnits( int nIdUnit, Plugin plugin );
 
     /**
      * Remove a unit

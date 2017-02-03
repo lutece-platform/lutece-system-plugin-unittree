@@ -38,7 +38,9 @@ import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
 import fr.paris.lutece.portal.service.spring.SpringContextService;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -144,6 +146,33 @@ public final class UnitHome
     public static boolean hasSubUnits( int nIdUnit )
     {
         return _dao.hasSubUnits( nIdUnit, _plugin );
+    }
+
+    /**
+     * Retrieve list of direct children units
+     * @param nIdUnit the id unit
+     * @return List of children units
+     */
+    public static List<Unit> getDirectSubUnits( int nIdUnit )
+    {
+        return _dao.getSubUnits( nIdUnit, _plugin );
+    }
+
+    /**
+     * Retrieve Set of all children units id
+     * @param nIdUnit the id unit
+     * @return Set of all children unit id
+     */
+    public static Set<Integer> getAllSubUnitsId( int nIdUnit )
+    {
+    	Set<Integer> _setResult = new HashSet<Integer>( );
+    	List<Unit> _listUnits = _dao.getSubUnits( nIdUnit, _plugin );
+    	for ( Unit unit : _listUnits )
+        {
+    		_setResult.add( unit.getIdUnit( ) );
+    		_setResult.addAll( getAllSubUnitsId( unit.getIdUnit( ) ) );
+        }
+    	return _setResult;
     }
 
     /**
