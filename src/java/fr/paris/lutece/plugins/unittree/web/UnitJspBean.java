@@ -37,6 +37,7 @@ import fr.paris.lutece.plugins.unittree.business.action.UnitAction;
 import fr.paris.lutece.plugins.unittree.business.action.UnitUserAction;
 import fr.paris.lutece.plugins.unittree.business.unit.Unit;
 import fr.paris.lutece.plugins.unittree.service.UnitErrorException;
+import fr.paris.lutece.plugins.unittree.service.unit.IUnitRemovalListener;
 import fr.paris.lutece.plugins.unittree.service.unit.IUnitService;
 import fr.paris.lutece.plugins.unittree.service.unit.IUnitUserService;
 import fr.paris.lutece.plugins.unittree.service.unit.UnitAttributeManager;
@@ -72,6 +73,7 @@ import org.apache.commons.lang.StringUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -801,7 +803,21 @@ public class UnitJspBean extends PluginAdminPageJspBean
             nIdParent = unit.getIdParent(  );
 
             try
-            {
+            {   
+                //Notify registered listener
+                List<IUnitRemovalListener> listRemovalListener = SpringContextService.getBeansOfType( IUnitRemovalListener.class );
+                for ( IUnitRemovalListener removalLister : listRemovalListener )
+                {
+                    try
+                    {
+                        removalLister.notify( nIdUnit );
+                    }
+                    catch( UnitErrorException e )
+                    {
+                        return AdminMessageService.getMessageUrl( request, e.getI18nErrorMessage( ) ,
+                    AdminMessage.TYPE_STOP );
+                    }
+                }
                 _unitService.removeUnit( nIdUnit, request );
             }
             catch ( Exception ex )

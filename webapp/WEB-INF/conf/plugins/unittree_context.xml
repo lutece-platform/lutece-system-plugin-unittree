@@ -27,4 +27,9 @@
 	<bean id="unittree.unitAction" class="fr.paris.lutece.plugins.unittree.business.action.UnitAction" scope="prototype" />
 	<bean id="unittree.unitUserAction" class="fr.paris.lutece.plugins.unittree.business.action.UnitUserAction" scope="prototype" />
 	<bean id="unittree.addUnitUserPluginAction" class="fr.paris.lutece.plugins.unittree.web.action.AddUnitUsersPluginAction" />
+
+        <!-- Listener -->
+        <!--<bean id="unittree.mokeRemovalUnitListener" class="fr.paris.lutece.plugins.unittree.service.unit.MokeUnitRemovalListener" />-->
+
+
 </beans>
