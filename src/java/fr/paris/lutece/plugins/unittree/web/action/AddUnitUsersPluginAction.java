@@ -53,7 +53,6 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 /**
  *
  * AddUnitUsersPluginAction
@@ -91,15 +90,14 @@ public class AddUnitUsersPluginAction extends AbstractPluginAction<IUnitSearchFi
             strIdUnit = Integer.toString( Unit.ID_ROOT );
         }
 
-        model.put( MARK_PERMISSION_ADD_USERS,
-            _unitService.isAuthorized( strIdUnit, UnitResourceIdService.PERMISSION_ADD_USER, adminUser ) );
+        model.put( MARK_PERMISSION_ADD_USERS, _unitService.isAuthorized( strIdUnit, UnitResourceIdService.PERMISSION_ADD_USER, adminUser ) );
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public String getButtonTemplate(  )
+    public String getButtonTemplate( )
     {
         return TEMPLATE_BUTTON;
     }
@@ -108,7 +106,7 @@ public class AddUnitUsersPluginAction extends AbstractPluginAction<IUnitSearchFi
      * {@inheritDoc}
      */
     @Override
-    public String getName(  )
+    public String getName( )
     {
         return ACTION_NAME;
     }
@@ -126,16 +124,16 @@ public class AddUnitUsersPluginAction extends AbstractPluginAction<IUnitSearchFi
      * {@inheritDoc}
      */
     @Override
-    public IPluginActionResult process( HttpServletRequest request, HttpServletResponse response, AdminUser adminUser,
-        IUnitSearchFields sessionFields ) throws AccessDeniedException
+    public IPluginActionResult process( HttpServletRequest request, HttpServletResponse response, AdminUser adminUser, IUnitSearchFields sessionFields )
+            throws AccessDeniedException
     {
         String strIdUnit = request.getParameter( PARAMETER_ID_UNIT );
 
         UrlItem urlItem = new UrlItem( AppPathService.getBaseUrl( request ) + JSP_URL_ADD_USERS );
         urlItem.addParameter( PARAMETER_ID_UNIT, strIdUnit );
 
-        DefaultPluginActionResult result = new DefaultPluginActionResult(  );
-        result.setRedirect( urlItem.getUrl(  ) );
+        DefaultPluginActionResult result = new DefaultPluginActionResult( );
+        result.setRedirect( urlItem.getUrl( ) );
 
         return result;
     }

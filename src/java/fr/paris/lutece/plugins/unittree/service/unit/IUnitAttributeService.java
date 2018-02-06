@@ -38,7 +38,6 @@ import fr.paris.lutece.plugins.unittree.service.UnitErrorException;
 
 import javax.servlet.http.HttpServletRequest;
 
-
 /**
  *
  * IUnitAttributeService
@@ -47,52 +46,71 @@ import javax.servlet.http.HttpServletRequest;
 public interface IUnitAttributeService
 {
     /**
-    * Do create the additional attributes of the given unit
-    * @param unit the unit
-    * @param request the HTTP request
-    */
+     * Do create the additional attributes of the given unit
+     * 
+     * @param unit
+     *            the unit
+     * @param request
+     *            the HTTP request
+     */
     void doCreateUnit( Unit unit, HttpServletRequest request );
 
     /**
      * Do modify the additional attributes of the given unit
-     * @param unit the unit
-     * @param request the HTTP request
+     * 
+     * @param unit
+     *            the unit
+     * @param request
+     *            the HTTP request
      */
     void doModifyUnit( Unit unit, HttpServletRequest request );
 
     /**
      * Do remove the additional attributes
-     * @param nIdUnit the id unit
-     * @param request the HTTP request
+     * 
+     * @param nIdUnit
+     *            the id unit
+     * @param request
+     *            the HTTP request
      */
     void doRemoveUnit( int nIdUnit, HttpServletRequest request );
 
     /**
      * Populate an unit additionnal attributes with the data of the <strong>database</strong>
-     * @param unit the unit to populate
+     * 
+     * @param unit
+     *            the unit to populate
      */
     void populate( Unit unit );
 
     /**
      * Populate an unit additionnal attributes with the data of the <strong>request</strong>
-     * @param unit the unit to populate
-     * @param request the HTTP request
-     * @throws UnitErrorException exception if there is an error (ex: mandatory field)
+     * 
+     * @param unit
+     *            the unit to populate
+     * @param request
+     *            the HTTP request
+     * @throws UnitErrorException
+     *             exception if there is an error (ex: mandatory field)
      */
-    void populate( Unit unit, HttpServletRequest request )
-        throws UnitErrorException;
+    void populate( Unit unit, HttpServletRequest request ) throws UnitErrorException;
 
     /**
      * Check if the given id unit can creabe sub units
-     * @param nIdUnit the id unit
+     * 
+     * @param nIdUnit
+     *            the id unit
      * @return true if the unit can create sub unit
      */
     boolean canCreateSubUnit( int nIdUnit );
 
     /**
      * Update attributes to change the parent of a unit.
-     * @param unitToMove The unit to change the parent of.
-     * @param newUnitParent The new parent of the unit
+     * 
+     * @param unitToMove
+     *            The unit to change the parent of.
+     * @param newUnitParent
+     *            The new parent of the unit
      */
     void moveSubTree( Unit unitToMove, Unit newUnitParent );
 }

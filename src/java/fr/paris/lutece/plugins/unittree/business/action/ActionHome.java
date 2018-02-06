@@ -40,7 +40,6 @@ import fr.paris.lutece.portal.service.spring.SpringContextService;
 
 import java.util.List;
 
-
 /**
  *
  * ActionHome
@@ -55,13 +54,15 @@ public final class ActionHome
     /**
      * Private constructor - this class need not be instantiated
      */
-    private ActionHome(  )
+    private ActionHome( )
     {
     }
 
     /**
      * Returns the list of allowed actions for a given action type
-     * @param strActionType the action type
+     * 
+     * @param strActionType
+     *            the action type
      * @return A list of actions for a given action type
      */
     public static List<IAction> getActionsList( String strActionType )
@@ -71,8 +72,11 @@ public final class ActionHome
 
     /**
      * Load the list of actions
-     * @param strActionType the action type
-     * @param strPermission the permission
+     * 
+     * @param strActionType
+     *            the action type
+     * @param strPermission
+     *            the permission
      * @return The List of actions
      */
     public static List<IAction> selectFilterByPermission( String strActionType, String strPermission )

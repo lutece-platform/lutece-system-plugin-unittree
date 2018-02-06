@@ -33,11 +33,12 @@
  */
 package fr.paris.lutece.plugins.unittree.business.unit;
 
-
 /**
  *
  * AbstractUnitAttribute
- * @param <T> The class object of the attribute
+ * 
+ * @param <T>
+ *            The class object of the attribute
  *
  */
 public abstract class AbstractUnitAttribute<T> implements IUnitAttribute<T>
@@ -57,7 +58,7 @@ public abstract class AbstractUnitAttribute<T> implements IUnitAttribute<T>
      * {@inheritDoc}
      */
     @Override
-    public T getAttribute(  )
+    public T getAttribute( )
     {
         return _attribute;
     }

@@ -46,7 +46,6 @@ import org.apache.commons.lang.StringUtils;
 
 import java.util.Locale;
 
-
 /**
  *
  * UnitResourceIdService
@@ -80,7 +79,7 @@ public class UnitResourceIdService extends ResourceIdService
     /**
      * Constructor
      */
-    public UnitResourceIdService(  )
+    public UnitResourceIdService( )
     {
         setPluginName( UnitTreePlugin.PLUGIN_NAME );
     }
@@ -88,50 +87,50 @@ public class UnitResourceIdService extends ResourceIdService
     /**
      * Initializes the service
      */
-    public void register(  )
+    public void register( )
     {
-        ResourceType rt = new ResourceType(  );
-        rt.setResourceIdServiceClass( UnitResourceIdService.class.getName(  ) );
+        ResourceType rt = new ResourceType( );
+        rt.setResourceIdServiceClass( UnitResourceIdService.class.getName( ) );
         rt.setPluginName( UnitTreePlugin.PLUGIN_NAME );
         rt.setResourceTypeKey( Unit.RESOURCE_TYPE );
         rt.setResourceTypeLabelKey( PROPERTY_LABEL_RESOURCE_TYPE );
 
-        Permission p = new Permission(  );
+        Permission p = new Permission( );
         p.setPermissionKey( PERMISSION_CREATE );
         p.setPermissionTitleKey( PROPERTY_LABEL_CREATE );
         rt.registerPermission( p );
 
-        p = new Permission(  );
+        p = new Permission( );
         p.setPermissionKey( PERMISSION_DELETE );
         p.setPermissionTitleKey( PROPERTY_LABEL_DELETE );
         rt.registerPermission( p );
 
-        p = new Permission(  );
+        p = new Permission( );
         p.setPermissionKey( PERMISSION_MODIFY );
         p.setPermissionTitleKey( PROPERTY_LABEL_MODIFY );
         rt.registerPermission( p );
 
-        p = new Permission(  );
+        p = new Permission( );
         p.setPermissionKey( PERMISSION_ADD_USER );
         p.setPermissionTitleKey( PROPERTY_LABEL_ADD_USER );
         rt.registerPermission( p );
 
-        p = new Permission(  );
+        p = new Permission( );
         p.setPermissionKey( PERMISSION_MODIFY_USER );
         p.setPermissionTitleKey( PROPERTY_LABEL_MODIFY_USER );
         rt.registerPermission( p );
 
-        p = new Permission(  );
+        p = new Permission( );
         p.setPermissionKey( PERMISSION_MOVE_USER );
         p.setPermissionTitleKey( PROPERTY_LABEL_MOVE_USER );
         rt.registerPermission( p );
 
-        p = new Permission(  );
+        p = new Permission( );
         p.setPermissionKey( PERMISSION_REMOVE_USER );
         p.setPermissionTitleKey( PROPERTY_LABEL_REMOVE_USER );
         rt.registerPermission( p );
 
-        p = new Permission(  );
+        p = new Permission( );
         p.setPermissionKey( PERMISSION_MOVE_UNIT );
         p.setPermissionTitleKey( PROPERTY_LABEL_MOVE_UNIT );
         rt.registerPermission( p );
@@ -141,17 +140,19 @@ public class UnitResourceIdService extends ResourceIdService
 
     /**
      * Returns a list of resource ids
-     * @param locale The current locale
+     * 
+     * @param locale
+     *            The current locale
      * @return A list of resource ids
      */
     public ReferenceList getResourceIdList( Locale locale )
     {
         IUnitService unitService = SpringContextService.getBean( IUnitService.BEAN_UNIT_SERVICE );
-        ReferenceList listResources = new ReferenceList(  );
+        ReferenceList listResources = new ReferenceList( );
 
         for ( Unit unit : unitService.getAllUnits( false ) )
         {
-            listResources.addItem( unit.getIdUnit(  ), unit.getLabel(  ) );
+            listResources.addItem( unit.getIdUnit( ), unit.getLabel( ) );
         }
 
         return listResources;
@@ -159,8 +160,11 @@ public class UnitResourceIdService extends ResourceIdService
 
     /**
      * Returns the Title of a given resource
-     * @param strId The Id of the resource
-     * @param locale The current locale
+     * 
+     * @param strId
+     *            The Id of the resource
+     * @param locale
+     *            The current locale
      * @return The Title of a given resource
      */
     public String getTitle( String strId, Locale locale )
@@ -173,7 +177,7 @@ public class UnitResourceIdService extends ResourceIdService
 
             if ( unit != null )
             {
-                return unit.getLabel(  );
+                return unit.getLabel( );
             }
         }
 

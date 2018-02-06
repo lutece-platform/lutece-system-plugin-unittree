@@ -46,7 +46,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-
 /**
  *
  * ActionService
@@ -82,11 +81,10 @@ public class ActionService implements IActionService
     }
 
     /**
-         * {@inheritDoc}
-         */
+     * {@inheritDoc}
+     */
     @Override
-    public List<IAction> getListActions( String strActionType, Locale locale, RBACResource resource, AdminUser user,
-        String strPermission )
+    public List<IAction> getListActions( String strActionType, Locale locale, RBACResource resource, AdminUser user, String strPermission )
     {
         List<IAction> listActions = null;
 
@@ -101,7 +99,7 @@ public class ActionService implements IActionService
 
         listActions = I18nService.localizeCollection( listActions, locale );
 
-        if ( user.isAdmin(  ) )
+        if ( user.isAdmin( ) )
         {
             return listActions;
         }
@@ -111,6 +109,6 @@ public class ActionService implements IActionService
             return (List<IAction>) RBACService.getAuthorizedActionsCollection( listActions, resource, user );
         }
 
-        return new ArrayList<IAction>(  );
+        return new ArrayList<IAction>( );
     }
 }

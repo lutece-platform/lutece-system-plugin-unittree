@@ -58,7 +58,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-
 /**
  *
  * UnitUserSearchFields
@@ -85,23 +84,25 @@ public class UnitUserSearchFields extends DefaultUnitSearchFields
 
     // SERVICES
     private AdminUser _user;
-    private AdminUserFilter _auFilter = new AdminUserFilter(  );
+    private AdminUserFilter _auFilter = new AdminUserFilter( );
 
     /**
      * Constructor
      */
-    public UnitUserSearchFields(  )
+    public UnitUserSearchFields( )
     {
-        super(  );
+        super( );
     }
 
     /**
      * Constructor
-     * @param request the HTTP request
+     * 
+     * @param request
+     *            the HTTP request
      */
     public UnitUserSearchFields( HttpServletRequest request )
     {
-        super(  );
+        super( );
         _user = AdminUserService.getAdminUser( request );
     }
 
@@ -109,25 +110,24 @@ public class UnitUserSearchFields extends DefaultUnitSearchFields
      * {@inheritDoc}
      */
     @Override
-    public void fillModelForUserSearchForm( List<AdminUser> listUsers, String strBaseUrl, HttpServletRequest request,
-        Map<String, Object> model, Unit unit ) throws AccessDeniedException
+    public void fillModelForUserSearchForm( List<AdminUser> listUsers, String strBaseUrl, HttpServletRequest request, Map<String, Object> model, Unit unit )
+            throws AccessDeniedException
     {
         if ( _user == null )
         {
-            String strErrorMessage = I18nService.getLocalizedString( MESSAGE_ERROR_USER_NOT_LOGGED,
-                    request.getLocale(  ) );
+            String strErrorMessage = I18nService.getLocalizedString( MESSAGE_ERROR_USER_NOT_LOGGED, request.getLocale( ) );
             throw new AccessDeniedException( strErrorMessage );
         }
 
         if ( StringUtils.isBlank( request.getParameter( PARAMETER_SESSION ) ) )
         {
-            _auFilter = new AdminUserFilter(  );
+            _auFilter = new AdminUserFilter( );
             _auFilter.setAdminUserFilter( request );
         }
 
         UrlItem url = new UrlItem( strBaseUrl );
 
-        List<AdminUser> listFilteredUsers = new ArrayList<AdminUser>(  );
+        List<AdminUser> listFilteredUsers = new ArrayList<AdminUser>( );
 
         for ( AdminUser filteredUser : AdminUserHome.findUserByFilter( _auFilter ) )
         {
@@ -135,7 +135,7 @@ public class UnitUserSearchFields extends DefaultUnitSearchFields
 
             for ( AdminUser user : listUsers )
             {
-                if ( user.getUserId(  ) == filteredUser.getUserId(  ) )
+                if ( user.getUserId( ) == filteredUser.getUserId( ) )
                 {
                     bIsFiltered = true;
 
@@ -143,7 +143,7 @@ public class UnitUserSearchFields extends DefaultUnitSearchFields
                 }
             }
 
-            if ( bIsFiltered && ( _user.isParent( filteredUser ) || ( _user.isAdmin(  ) ) ) )
+            if ( bIsFiltered && ( _user.isParent( filteredUser ) || ( _user.isAdmin( ) ) ) )
             {
                 listFilteredUsers.add( filteredUser );
             }
@@ -152,48 +152,44 @@ public class UnitUserSearchFields extends DefaultUnitSearchFields
         // SORT
         this.setSortedAttributeName( request );
 
-        if ( getSortedAttributeName(  ) != null )
+        if ( getSortedAttributeName( ) != null )
         {
             this.setAscSort( request );
 
-            Collections.sort( listFilteredUsers,
-                new AttributeComparator( getSortedAttributeName(  ), this.isAscSort(  ) ) );
+            Collections.sort( listFilteredUsers, new AttributeComparator( getSortedAttributeName( ), this.isAscSort( ) ) );
         }
 
-        this.setCurrentPageIndex( Paginator.getPageIndex( request, Paginator.PARAMETER_PAGE_INDEX,
-                this.getCurrentPageIndex(  ) ) );
-        this.setItemsPerPage( Paginator.getItemsPerPage( request, Paginator.PARAMETER_ITEMS_PER_PAGE,
-                this.getItemsPerPage(  ), this.getDefaultItemsPerPage(  ) ) );
+        this.setCurrentPageIndex( Paginator.getPageIndex( request, Paginator.PARAMETER_PAGE_INDEX, this.getCurrentPageIndex( ) ) );
+        this.setItemsPerPage( Paginator.getItemsPerPage( request, Paginator.PARAMETER_ITEMS_PER_PAGE, this.getItemsPerPage( ), this.getDefaultItemsPerPage( ) ) );
 
-        if ( getSortedAttributeName(  ) != null )
+        if ( getSortedAttributeName( ) != null )
         {
-            url.addParameter( Parameters.SORTED_ATTRIBUTE_NAME, getSortedAttributeName(  ) );
-            url.addParameter( Parameters.SORTED_ASC, Boolean.toString( this.isAscSort(  ) ) );
+            url.addParameter( Parameters.SORTED_ATTRIBUTE_NAME, getSortedAttributeName( ) );
+            url.addParameter( Parameters.SORTED_ASC, Boolean.toString( this.isAscSort( ) ) );
         }
 
-        url.addParameter( PARAMETER_ID_UNIT, unit.getIdUnit(  ) );
+        url.addParameter( PARAMETER_ID_UNIT, unit.getIdUnit( ) );
         url.addParameter( PARAMETER_SESSION, PARAMETER_SESSION );
 
-        LocalizedPaginator<AdminUser> paginator = new LocalizedPaginator<AdminUser>( listFilteredUsers,
-                getItemsPerPage(  ), url.getUrl(  ), Paginator.PARAMETER_PAGE_INDEX, getCurrentPageIndex(  ),
-                request.getLocale(  ) );
+        LocalizedPaginator<AdminUser> paginator = new LocalizedPaginator<AdminUser>( listFilteredUsers, getItemsPerPage( ), url.getUrl( ),
+                Paginator.PARAMETER_PAGE_INDEX, getCurrentPageIndex( ), request.getLocale( ) );
 
         // USER LEVEL
-        Collection<Level> filteredLevels = new ArrayList<Level>(  );
+        Collection<Level> filteredLevels = new ArrayList<Level>( );
 
-        for ( Level level : LevelHome.getLevelsList(  ) )
+        for ( Level level : LevelHome.getLevelsList( ) )
         {
-            if ( _user.isAdmin(  ) || _user.hasRights( level.getId(  ) ) )
+            if ( _user.isAdmin( ) || _user.hasRights( level.getId( ) ) )
             {
                 filteredLevels.add( level );
             }
         }
 
         model.put( MARK_USER_LEVELS_LIST, filteredLevels );
-        model.put( MARK_LIST_USERS, paginator.getPageItems(  ) );
+        model.put( MARK_LIST_USERS, paginator.getPageItems( ) );
         model.put( MARK_SEARCH_ADMIN_USER_FILTER, _auFilter );
         model.put( MARK_PAGINATOR, paginator );
-        model.put( MARK_NB_ITEMS_PER_PAGE, Integer.toString( paginator.getItemsPerPage(  ) ) );
-        model.put( MARK_IS_IN_DEPTH_SEARCH, this.isInDepthSearch(  ) );
+        model.put( MARK_NB_ITEMS_PER_PAGE, Integer.toString( paginator.getItemsPerPage( ) ) );
+        model.put( MARK_IS_IN_DEPTH_SEARCH, this.isInDepthSearch( ) );
     }
 }

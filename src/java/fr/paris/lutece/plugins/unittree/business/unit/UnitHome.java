@@ -42,7 +42,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-
 /**
  *
  * UnitHome
@@ -57,13 +56,15 @@ public final class UnitHome
     /**
      * Private constructor
      */
-    private UnitHome(  )
+    private UnitHome( )
     {
     }
 
     /**
      * Load the unit
-     * @param nIdUnit the id unit
+     * 
+     * @param nIdUnit
+     *            the id unit
      * @return an instance of {@link Unit}
      */
     public static Unit findByPrimaryKey( int nIdUnit )
@@ -73,7 +74,9 @@ public final class UnitHome
 
     /**
      * Load an unit by id user
-     * @param nIdUser the id user
+     * 
+     * @param nIdUser
+     *            the id user
      * @return an instance of {@link Unit}
      */
     public static List<Unit> findByIdUser( int nIdUser )
@@ -83,7 +86,9 @@ public final class UnitHome
 
     /**
      * Find the units by filter
-     * @param uFilter the filter
+     * 
+     * @param uFilter
+     *            the filter
      * @return a list of {@link Unit}
      */
     public static List<Unit> findByFilter( UnitFilter uFilter )
@@ -93,25 +98,29 @@ public final class UnitHome
 
     /**
      * Select all units
+     * 
      * @return a list of {@link Unit}
      */
-    public static List<Unit> findAll(  )
+    public static List<Unit> findAll( )
     {
         return _dao.selectAll( _plugin );
     }
 
     /**
      * Find all ids users
+     * 
      * @return a list of ids user
      */
-    public static List<Integer> findAllIdsUsers(  )
+    public static List<Integer> findAllIdsUsers( )
     {
         return _dao.selectAllIdsUser( _plugin );
     }
 
     /**
      * Find the ids user
-     * @param nIdUnit the id unit
+     * 
+     * @param nIdUnit
+     *            the id unit
      * @return the list of ids user
      */
     public static List<Integer> findIdsUser( int nIdUnit )
@@ -121,7 +130,9 @@ public final class UnitHome
 
     /**
      * Insert a new unit
-     * @param unit the unit
+     * 
+     * @param unit
+     *            the unit
      * @return the new primary key
      */
     public static int create( Unit unit )
@@ -131,7 +142,9 @@ public final class UnitHome
 
     /**
      * Remove a unit
-     * @param nIdUnit the id unit
+     * 
+     * @param nIdUnit
+     *            the id unit
      */
     public static void remove( int nIdUnit )
     {
@@ -140,7 +153,9 @@ public final class UnitHome
 
     /**
      * Check if the given id unit has sub units
-     * @param nIdUnit the id unit
+     * 
+     * @param nIdUnit
+     *            the id unit
      * @return true if it has sub units, false otherwise
      */
     public static boolean hasSubUnits( int nIdUnit )
@@ -150,7 +165,9 @@ public final class UnitHome
 
     /**
      * Retrieve list of direct children units
-     * @param nIdUnit the id unit
+     * 
+     * @param nIdUnit
+     *            the id unit
      * @return List of children units
      */
     public static List<Unit> getDirectSubUnits( int nIdUnit )
@@ -160,25 +177,30 @@ public final class UnitHome
 
     /**
      * Retrieve Set of all children units id
-     * @param nIdUnit the id unit
+     * 
+     * @param nIdUnit
+     *            the id unit
      * @return Set of all children unit id
      */
     public static Set<Integer> getAllSubUnitsId( int nIdUnit )
     {
-    	Set<Integer> _setResult = new HashSet<Integer>( );
-    	List<Unit> _listUnits = _dao.getSubUnits( nIdUnit, _plugin );
-    	for ( Unit unit : _listUnits )
+        Set<Integer> _setResult = new HashSet<Integer>( );
+        List<Unit> _listUnits = _dao.getSubUnits( nIdUnit, _plugin );
+        for ( Unit unit : _listUnits )
         {
-    		_setResult.add( unit.getIdUnit( ) );
-    		_setResult.addAll( getAllSubUnitsId( unit.getIdUnit( ) ) );
+            _setResult.add( unit.getIdUnit( ) );
+            _setResult.addAll( getAllSubUnitsId( unit.getIdUnit( ) ) );
         }
-    	return _setResult;
+        return _setResult;
     }
 
     /**
      * Remove a user from a unit
-     * @param nIdUser the id user
-     * @param nIdUnit The id of the unit
+     * 
+     * @param nIdUser
+     *            the id user
+     * @param nIdUnit
+     *            The id of the unit
      */
     public static void removeUserFromUnit( int nIdUser, int nIdUnit )
     {
@@ -187,7 +209,9 @@ public final class UnitHome
 
     /**
      * Remove an unit from a given id unit
-     * @param nIdUnit the id unit
+     * 
+     * @param nIdUnit
+     *            the id unit
      */
     public static void removeUsersFromUnit( int nIdUnit )
     {
@@ -196,7 +220,9 @@ public final class UnitHome
 
     /**
      * Update a unit
-     * @param unit the unit
+     * 
+     * @param unit
+     *            the unit
      */
     public static void update( Unit unit )
     {
@@ -205,8 +231,11 @@ public final class UnitHome
 
     /**
      * Add the user to the unit
-     * @param nIdUnit the id unit
-     * @param nIdUser the id user
+     * 
+     * @param nIdUnit
+     *            the id unit
+     * @param nIdUser
+     *            the id user
      */
     public static void addUserToUnit( int nIdUnit, int nIdUser )
     {
@@ -215,8 +244,11 @@ public final class UnitHome
 
     /**
      * Check if the user is in a given unit
-     * @param nIdUser the id user
-     * @param nIdUnit The id of the unit
+     * 
+     * @param nIdUser
+     *            the id user
+     * @param nIdUnit
+     *            The id of the unit
      * @return true if the user is in the unit, false otherwise
      */
     public static boolean isUserInUnit( int nIdUser, int nIdUnit )
@@ -226,16 +258,19 @@ public final class UnitHome
 
     /**
      * Return all the Unit with no children (level 0)
+     * 
      * @return all the Unit with no children (level 0)
      */
-    public static List<Unit> getUnitWithNoChildren(  )
+    public static List<Unit> getUnitWithNoChildren( )
     {
         return _dao.getUnitWithNoChildren( _plugin );
     }
 
     /**
      * Find the sector id
-     * @param nIdSector the id sector
+     * 
+     * @param nIdSector
+     *            the id sector
      * @return a list of {@link Unit}
      */
     public static List<Unit> findBySectorId( int nIdSector )
@@ -245,8 +280,11 @@ public final class UnitHome
 
     /**
      * Update the parent of a unit
-     * @param nIdUnitToMove The id of the unit to change the parent of.
-     * @param nIdNewParent The id of the new parent of the unit.
+     * 
+     * @param nIdUnitToMove
+     *            The id of the unit to change the parent of.
+     * @param nIdNewParent
+     *            The id of the new parent of the unit.
      */
     public static void updateParent( int nIdUnitToMove, int nIdNewParent )
     {

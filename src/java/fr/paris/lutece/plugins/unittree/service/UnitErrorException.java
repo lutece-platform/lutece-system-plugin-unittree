@@ -33,7 +33,6 @@
  */
 package fr.paris.lutece.plugins.unittree.service;
 
-
 /**
  *
  * UnitErrorException
@@ -46,7 +45,9 @@ public class UnitErrorException extends Exception
 
     /**
      * Constructor
-     * @param strI18nErrorMessage the I18n key error message
+     * 
+     * @param strI18nErrorMessage
+     *            the I18n key error message
      */
     public UnitErrorException( String strI18nErrorMessage )
     {
@@ -56,7 +57,7 @@ public class UnitErrorException extends Exception
     /**
      * @return the _strI18nErrorMessage
      */
-    public String getI18nErrorMessage(  )
+    public String getI18nErrorMessage( )
     {
         return _strI18nErrorMessage;
     }

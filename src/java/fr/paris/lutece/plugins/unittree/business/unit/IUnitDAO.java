@@ -37,7 +37,6 @@ import fr.paris.lutece.portal.service.plugin.Plugin;
 
 import java.util.List;
 
-
 /**
  *
  *
@@ -46,147 +45,204 @@ public interface IUnitDAO
 {
     /**
      * Get new primary key
-     * @param plugin the plugin
+     * 
+     * @param plugin
+     *            the plugin
      * @return a new primary key
      */
     int newPrimaryKey( Plugin plugin );
 
     /**
      * Load the unit
-     * @param nIdUnit the id unit
-     * @param plugin the plugin
+     * 
+     * @param nIdUnit
+     *            the id unit
+     * @param plugin
+     *            the plugin
      * @return an instance of {@link Unit}
      */
     Unit load( int nIdUnit, Plugin plugin );
 
     /**
      * Load an unit by id user
-     * @param nIdUser the id user
-     * @param plugin the plugin
+     * 
+     * @param nIdUser
+     *            the id user
+     * @param plugin
+     *            the plugin
      * @return a list of {@link Unit}
      */
     List<Unit> selectByIdUser( int nIdUser, Plugin plugin );
 
     /**
      * Select all units
-     * @param plugin the plugin
+     * 
+     * @param plugin
+     *            the plugin
      * @return a list of {@link Unit}
      */
     List<Unit> selectAll( Plugin plugin );
 
     /**
      * Select the units by filter
-     * @param uFilter the filter
-     * @param plugin the plugin
+     * 
+     * @param uFilter
+     *            the filter
+     * @param plugin
+     *            the plugin
      * @return a list of {@link Unit}
      */
     List<Unit> selectByFilter( UnitFilter uFilter, Plugin plugin );
 
     /**
      * Select all ids user
-     * @param plugin the plugin
+     * 
+     * @param plugin
+     *            the plugin
      * @return a list of ids user
      */
     List<Integer> selectAllIdsUser( Plugin plugin );
 
     /**
      * Select the ids user from a given id unit
-     * @param nIdUnit the id unit
-     * @param plugin the plugin
+     * 
+     * @param nIdUnit
+     *            the id unit
+     * @param plugin
+     *            the plugin
      * @return a list of ids user
      */
     List<Integer> selectIdsUser( int nIdUnit, Plugin plugin );
 
     /**
      * Insert a new unit
-     * @param unit the unit
-     * @param plugin the plugin
+     * 
+     * @param unit
+     *            the unit
+     * @param plugin
+     *            the plugin
      * @return the new primary key
      */
     int insert( Unit unit, Plugin plugin );
 
     /**
      * Check if the given id unit has sub units or not
-     * @param nIdUnit the id unit
-     * @param plugin the plugin
+     * 
+     * @param nIdUnit
+     *            the id unit
+     * @param plugin
+     *            the plugin
      * @return true if the unit has sub units, false otherwise
      */
     boolean hasSubUnits( int nIdUnit, Plugin plugin );
-    
+
     /**
      * Retrieve list of direct children units
-     * @param nIdUnit the id unit
-     * @param plugin the plugin
+     * 
+     * @param nIdUnit
+     *            the id unit
+     * @param plugin
+     *            the plugin
      * @return List of children units
      */
     List<Unit> getSubUnits( int nIdUnit, Plugin plugin );
 
     /**
      * Remove a unit
-     * @param nIdUnit the id unit
-     * @param plugin the plugin
+     * 
+     * @param nIdUnit
+     *            the id unit
+     * @param plugin
+     *            the plugin
      */
     void remove( int nIdUnit, Plugin plugin );
 
     /**
      * Update a unit
-     * @param unit the unit
-     * @param plugin the plugin
+     * 
+     * @param unit
+     *            the unit
+     * @param plugin
+     *            the plugin
      */
     void update( Unit unit, Plugin plugin );
 
     /**
      * Add an user to an unit
-     * @param nIdUnit the id unit
-     * @param nIdUser the id user
-     * @param plugin the plugin
+     * 
+     * @param nIdUnit
+     *            the id unit
+     * @param nIdUser
+     *            the id user
+     * @param plugin
+     *            the plugin
      */
     void addUserToUnit( int nIdUnit, int nIdUser, Plugin plugin );
 
     /**
      * Check if the user is in the unit
-     * @param nIdUser the id user
-     * @param nIdUnit The id of the unit
-     * @param plugin the plugin
+     * 
+     * @param nIdUser
+     *            the id user
+     * @param nIdUnit
+     *            The id of the unit
+     * @param plugin
+     *            the plugin
      * @return true if the user is in the unit, false otherwise
      */
     boolean isUserInUnit( int nIdUser, int nIdUnit, Plugin plugin );
 
     /**
      * Remove a given user from the unit
-     * @param nIdUser the id user
-     * @param nIdUnit The id of the unit
-     * @param plugin the plugin
+     * 
+     * @param nIdUser
+     *            the id user
+     * @param nIdUnit
+     *            The id of the unit
+     * @param plugin
+     *            the plugin
      */
     void removeUserFromUnit( int nIdUser, int nIdUnit, Plugin plugin );
 
     /**
      * Remove users from a given id unit
-     * @param nIdUnit the id unit
-     * @param plugin the plugin
+     * 
+     * @param nIdUnit
+     *            the id unit
+     * @param plugin
+     *            the plugin
      */
     void removeUsersFromUnit( int nIdUnit, Plugin plugin );
 
     /**
      * Return all the Unit of the Sector
-     * @param nIdSector id sector
-     * @param plugin the plugin
+     * 
+     * @param nIdSector
+     *            id sector
+     * @param plugin
+     *            the plugin
      * @return all the Unit of the Sector
      */
     List<Unit> findBySectorId( int nIdSector, Plugin plugin );
 
     /**
      * Return all the Unit with no children (level 0)
-     * @param plugin the plugin
+     * 
+     * @param plugin
+     *            the plugin
      * @return all the Unit with no children (level 0)
      */
     List<Unit> getUnitWithNoChildren( Plugin plugin );
 
     /**
      * Update the parent of a unit
-     * @param nIdUnitToMove The id of the unit to change the parent of.
-     * @param nIdNewParent The id of the new parent of the unit.
-     * @param plugin The plugin
+     * 
+     * @param nIdUnitToMove
+     *            The id of the unit to change the parent of.
+     * @param nIdNewParent
+     *            The id of the new parent of the unit.
+     * @param plugin
+     *            The plugin
      */
     void updateParent( int nIdUnitToMove, int nIdNewParent, Plugin plugin );
 }

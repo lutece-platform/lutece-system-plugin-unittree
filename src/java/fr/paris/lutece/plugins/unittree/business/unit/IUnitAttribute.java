@@ -33,30 +33,35 @@
  */
 package fr.paris.lutece.plugins.unittree.business.unit;
 
-
 /**
  *
  * This class represents the complementary attributes of an unit
- * @param <T> The class object of the attribute
+ * 
+ * @param <T>
+ *            The class object of the attribute
  *
  */
 public interface IUnitAttribute<T>
 {
     /**
      * Set the attribute
-     * @param attribute the attribute to set
+     * 
+     * @param attribute
+     *            the attribute to set
      */
     void setAttribute( T attribute );
 
     /**
      * Get the attribute
+     * 
      * @return the attribute the attribute
      */
-    T getAttribute(  );
+    T getAttribute( );
 
     /**
      * Get the attribute name
+     * 
      * @return the attribute name
      */
-    String getAttributeName(  );
+    String getAttributeName( );
 }

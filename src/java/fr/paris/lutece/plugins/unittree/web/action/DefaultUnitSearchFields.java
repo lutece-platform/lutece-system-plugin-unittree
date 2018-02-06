@@ -42,7 +42,6 @@ import java.io.Serializable;
 
 import javax.servlet.http.HttpServletRequest;
 
-
 /**
  *
  * DefaultUnitSearchFields
@@ -71,7 +70,7 @@ public abstract class DefaultUnitSearchFields implements IUnitSearchFields, Seri
      * {@inheritDoc}
      */
     @Override
-    public String getCurrentPageIndex(  )
+    public String getCurrentPageIndex( )
     {
         return _strCurrentPageIndex;
     }
@@ -80,7 +79,7 @@ public abstract class DefaultUnitSearchFields implements IUnitSearchFields, Seri
      * {@inheritDoc}
      */
     @Override
-    public int getDefaultItemsPerPage(  )
+    public int getDefaultItemsPerPage( )
     {
         return _nDefaultItemsPerPage;
     }
@@ -107,7 +106,7 @@ public abstract class DefaultUnitSearchFields implements IUnitSearchFields, Seri
      * {@inheritDoc}
      */
     @Override
-    public int getItemsPerPage(  )
+    public int getItemsPerPage( )
     {
         return _nItemsPerPage;
     }
@@ -122,8 +121,8 @@ public abstract class DefaultUnitSearchFields implements IUnitSearchFields, Seri
     }
 
     /**
-         * {@inheritDoc}
-         */
+     * {@inheritDoc}
+     */
     @Override
     public void setInDepthSearch( HttpServletRequest request )
     {
@@ -137,16 +136,16 @@ public abstract class DefaultUnitSearchFields implements IUnitSearchFields, Seri
      * {@inheritDoc}
      */
     @Override
-    public boolean isInDepthSearch(  )
+    public boolean isInDepthSearch( )
     {
         return _bIsInDepthSearch;
     }
 
     /**
-         * {@inheritDoc}
-         */
+     * {@inheritDoc}
+     */
     @Override
-    public String getSortedAttributeName(  )
+    public String getSortedAttributeName( )
     {
         return _strSortedAttributeName;
     }
@@ -167,7 +166,7 @@ public abstract class DefaultUnitSearchFields implements IUnitSearchFields, Seri
      * {@inheritDoc}
      */
     @Override
-    public boolean isAscSort(  )
+    public boolean isAscSort( )
     {
         return _bIsAscSort;
     }

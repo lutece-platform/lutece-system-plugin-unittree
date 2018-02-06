@@ -33,7 +33,6 @@
  */
 package fr.paris.lutece.plugins.unittree.business.action;
 
-
 /**
  *
  * DefaultAction
@@ -44,10 +43,10 @@ public class DefaultAction extends AbstractAction
     private String _strActionType;
 
     /**
-    * {@inheritDoc}
-    */
+     * {@inheritDoc}
+     */
     @Override
-    public String getActionType(  )
+    public String getActionType( )
     {
         return _strActionType;
     }

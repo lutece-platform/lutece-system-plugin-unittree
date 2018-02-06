@@ -33,7 +33,6 @@
  */
 package fr.paris.lutece.plugins.unittree.business.action;
 
-
 /**
  *
  * IActionFactory
@@ -43,7 +42,9 @@ public interface IActionFactory
 {
     /**
      * Create a new action
-     * @param strActionType the action type
+     * 
+     * @param strActionType
+     *            the action type
      * @return an instance of {@link IAction}
      */
     IAction newAction( String strActionType );

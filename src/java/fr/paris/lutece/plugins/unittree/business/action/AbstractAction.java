@@ -37,7 +37,6 @@ import fr.paris.lutece.portal.service.i18n.I18nService;
 
 import java.util.Locale;
 
-
 /**
  *
  * AbstractAction
@@ -55,7 +54,9 @@ public abstract class AbstractAction implements IAction
 
     /**
      * Set the id action
-     * @param nIdAction the nIdAction to set
+     * 
+     * @param nIdAction
+     *            the nIdAction to set
      */
     public void setIdAction( int nIdAction )
     {
@@ -64,17 +65,20 @@ public abstract class AbstractAction implements IAction
 
     /**
      * Get the id action
+     * 
      * @return the nIdAction
      */
-    public int getIdAction(  )
+    public int getIdAction( )
     {
         return _nIdAction;
     }
 
     /**
-    * Implements Localizable
-    * @param locale The current locale
-    */
+     * Implements Localizable
+     * 
+     * @param locale
+     *            The current locale
+     */
     public void setLocale( Locale locale )
     {
         _locale = locale;
@@ -82,16 +86,19 @@ public abstract class AbstractAction implements IAction
 
     /**
      * Return the Url
+     * 
      * @return The Url
      */
-    public String getUrl(  )
+    public String getUrl( )
     {
         return _strUrl;
     }
 
     /**
      * Set the Url
-     * @param strUrl The Url
+     * 
+     * @param strUrl
+     *            The Url
      */
     public void setUrl( String strUrl )
     {
@@ -100,25 +107,29 @@ public abstract class AbstractAction implements IAction
 
     /**
      * Returns the NameKey
+     * 
      * @return The NameKey
      */
-    public String getNameKey(  )
+    public String getNameKey( )
     {
         return _strNameKey;
     }
 
     /**
      * Returns the Name
+     * 
      * @return The Name
      */
-    public String getName(  )
+    public String getName( )
     {
         return I18nService.getLocalizedString( _strNameKey, _locale );
     }
 
     /**
      * Sets the NameKey
-     * @param strNameKey The NameKey
+     * 
+     * @param strNameKey
+     *            The NameKey
      */
     public void setNameKey( String strNameKey )
     {
@@ -127,25 +138,29 @@ public abstract class AbstractAction implements IAction
 
     /**
      * Returns the DescriptionKey
+     * 
      * @return The DescriptionKey
      */
-    public String getDescriptionKey(  )
+    public String getDescriptionKey( )
     {
         return _strDescriptionKey;
     }
 
     /**
      * Returns the Description
+     * 
      * @return The Description
      */
-    public String getDescription(  )
+    public String getDescription( )
     {
         return I18nService.getLocalizedString( _strDescriptionKey, _locale );
     }
 
     /**
      * Sets the DescriptionKey
-     * @param strDescriptionKey The DescriptionKey
+     * 
+     * @param strDescriptionKey
+     *            The DescriptionKey
      */
     public void setDescriptionKey( String strDescriptionKey )
     {
@@ -154,16 +169,19 @@ public abstract class AbstractAction implements IAction
 
     /**
      * Returns the icon
+     * 
      * @return The icon
      */
-    public String getIcon(  )
+    public String getIcon( )
     {
         return _strIcon;
     }
 
     /**
      * Sets the icon
-     * @param strIcon The icon
+     * 
+     * @param strIcon
+     *            The icon
      */
     public void setIcon( String strIcon )
     {
@@ -172,16 +190,19 @@ public abstract class AbstractAction implements IAction
 
     /**
      * Returns the permission associated to the action
+     * 
      * @return The permission
      */
-    public String getPermission(  )
+    public String getPermission( )
     {
         return _strPermission;
     }
 
     /**
      * Sets the Permission
-     * @param strPermission The Permission
+     * 
+     * @param strPermission
+     *            The Permission
      */
     public void setPermission( String strPermission )
     {
@@ -192,7 +213,7 @@ public abstract class AbstractAction implements IAction
      * {@inheritDoc}
      */
     @Override
-    public int hashCode(  )
+    public int hashCode( )
     {
         final int prime = 31;
         int result = 1;
@@ -202,8 +223,8 @@ public abstract class AbstractAction implements IAction
     }
 
     /**
-    * {@inheritDoc}
-    */
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals( Object obj )
     {
@@ -217,7 +238,7 @@ public abstract class AbstractAction implements IAction
             return false;
         }
 
-        if ( getClass(  ) != obj.getClass(  ) )
+        if ( getClass( ) != obj.getClass( ) )
         {
             return false;
         }

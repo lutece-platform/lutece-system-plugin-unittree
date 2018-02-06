@@ -35,7 +35,6 @@ package fr.paris.lutece.plugins.unittree.service;
 
 import fr.paris.lutece.portal.service.plugin.PluginDefaultImplementation;
 
-
 /**
  *
  * UnitTreePlugin

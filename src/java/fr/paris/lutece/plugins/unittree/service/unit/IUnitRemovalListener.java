@@ -35,12 +35,13 @@ package fr.paris.lutece.plugins.unittree.service.unit;
 
 import fr.paris.lutece.plugins.unittree.service.UnitErrorException;
 
-
 public interface IUnitRemovalListener
 {
     /**
      * Notify the listener for a unit deletion
-     * @param nIdRemovedUnit  the id of deleted unit.
+     * 
+     * @param nIdRemovedUnit
+     *            the id of deleted unit.
      * @throws UnitErrorException
      */
     void notify( int nIdRemovedUnit ) throws UnitErrorException;

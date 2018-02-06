@@ -52,7 +52,6 @@ import javax.inject.Inject;
 
 import javax.servlet.http.HttpServletRequest;
 
-
 /**
  *
  * UnitUserService
@@ -82,7 +81,7 @@ public class UnitUserService implements IUnitUserService
     @Override
     public List<AdminUser> getUsers( int nIdUnit, Map<String, Unit> mapIdUserUnit, boolean isInDepthSearch )
     {
-        List<AdminUser> listAdminUsers = new ArrayList<AdminUser>(  );
+        List<AdminUser> listAdminUsers = new ArrayList<AdminUser>( );
 
         // First add the users from the current unit
         listAdminUsers.addAll( getUsers( nIdUnit, mapIdUserUnit ) );
@@ -93,7 +92,7 @@ public class UnitUserService implements IUnitUserService
             for ( Unit subUnit : _unitService.getSubUnits( nIdUnit, false ) )
             {
                 // Recursive function in order to get all users from all sub units of the unit
-                listAdminUsers.addAll( getUsers( subUnit.getIdUnit(  ), mapIdUserUnit, isInDepthSearch ) );
+                listAdminUsers.addAll( getUsers( subUnit.getIdUnit( ), mapIdUserUnit, isInDepthSearch ) );
             }
         }
 
@@ -106,10 +105,10 @@ public class UnitUserService implements IUnitUserService
     @Override
     public List<AdminUser> getAvailableUsers( AdminUser currentUser, int nIdUnit, boolean bMultiAffectationEnabled )
     {
-        List<AdminUser> listUsers = new ArrayList<AdminUser>(  );
+        List<AdminUser> listUsers = new ArrayList<AdminUser>( );
         Unit unit = _unitService.getUnit( nIdUnit, false );
 
-        for ( AdminUser user : AdminUserHome.findUserList(  ) )
+        for ( AdminUser user : AdminUserHome.findUserList( ) )
         {
             if ( isUserAvailable( currentUser, user, unit, bMultiAffectationEnabled ) )
             {
@@ -126,7 +125,7 @@ public class UnitUserService implements IUnitUserService
     @Override
     public List<AdminUser> getAvailableUsers( AdminUser currentUser, int nIdUnit )
     {
-        boolean bMultiAffectationEnabled = isMultiAffectationEnabled(  );
+        boolean bMultiAffectationEnabled = isMultiAffectationEnabled( );
 
         return getAvailableUsers( currentUser, nIdUnit, bMultiAffectationEnabled );
     }
@@ -139,7 +138,7 @@ public class UnitUserService implements IUnitUserService
     @Override
     public void doProcessAddUser( int nIdUser, AdminUser currentUser, HttpServletRequest request )
     {
-        for ( IUnitUserAttributeService service : UnitUserAttributeManager.getListUnitUserAttributeService(  ) )
+        for ( IUnitUserAttributeService service : UnitUserAttributeManager.getListUnitUserAttributeService( ) )
         {
             service.doAddUser( nIdUser, currentUser, request );
         }
@@ -151,7 +150,7 @@ public class UnitUserService implements IUnitUserService
     @Override
     public void doProcessModifyUser( int nIdUser, AdminUser currentUser, HttpServletRequest request )
     {
-        for ( IUnitUserAttributeService service : UnitUserAttributeManager.getListUnitUserAttributeService(  ) )
+        for ( IUnitUserAttributeService service : UnitUserAttributeManager.getListUnitUserAttributeService( ) )
         {
             service.doModifyUser( nIdUser, currentUser, request );
         }
@@ -163,7 +162,7 @@ public class UnitUserService implements IUnitUserService
     @Override
     public void doProcessRemoveUser( int nIdUser, AdminUser currentUser, HttpServletRequest request )
     {
-        for ( IUnitUserAttributeService service : UnitUserAttributeManager.getListUnitUserAttributeService(  ) )
+        for ( IUnitUserAttributeService service : UnitUserAttributeManager.getListUnitUserAttributeService( ) )
         {
             service.doRemoveUser( nIdUser, currentUser, request );
         }
@@ -193,9 +192,9 @@ public class UnitUserService implements IUnitUserService
         {
             Unit unit = UnitHome.findByPrimaryKey( nIdUnit );
             List<Unit> listUnits = _unitService.getUnitsByIdUser( nIdUser, false );
-            boolean bMultiAffectationEnabled = isMultiAffectationEnabled(  );
+            boolean bMultiAffectationEnabled = isMultiAffectationEnabled( );
 
-            if ( !bMultiAffectationEnabled && ( listUnits.size(  ) > 0 ) )
+            if ( !bMultiAffectationEnabled && ( listUnits.size( ) > 0 ) )
             {
                 return false;
             }
@@ -204,7 +203,7 @@ public class UnitUserService implements IUnitUserService
             {
                 if ( _unitService.isParent( unit, userUnit ) )
                 {
-                    removeUserFromUnit( nIdUser, userUnit.getIdUnit(  ) );
+                    removeUserFromUnit( nIdUser, userUnit.getIdUnit( ) );
                 }
             }
 
@@ -240,32 +239,34 @@ public class UnitUserService implements IUnitUserService
      * {@inheritDoc}
      */
     @Override
-    public boolean isMultiAffectationEnabled(  )
+    public boolean isMultiAffectationEnabled( )
     {
-        return AppPropertiesService.getPropertyBoolean( PROPERTY_MULTI_AFFECTATION_ENABLED,
-            DEFAULT_MULTI_AFFECTATION_ENABLED );
+        return AppPropertiesService.getPropertyBoolean( PROPERTY_MULTI_AFFECTATION_ENABLED, DEFAULT_MULTI_AFFECTATION_ENABLED );
     }
 
     // PRIVATE METHODS
 
     /**
      * Tell if 2 users have groups in common
-     * @param user1 User1
-     * @param user2 User2
+     * 
+     * @param user1
+     *            User1
+     * @param user2
+     *            User2
      * @return true or false
      */
     private boolean haveCommonWorkgroups( AdminUser user1, AdminUser user2 )
     {
         ReferenceList workgroups = AdminWorkgroupHome.getUserWorkgroups( user1 );
 
-        if ( workgroups.size(  ) == 0 )
+        if ( workgroups.size( ) == 0 )
         {
             return true;
         }
 
         for ( ReferenceItem item : workgroups )
         {
-            if ( AdminWorkgroupHome.isUserInWorkgroup( user2, item.getCode(  ) ) )
+            if ( AdminWorkgroupHome.isUserInWorkgroup( user2, item.getCode( ) ) )
             {
                 return true;
             }
@@ -276,20 +277,22 @@ public class UnitUserService implements IUnitUserService
 
     /**
      * Check if the user is available
-     * @param currentUser the current user
-     * @param userToCheck the user to check
-     * @param unit the unit to check if the user is available for
-     * @param bMultiAffectationEnabled Indicates if this method should allow a
-     *            user to be in several units, or if it should return false if
-     *            he is already in a unit.
+     * 
+     * @param currentUser
+     *            the current user
+     * @param userToCheck
+     *            the user to check
+     * @param unit
+     *            the unit to check if the user is available for
+     * @param bMultiAffectationEnabled
+     *            Indicates if this method should allow a user to be in several units, or if it should return false if he is already in a unit.
      * @return true if the user is available, false otherwise
      */
-    private boolean isUserAvailable( AdminUser currentUser, AdminUser userToCheck, Unit unit,
-        boolean bMultiAffectationEnabled )
+    private boolean isUserAvailable( AdminUser currentUser, AdminUser userToCheck, Unit unit, boolean bMultiAffectationEnabled )
     {
-        List<Unit> listUnits = _unitService.getUnitsByIdUser( userToCheck.getUserId(  ), false );
+        List<Unit> listUnits = _unitService.getUnitsByIdUser( userToCheck.getUserId( ), false );
 
-        if ( !bMultiAffectationEnabled && ( listUnits.size(  ) > 0 ) )
+        if ( !bMultiAffectationEnabled && ( listUnits.size( ) > 0 ) )
         {
             return false;
         }
@@ -297,14 +300,14 @@ public class UnitUserService implements IUnitUserService
         for ( Unit userUnit : listUnits )
         {
             // If the user is in the unit or in one if its parents
-            if ( ( userUnit.getIdUnit(  ) == unit.getIdUnit(  ) ) || _unitService.isParent( userUnit, unit ) )
+            if ( ( userUnit.getIdUnit( ) == unit.getIdUnit( ) ) || _unitService.isParent( userUnit, unit ) )
             {
                 return false;
             }
         }
 
         // Check if the current user is admin => visibility to all users
-        if ( currentUser.isAdmin(  ) )
+        if ( currentUser.isAdmin( ) )
         {
             return true;
         }
@@ -313,8 +316,7 @@ public class UnitUserService implements IUnitUserService
         if ( currentUser.isParent( userToCheck ) )
         {
             // Then check if they have the same workgroup, or the user to check does not have any workgroup
-            if ( haveCommonWorkgroups( currentUser, userToCheck ) ||
-                    !AdminWorkgroupHome.checkUserHasWorkgroup( userToCheck.getUserId(  ) ) )
+            if ( haveCommonWorkgroups( currentUser, userToCheck ) || !AdminWorkgroupHome.checkUserHasWorkgroup( userToCheck.getUserId( ) ) )
             {
                 return true;
             }
@@ -325,17 +327,20 @@ public class UnitUserService implements IUnitUserService
 
     /**
      * Get the list of {@link AdminUser} from a given id unit
-     * @param nIdUnit the id unit
-     * @param mapIdUserUnit the map of <idUser, Unit>
+     * 
+     * @param nIdUnit
+     *            the id unit
+     * @param mapIdUserUnit
+     *            the map of <idUser, Unit>
      * @return a list of {@link AdminUser}
      */
     private List<AdminUser> getUsers( int nIdUnit, Map<String, Unit> mapIdUserUnit )
     {
         Unit unit = _unitService.getUnit( nIdUnit, false );
-        List<AdminUser> listUsers = new ArrayList<AdminUser>(  );
+        List<AdminUser> listUsers = new ArrayList<AdminUser>( );
         List<Integer> listIdUsers = UnitHome.findIdsUser( nIdUnit );
 
-        if ( ( listIdUsers != null ) && !listIdUsers.isEmpty(  ) )
+        if ( ( listIdUsers != null ) && !listIdUsers.isEmpty( ) )
         {
             for ( int nIdUser : listIdUsers )
             {
@@ -344,7 +349,7 @@ public class UnitUserService implements IUnitUserService
                 if ( user != null )
                 {
                     listUsers.add( user );
-                    mapIdUserUnit.put( Integer.toString( user.getUserId(  ) ), unit );
+                    mapIdUserUnit.put( Integer.toString( user.getUserId( ) ), unit );
                 }
             }
         }

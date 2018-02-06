@@ -40,7 +40,6 @@ import java.util.Map;
 
 import javax.validation.constraints.NotNull;
 
-
 /**
  *
  * Unit
@@ -58,20 +57,23 @@ public class Unit implements RBACResource
     private String _strLabel;
     @NotNull
     private String _strDescription;
-    private Map<String, IUnitAttribute> _mapAttributes = new HashMap<String, IUnitAttribute>(  );
+    private Map<String, IUnitAttribute> _mapAttributes = new HashMap<String, IUnitAttribute>( );
 
     /**
      * Get the id unit
+     * 
      * @return the id unit
      */
-    public int getIdUnit(  )
+    public int getIdUnit( )
     {
         return _nIdUnit;
     }
 
     /**
      * Set the id unit
-     * @param nIdUnit the id unit
+     * 
+     * @param nIdUnit
+     *            the id unit
      */
     public void setIdUnit( int nIdUnit )
     {
@@ -80,16 +82,19 @@ public class Unit implements RBACResource
 
     /**
      * Get the label
+     * 
      * @return the label
      */
-    public String getLabel(  )
+    public String getLabel( )
     {
         return _strLabel;
     }
 
     /**
      * Set the label
-     * @param strLabel the label
+     * 
+     * @param strLabel
+     *            the label
      */
     public void setLabel( String strLabel )
     {
@@ -98,16 +103,19 @@ public class Unit implements RBACResource
 
     /**
      * Get the description
+     * 
      * @return the description
      */
-    public String getDescription(  )
+    public String getDescription( )
     {
         return _strDescription;
     }
 
     /**
      * Set the description
-     * @param strDescription the description
+     * 
+     * @param strDescription
+     *            the description
      */
     public void setDescription( String strDescription )
     {
@@ -116,7 +124,9 @@ public class Unit implements RBACResource
 
     /**
      * Set the id parent
-     * @param nIdParent the nIdParent to set
+     * 
+     * @param nIdParent
+     *            the nIdParent to set
      */
     public void setIdParent( int nIdParent )
     {
@@ -125,26 +135,31 @@ public class Unit implements RBACResource
 
     /**
      * Get the id parent
+     * 
      * @return the nIdParent
      */
-    public int getIdParent(  )
+    public int getIdParent( )
     {
         return _nIdParent;
     }
 
     /**
      * Check if the unit is the root unit
+     * 
      * @return true if the unit is the root unit, false otherwise
      */
-    public boolean isRoot(  )
+    public boolean isRoot( )
     {
         return _nIdUnit == ID_ROOT;
     }
 
     /**
      * Get the attribute from a given key
-     * @param <T> the class of the attribute
-     * @param strKey the key of the attribute
+     * 
+     * @param <T>
+     *            the class of the attribute
+     * @param strKey
+     *            the key of the attribute
      * @return the attribute
      */
     public <T> IUnitAttribute<T> getAttribute( String strKey )
@@ -154,18 +169,20 @@ public class Unit implements RBACResource
 
     /**
      * Add an attribute
-     * @param attribute the attribute to add
+     * 
+     * @param attribute
+     *            the attribute to add
      */
     public void addAttribute( IUnitAttribute<?> attribute )
     {
-        _mapAttributes.put( attribute.getAttributeName(  ), attribute );
+        _mapAttributes.put( attribute.getAttributeName( ), attribute );
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public String getResourceId(  )
+    public String getResourceId( )
     {
         return Integer.toString( _nIdUnit );
     }
@@ -174,7 +191,7 @@ public class Unit implements RBACResource
      * {@inheritDoc}
      */
     @Override
-    public String getResourceTypeCode(  )
+    public String getResourceTypeCode( )
     {
         return RESOURCE_TYPE;
     }

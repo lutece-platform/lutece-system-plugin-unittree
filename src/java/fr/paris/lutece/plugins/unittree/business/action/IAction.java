@@ -38,7 +38,6 @@ import fr.paris.lutece.portal.service.rbac.RBACAction;
 
 import java.util.Locale;
 
-
 /**
  *
  * IAction
@@ -48,103 +47,128 @@ public interface IAction extends Localizable, RBACAction
 {
     /**
      * Set the id action
-     * @param nIdAction the nIdAction to set
+     * 
+     * @param nIdAction
+     *            the nIdAction to set
      */
     void setIdAction( int nIdAction );
 
     /**
      * Get the id action
+     * 
      * @return the nIdAction
      */
-    int getIdAction(  );
+    int getIdAction( );
 
     /**
-    * Implements Localizable
-    * @param locale The current locale
-    */
+     * Implements Localizable
+     * 
+     * @param locale
+     *            The current locale
+     */
     void setLocale( Locale locale );
 
     /**
      * Returns the Url
+     * 
      * @return The Url
      */
-    String getUrl(  );
+    String getUrl( );
 
     /**
      * Sets the Url
-     * @param strUrl The Url
+     * 
+     * @param strUrl
+     *            The Url
      */
     void setUrl( String strUrl );
 
     /**
      * Returns the NameKey
+     * 
      * @return The NameKey
      */
-    String getNameKey(  );
+    String getNameKey( );
 
     /**
      * Returns the Name
+     * 
      * @return The Name
      */
-    String getName(  );
+    String getName( );
 
     /**
      * Sets the NameKey
-     * @param strNameKey The NameKey
+     * 
+     * @param strNameKey
+     *            The NameKey
      */
     void setNameKey( String strNameKey );
 
     /**
      * Returns the DescriptionKey
+     * 
      * @return The DescriptionKey
      */
-    String getDescriptionKey(  );
+    String getDescriptionKey( );
 
     /**
      * Returns the Description
+     * 
      * @return The Description
      */
-    String getDescription(  );
+    String getDescription( );
 
     /**
      * Sets the DescriptionKey
-     * @param strDescriptionKey The DescriptionKey
+     * 
+     * @param strDescriptionKey
+     *            The DescriptionKey
      */
     void setDescriptionKey( String strDescriptionKey );
 
     /**
      * Returns the IconUrl
+     * 
      * @return The IconUrl
      */
-    String getIcon(  );
+    String getIcon( );
 
     /**
      * Sets the IconUrl
-     * @param strIconUrl The IconUrl
+     * 
+     * @param strIconUrl
+     *            The IconUrl
      */
     void setIcon( String strIconUrl );
 
     /**
      * Returns the permission associated to the action
+     * 
      * @return The permission
      */
-    String getPermission(  );
+    String getPermission( );
 
     /**
      * Sets the Permission
-     * @param strPermission The Permission
+     * 
+     * @param strPermission
+     *            The Permission
      */
     void setPermission( String strPermission );
 
     /**
      * Get the action type
+     * 
      * @return the action type
      */
-    String getActionType(  );
+    String getActionType( );
 
     /**
      * Set the action type
-     * @param strActionType the action type
+     * 
+     * @param strActionType
+     *            the action type
      */
     void setActionType( String strActionType );
 }

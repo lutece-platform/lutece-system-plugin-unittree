@@ -40,14 +40,12 @@ import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.CannotLoadBeanClassException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 
-
 /**
  *
  * This factory is used for :
  * <ul>
  * <li>
- * creating new instance of {@link IAction} depending of the action type
- * </li>
+ * creating new instance of {@link IAction} depending of the action type</li>
  * </ul>
  *
  */
@@ -65,26 +63,23 @@ public class ActionFactory implements IActionFactory
         {
             action = SpringContextService.getBean( strActionType );
         }
-        catch ( BeanDefinitionStoreException e )
+        catch( BeanDefinitionStoreException e )
         {
-            AppLogService.debug( "ActionFactory ERROR : could not load bean '" + e.getBeanName(  ) + "' - CAUSE : " +
-                e.getMessage(  ) );
+            AppLogService.debug( "ActionFactory ERROR : could not load bean '" + e.getBeanName( ) + "' - CAUSE : " + e.getMessage( ) );
         }
-        catch ( NoSuchBeanDefinitionException e )
+        catch( NoSuchBeanDefinitionException e )
         {
-            AppLogService.debug( "ActionFactory ERROR : could not load bean '" + e.getBeanName(  ) + "' - CAUSE : " +
-                e.getMessage(  ) );
+            AppLogService.debug( "ActionFactory ERROR : could not load bean '" + e.getBeanName( ) + "' - CAUSE : " + e.getMessage( ) );
         }
-        catch ( CannotLoadBeanClassException e )
+        catch( CannotLoadBeanClassException e )
         {
-            AppLogService.debug( "ActionFactory ERROR : could not load bean '" + e.getBeanName(  ) + "' - CAUSE : " +
-                e.getMessage(  ) );
+            AppLogService.debug( "ActionFactory ERROR : could not load bean '" + e.getBeanName( ) + "' - CAUSE : " + e.getMessage( ) );
         }
 
         // If no action is defined for strActionType, then create a DefaultAction
         if ( action == null )
         {
-            action = new DefaultAction(  );
+            action = new DefaultAction( );
         }
 
         return action;

@@ -35,7 +35,6 @@ package fr.paris.lutece.plugins.unittree.business.unit;
 
 import org.apache.commons.lang.StringUtils;
 
-
 /**
  *
  * UnitFilter
@@ -49,9 +48,9 @@ public class UnitFilter
     private boolean _bIsWideSearch;
 
     /**
-    * Constructor
-    */
-    public UnitFilter(  )
+     * Constructor
+     */
+    public UnitFilter( )
     {
         _nIdParent = Unit.ID_NULL;
         _strLabel = StringUtils.EMPTY;
@@ -61,16 +60,19 @@ public class UnitFilter
 
     /**
      * Get the label
+     * 
      * @return the label
      */
-    public String getLabel(  )
+    public String getLabel( )
     {
         return _strLabel;
     }
 
     /**
      * Set the label
-     * @param strLabel the label
+     * 
+     * @param strLabel
+     *            the label
      */
     public void setLabel( String strLabel )
     {
@@ -79,25 +81,29 @@ public class UnitFilter
 
     /**
      * Check if the filter contains the label
+     * 
      * @return true if it contains, false otherwise
      */
-    public boolean containsLabel(  )
+    public boolean containsLabel( )
     {
         return StringUtils.isNotBlank( _strLabel );
     }
 
     /**
      * Get the description
+     * 
      * @return the description
      */
-    public String getDescription(  )
+    public String getDescription( )
     {
         return _strDescription;
     }
 
     /**
      * Set the description
-     * @param strDescription the description
+     * 
+     * @param strDescription
+     *            the description
      */
     public void setDescription( String strDescription )
     {
@@ -106,25 +112,29 @@ public class UnitFilter
 
     /**
      * Check if the filter contains the description
+     * 
      * @return true if it contains, false otherwise
      */
-    public boolean containsDescription(  )
+    public boolean containsDescription( )
     {
         return StringUtils.isNotBlank( _strDescription );
     }
 
     /**
      * Get the id parent
+     * 
      * @return the id parent
      */
-    public int getIdParent(  )
+    public int getIdParent( )
     {
         return _nIdParent;
     }
 
     /**
      * Set the id parent
-     * @param nIdParent the reference code
+     * 
+     * @param nIdParent
+     *            the reference code
      */
     public void setIdParent( int nIdParent )
     {
@@ -133,16 +143,19 @@ public class UnitFilter
 
     /**
      * Check if the filter contains the id parent
+     * 
      * @return true if the it contains, false otherwise
      */
-    public boolean containsIdParent(  )
+    public boolean containsIdParent( )
     {
         return _nIdParent != -1;
     }
 
     /**
      * Set true if the search is wide, false otherwise
-     * @param isWideSearch true if the search is wide, false otherwise
+     * 
+     * @param isWideSearch
+     *            true if the search is wide, false otherwise
      */
     public void setWideSearch( boolean isWideSearch )
     {
@@ -151,9 +164,10 @@ public class UnitFilter
 
     /**
      * Return true if the search is wide, false otherwise
+     * 
      * @return true if the search is wide, false otherwise
      */
-    public boolean isWideSearch(  )
+    public boolean isWideSearch( )
     {
         return _bIsWideSearch;
     }

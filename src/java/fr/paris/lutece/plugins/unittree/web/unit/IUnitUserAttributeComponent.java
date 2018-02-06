@@ -37,7 +37,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-
 /**
  *
  * IUnitUserAttributeComponent
@@ -47,20 +46,25 @@ public interface IUnitUserAttributeComponent
 {
     /**
      * Fill the model of the unit user attribute component
-     * @param request the HTTP request
-     * @param model the model
+     * 
+     * @param request
+     *            the HTTP request
+     * @param model
+     *            the model
      */
     void fillModel( HttpServletRequest request, Map<String, Object> model );
 
     /**
      * Get the template
+     * 
      * @return the template
      */
-    String getTemplate(  );
+    String getTemplate( );
 
     /**
      * Get the name
+     * 
      * @return the name
      */
-    String getName(  );
+    String getName( );
 }

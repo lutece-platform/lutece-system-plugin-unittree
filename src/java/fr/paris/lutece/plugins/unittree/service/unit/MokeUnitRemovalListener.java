@@ -37,7 +37,7 @@ import fr.paris.lutece.plugins.unittree.service.UnitErrorException;
 
 public class MokeUnitRemovalListener implements IUnitRemovalListener
 {
-    
+
     private static final String MESSAGE_MOKE_UNIT_REMOVAL_ERROR = "unittree.moke.unit.removal.listener.error";
 
     /**
@@ -46,8 +46,8 @@ public class MokeUnitRemovalListener implements IUnitRemovalListener
     @Override
     public void notify( int nIdRemovedUnit ) throws UnitErrorException
     {
-        //Test error when deleting unit
+        // Test error when deleting unit
         throw new UnitErrorException( MESSAGE_MOKE_UNIT_REMOVAL_ERROR );
     }
-    
+
 }

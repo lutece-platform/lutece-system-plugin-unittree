@@ -33,7 +33,6 @@
  */
 package fr.paris.lutece.plugins.unittree.business.action;
 
-
 /**
  *
  * This class represents the action usable on an unit
@@ -47,7 +46,7 @@ public class UnitAction extends AbstractAction
      * {@inheritDoc}
      */
     @Override
-    public String getActionType(  )
+    public String getActionType( )
     {
         return ACTION_TYPE;
     }

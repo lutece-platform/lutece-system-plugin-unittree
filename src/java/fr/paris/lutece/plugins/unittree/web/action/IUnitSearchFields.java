@@ -42,7 +42,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-
 /**
  *
  * IUnitPluginAction
@@ -52,87 +51,111 @@ public interface IUnitSearchFields
 {
     /**
      * Get the items per page
+     * 
      * @return the items per page
      */
-    int getItemsPerPage(  );
+    int getItemsPerPage( );
 
     /**
      * Set the items per page
-     * @param nItemsPerPage the items per page
+     * 
+     * @param nItemsPerPage
+     *            the items per page
      */
     void setItemsPerPage( int nItemsPerPage );
 
     /**
-    * Default items per page
-    * @return default items per page
-    */
-    int getDefaultItemsPerPage(  );
+     * Default items per page
+     * 
+     * @return default items per page
+     */
+    int getDefaultItemsPerPage( );
 
     /**
      * Default items per page
-     * @param nDefaultItemsPerPage default items per page
+     * 
+     * @param nDefaultItemsPerPage
+     *            default items per page
      */
     void setDefaultItemsPerPage( int nDefaultItemsPerPage );
 
     /**
      * Current page index
+     * 
      * @return current page index
      */
-    String getCurrentPageIndex(  );
+    String getCurrentPageIndex( );
 
     /**
      * Current page index
-     * @param strCurrentPageIndex current page index
+     * 
+     * @param strCurrentPageIndex
+     *            current page index
      */
     void setCurrentPageIndex( String strCurrentPageIndex );
 
     /**
      * Set the sorted attribute name from the HTTP request
-     * @param request the HTTP request
+     * 
+     * @param request
+     *            the HTTP request
      */
     void setSortedAttributeName( HttpServletRequest request );
 
     /**
      * Get the sorted attribute name
+     * 
      * @return the sorted attibute name
      */
-    String getSortedAttributeName(  );
+    String getSortedAttributeName( );
 
     /**
      * Set the asc sort from the HTTP request
-     * @param request the HTTP request
+     * 
+     * @param request
+     *            the HTTP request
      */
     void setAscSort( HttpServletRequest request );
 
     /**
      * Check if it is an asc sort
+     * 
      * @return true if it is an asc sort, false otherwise
      */
-    boolean isAscSort(  );
+    boolean isAscSort( );
 
     /**
      * Fill the model for the user search form
-     * @param listUsers the list of users
-     * @param strBaseUrl the base url
-     * @param request the HTTP request
-     * @param model the model
-     * @param unit the unit
-     * @throws AccessDeniedException exception if the user does not have the rights
+     * 
+     * @param listUsers
+     *            the list of users
+     * @param strBaseUrl
+     *            the base url
+     * @param request
+     *            the HTTP request
+     * @param model
+     *            the model
+     * @param unit
+     *            the unit
+     * @throws AccessDeniedException
+     *             exception if the user does not have the rights
      */
-    void fillModelForUserSearchForm( List<AdminUser> listUsers, String strBaseUrl, HttpServletRequest request,
-        Map<String, Object> model, Unit unit ) throws AccessDeniedException;
+    void fillModelForUserSearchForm( List<AdminUser> listUsers, String strBaseUrl, HttpServletRequest request, Map<String, Object> model, Unit unit )
+            throws AccessDeniedException;
 
     /**
-     * Check if if it an in depth search.
-     * <br />
+     * Check if if it an in depth search. <br />
      * It will check if the request possesses the parameter <strong>isInDepthSearch</strong>
-     * @param request the HTTP request
+     * 
+     * @param request
+     *            the HTTP request
      */
     void setInDepthSearch( HttpServletRequest request );
 
     /**
      * Check if it is an in depth search
+     * 
      * @return true if it is an in depth search, false otherwise
      */
-    boolean isInDepthSearch(  );
+    boolean isInDepthSearch( );
 }

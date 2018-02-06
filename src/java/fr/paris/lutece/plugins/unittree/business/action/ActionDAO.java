@@ -41,7 +41,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-
 /**
  *
  * ActionDAO
@@ -49,10 +48,10 @@ import javax.inject.Inject;
  */
 public class ActionDAO implements IActionDAO
 {
-    private static final String SQL_QUERY_SELECT_ACTIONS = "SELECT id_action, name_key, description_key, action_url, icon_url, action_permission, action_type " +
-        " FROM unittree_action WHERE action_type = ? ";
-    private static final String SQL_QUERY_SELECT_FILTER_BY_PERMISSION = "SELECT id_action, name_key, description_key, action_url, icon_url, action_permission, action_type " +
-        " FROM unittree_action WHERE action_type = ? AND action_permission != ? ";
+    private static final String SQL_QUERY_SELECT_ACTIONS = "SELECT id_action, name_key, description_key, action_url, icon_url, action_permission, action_type "
+            + " FROM unittree_action WHERE action_type = ? ";
+    private static final String SQL_QUERY_SELECT_FILTER_BY_PERMISSION = "SELECT id_action, name_key, description_key, action_url, icon_url, action_permission, action_type "
+            + " FROM unittree_action WHERE action_type = ? AND action_permission != ? ";
     @Inject
     private ActionFactory _actionFactory;
 
@@ -62,12 +61,12 @@ public class ActionDAO implements IActionDAO
     @Override
     public List<IAction> selectActions( String strActionType, Plugin plugin )
     {
-        List<IAction> listActions = new ArrayList<IAction>(  );
+        List<IAction> listActions = new ArrayList<IAction>( );
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ACTIONS, plugin );
         daoUtil.setString( 1, strActionType );
-        daoUtil.executeQuery(  );
+        daoUtil.executeQuery( );
 
-        while ( daoUtil.next(  ) )
+        while ( daoUtil.next( ) )
         {
             int nIndex = 1;
             IAction action = _actionFactory.newAction( strActionType );
@@ -82,7 +81,7 @@ public class ActionDAO implements IActionDAO
             listActions.add( action );
         }
 
-        daoUtil.free(  );
+        daoUtil.free( );
 
         return listActions;
     }
@@ -94,13 +93,13 @@ public class ActionDAO implements IActionDAO
     public List<IAction> selectFilterByPermission( String strActionType, String strPermission, Plugin plugin )
     {
         int nIndex = 1;
-        List<IAction> listActions = new ArrayList<IAction>(  );
+        List<IAction> listActions = new ArrayList<IAction>( );
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_FILTER_BY_PERMISSION, plugin );
         daoUtil.setString( nIndex++, strActionType );
         daoUtil.setString( nIndex, strPermission );
-        daoUtil.executeQuery(  );
+        daoUtil.executeQuery( );
 
-        while ( daoUtil.next(  ) )
+        while ( daoUtil.next( ) )
         {
             nIndex = 1;
 
@@ -116,7 +115,7 @@ public class ActionDAO implements IActionDAO
             listActions.add( action );
         }
 
-        daoUtil.free(  );
+        daoUtil.free( );
 
         return listActions;
     }

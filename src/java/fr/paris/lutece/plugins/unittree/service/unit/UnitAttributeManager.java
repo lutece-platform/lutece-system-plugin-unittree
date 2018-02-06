@@ -44,7 +44,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-
 /**
  *
  * UnitAttributeManager
@@ -55,56 +54,65 @@ public final class UnitAttributeManager
     /**
      * Private constructor
      */
-    private UnitAttributeManager(  )
+    private UnitAttributeManager( )
     {
     }
 
     /**
      * Get the list of unit attribute components
+     * 
      * @return a list of {@link IUnitAttributeComponent}
      */
-    public static List<IUnitAttributeComponent> getListUnitAttributeComponents(  )
+    public static List<IUnitAttributeComponent> getListUnitAttributeComponents( )
     {
         return SpringContextService.getBeansOfType( IUnitAttributeComponent.class );
     }
 
     /**
      * Fill the model for the unit user attribute component
-     * @param request the HTTP request
-     * @param adminUser the current user
-     * @param model the model
-     * @param strMark the marker
+     * 
+     * @param request
+     *            the HTTP request
+     * @param adminUser
+     *            the current user
+     * @param model
+     *            the model
+     * @param strMark
+     *            the marker
      */
-    public static void fillModel( HttpServletRequest request, AdminUser adminUser, Map<String, Object> model,
-        String strMark )
+    public static void fillModel( HttpServletRequest request, AdminUser adminUser, Map<String, Object> model, String strMark )
     {
-        for ( IUnitAttributeComponent component : getListUnitAttributeComponents(  ) )
+        for ( IUnitAttributeComponent component : getListUnitAttributeComponents( ) )
         {
             component.fillModel( request, adminUser, model );
         }
 
-        model.put( strMark, getListUnitAttributeComponents(  ) );
+        model.put( strMark, getListUnitAttributeComponents( ) );
     }
 
     /**
      * Get the list of unit attribute services
+     * 
      * @return a list of {@link IUnitUserAttributeService}
      */
-    public static List<IUnitAttributeService> getListUnitAttributeService(  )
+    public static List<IUnitAttributeService> getListUnitAttributeService( )
     {
         return SpringContextService.getBeansOfType( IUnitAttributeService.class );
     }
 
     /**
      * Populate an unit with the data of the <strong>request</strong>
-     * @param unit the unit to populate
-     * @param request the HTTP request
-     * @throws UnitErrorException exception if there is an error (ex: mandatory field)
+     * 
+     * @param unit
+     *            the unit to populate
+     * @param request
+     *            the HTTP request
+     * @throws UnitErrorException
+     *             exception if there is an error (ex: mandatory field)
      */
-    public static void populate( Unit unit, HttpServletRequest request )
-        throws UnitErrorException
+    public static void populate( Unit unit, HttpServletRequest request ) throws UnitErrorException
     {
-        for ( IUnitAttributeService service : UnitAttributeManager.getListUnitAttributeService(  ) )
+        for ( IUnitAttributeService service : UnitAttributeManager.getListUnitAttributeService( ) )
         {
             service.populate( unit, request );
         }
@@ -112,11 +120,13 @@ public final class UnitAttributeManager
 
     /**
      * Populate an unit additionnal attributes with the data of the <strong>database</strong>
-     * @param unit the unit to populate
+     * 
+     * @param unit
+     *            the unit to populate
      */
     public static void populate( Unit unit )
     {
-        for ( IUnitAttributeService service : UnitAttributeManager.getListUnitAttributeService(  ) )
+        for ( IUnitAttributeService service : UnitAttributeManager.getListUnitAttributeService( ) )
         {
             service.populate( unit );
         }
@@ -124,12 +134,15 @@ public final class UnitAttributeManager
 
     /**
      * Do create the additional attributes of the given unit
-     * @param unit the unit
-     * @param request the HTTP request
+     * 
+     * @param unit
+     *            the unit
+     * @param request
+     *            the HTTP request
      */
     public static void doCreateUnit( Unit unit, HttpServletRequest request )
     {
-        for ( IUnitAttributeService service : UnitAttributeManager.getListUnitAttributeService(  ) )
+        for ( IUnitAttributeService service : UnitAttributeManager.getListUnitAttributeService( ) )
         {
             service.doCreateUnit( unit, request );
         }
@@ -137,12 +150,15 @@ public final class UnitAttributeManager
 
     /**
      * Do modify the additional attributes of the given unit
-     * @param unit the unit
-     * @param request the HTTP request
+     * 
+     * @param unit
+     *            the unit
+     * @param request
+     *            the HTTP request
      */
     public static void doModifyUnit( Unit unit, HttpServletRequest request )
     {
-        for ( IUnitAttributeService service : UnitAttributeManager.getListUnitAttributeService(  ) )
+        for ( IUnitAttributeService service : UnitAttributeManager.getListUnitAttributeService( ) )
         {
             service.doModifyUnit( unit, request );
         }
@@ -150,12 +166,15 @@ public final class UnitAttributeManager
 
     /**
      * Do remove the additional attributes
-     * @param nIdUnit the id unit
-     * @param request the HTTP request
+     * 
+     * @param nIdUnit
+     *            the id unit
+     * @param request
+     *            the HTTP request
      */
     public static void doRemoveUnit( int nIdUnit, HttpServletRequest request )
     {
-        for ( IUnitAttributeService service : UnitAttributeManager.getListUnitAttributeService(  ) )
+        for ( IUnitAttributeService service : UnitAttributeManager.getListUnitAttributeService( ) )
         {
             service.doRemoveUnit( nIdUnit, request );
         }
@@ -163,12 +182,14 @@ public final class UnitAttributeManager
 
     /**
      * Check if the given id unit can creabe sub units
-     * @param nIdUnit the id unit
+     * 
+     * @param nIdUnit
+     *            the id unit
      * @return true if the unit can create sub unit
      */
     public static boolean canCreateSubUnit( int nIdUnit )
     {
-        for ( IUnitAttributeService service : UnitAttributeManager.getListUnitAttributeService(  ) )
+        for ( IUnitAttributeService service : UnitAttributeManager.getListUnitAttributeService( ) )
         {
             if ( !service.canCreateSubUnit( nIdUnit ) )
             {
@@ -181,12 +202,15 @@ public final class UnitAttributeManager
 
     /**
      * Update attributes to change the parent of a unit.
-     * @param unitToMove The unit to change the parent of.
-     * @param newUnitParent The new parent of the unit
+     * 
+     * @param unitToMove
+     *            The unit to change the parent of.
+     * @param newUnitParent
+     *            The new parent of the unit
      */
     public static void moveSubTree( Unit unitToMove, Unit newUnitParent )
     {
-        for ( IUnitAttributeService service : UnitAttributeManager.getListUnitAttributeService(  ) )
+        for ( IUnitAttributeService service : UnitAttributeManager.getListUnitAttributeService( ) )
         {
             service.moveSubTree( unitToMove, newUnitParent );
         }
