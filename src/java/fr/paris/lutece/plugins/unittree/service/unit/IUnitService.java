@@ -98,12 +98,23 @@ public interface IUnitService
     List<Unit> getUnitsFirstLevel( boolean bGetAdditionalInfos );
 
     /**
-     * Get the sub units from a given id unit
+     * Get the direct sub units from a given id unit
      * @param nIdUnit the id unit
      * @param bGetAdditionalInfos true if it must get the ids sector
      * @return a list of {@link Unit}
      */
     List<Unit> getSubUnits( int nIdUnit, boolean bGetAdditionalInfos );
+
+    /**
+     * Get all the sub units in the unit tree from the specified unit
+     * 
+     * @param unit
+     *            the unit
+     * @param bGetAdditionalInfos
+     *            true if it must get the ids sector
+     * @return a list of {@link Unit}
+     */
+    List<Unit> getAllSubUnits( Unit unit, boolean bGetAdditionalInfos );
 
     /**
      * Get the list of actions
@@ -116,7 +127,7 @@ public interface IUnitService
     List<IAction> getListActions( String strActionType, Locale locale, Unit unit, AdminUser user );
 
     /**
-     * Get the sub units as a {@link ReferenceList}
+     * Get the direct sub units as a {@link ReferenceList}
      * @param nIdUnit the id unit
      * @param locale the locale
      * @return a {@link ReferenceList}

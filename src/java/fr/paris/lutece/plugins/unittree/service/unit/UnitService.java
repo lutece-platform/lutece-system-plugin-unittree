@@ -211,6 +211,39 @@ public class UnitService implements IUnitService
      * {@inheritDoc}
      */
     @Override
+    public List<Unit> getAllSubUnits( Unit unit, boolean bGetAdditionalInfos )
+    {
+        List<Unit> listSubUnits = getSubUnits( unit.getIdUnit( ), bGetAdditionalInfos );
+
+        return getAllSubUnitsRecursive( listSubUnits, bGetAdditionalInfos );
+    }
+
+    /**
+     * Recursive method to get all the sub units from a list of units
+     * 
+     * @param listUnits
+     *            the list of units the method has to search the sub units
+     * @param bGetAdditionalInfos
+     *            {@code true} if it must get the ids sector, {@code false} otherwise
+     * @return all the sub units
+     */
+    private List<Unit> getAllSubUnitsRecursive( List<Unit> listUnits, boolean bGetAdditionalInfos )
+    {
+        List<Unit> listCurrentUnitsAndSubUnits = new ArrayList<>( listUnits );
+
+        for ( Unit unit : listUnits )
+        {
+            List<Unit> listSubUnits = getSubUnits( unit.getIdUnit( ), bGetAdditionalInfos );
+            listCurrentUnitsAndSubUnits.addAll( getAllSubUnitsRecursive( listSubUnits, bGetAdditionalInfos ) );
+        }
+
+        return listCurrentUnitsAndSubUnits;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public List<IAction> getListActions( String strActionType, Locale locale, Unit unit, AdminUser user )
     {
         // If the user is admin, then no need to filter by permission
