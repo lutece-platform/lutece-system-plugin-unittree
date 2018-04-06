@@ -34,6 +34,7 @@
 package fr.paris.lutece.plugins.unittree.service.action;
 
 import fr.paris.lutece.plugins.unittree.business.action.IAction;
+import fr.paris.lutece.plugins.unittree.service.rbac.UnittreeRBACRecursiveType;
 import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.portal.service.rbac.RBACResource;
 
@@ -56,9 +57,11 @@ public interface IActionService
      *            the locale
      * @param user
      *            the current user
+     * @param recursiveType
+     *            the RBACRecursiveType
      * @return a list of {@link IAction}
      */
-    List<IAction> getListActions( String strActionType, Locale locale, AdminUser user );
+    List<IAction> getListActions( String strActionType, Locale locale, AdminUser user, UnittreeRBACRecursiveType recursiveType );
 
     /**
      * Get the list of actions by filter by permission
@@ -71,9 +74,11 @@ public interface IActionService
      *            the current user
      * @param strPermission
      *            the permission
+     * @param recursiveType
+     *            the RBACRecursive type
      * @return a list of {@link IAction}
      */
-    List<IAction> getListActions( String strActionType, Locale locale, AdminUser user, String strPermission );
+    List<IAction> getListActions( String strActionType, Locale locale, AdminUser user, String strPermission, UnittreeRBACRecursiveType recursiveType );
 
     /**
      * Get the list of actions by filter by permission
@@ -86,9 +91,11 @@ public interface IActionService
      *            the resource
      * @param user
      *            the current user
+     * @param recursiveType
+     *            the RBACRecursive type
      * @return a list of {@link IAction}
      */
-    List<IAction> getListActions( String strActionType, Locale locale, RBACResource resource, AdminUser user );
+    List<IAction> getListActions( String strActionType, Locale locale, RBACResource resource, AdminUser user, UnittreeRBACRecursiveType recursiveType );
 
     /**
      * Get the list of actions by filter by permission
@@ -103,7 +110,10 @@ public interface IActionService
      *            the current user
      * @param strPermission
      *            the permission
+     * @param recursiveType
+     *            the RBAC recursive type
      * @return a list of {@link IAction}
      */
-    List<IAction> getListActions( String strActionType, Locale locale, RBACResource resource, AdminUser user, String strPermission );
+    List<IAction> getListActions( String strActionType, Locale locale, RBACResource resource, AdminUser user, String strPermission,
+            UnittreeRBACRecursiveType recursiveType );
 }

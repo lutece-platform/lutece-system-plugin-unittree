@@ -34,6 +34,7 @@
 package fr.paris.lutece.plugins.unittree.web.action;
 
 import fr.paris.lutece.plugins.unittree.business.unit.Unit;
+import fr.paris.lutece.plugins.unittree.service.rbac.UnittreeRBACRecursiveType;
 import fr.paris.lutece.plugins.unittree.service.unit.IUnitService;
 import fr.paris.lutece.plugins.unittree.service.unit.UnitResourceIdService;
 import fr.paris.lutece.portal.business.user.AdminUser;
@@ -90,7 +91,8 @@ public class AddUnitUsersPluginAction extends AbstractPluginAction<IUnitSearchFi
             strIdUnit = Integer.toString( Unit.ID_ROOT );
         }
 
-        model.put( MARK_PERMISSION_ADD_USERS, _unitService.isAuthorized( strIdUnit, UnitResourceIdService.PERMISSION_ADD_USER, adminUser ) );
+        model.put( MARK_PERMISSION_ADD_USERS,
+                _unitService.isAuthorized( strIdUnit, UnitResourceIdService.PERMISSION_ADD_USER, adminUser, UnittreeRBACRecursiveType.PARENT_RECURSIVE ) );
     }
 
     /**

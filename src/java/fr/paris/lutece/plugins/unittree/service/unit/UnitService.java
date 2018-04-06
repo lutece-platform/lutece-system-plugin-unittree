@@ -39,9 +39,10 @@ import fr.paris.lutece.plugins.unittree.business.unit.UnitFilter;
 import fr.paris.lutece.plugins.unittree.business.unit.UnitHome;
 import fr.paris.lutece.plugins.unittree.service.UnitErrorException;
 import fr.paris.lutece.plugins.unittree.service.action.IActionService;
+import fr.paris.lutece.plugins.unittree.service.rbac.UnittreeRBACService;
+import fr.paris.lutece.plugins.unittree.service.rbac.UnittreeRBACRecursiveType;
 import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.portal.service.i18n.I18nService;
-import fr.paris.lutece.portal.service.rbac.RBACService;
 import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.util.ReferenceList;
 import fr.paris.lutece.util.xml.XmlUtil;
@@ -53,8 +54,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.FileInputStream;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -243,53 +247,26 @@ public class UnitService implements IUnitService
      * {@inheritDoc}
      */
     @Override
-    public List<IAction> getListActions( String strActionType, Locale locale, Unit unit, AdminUser user )
+    public List<IAction> getListActions( String strActionType, Locale locale, Unit unit, AdminUser user, UnittreeRBACRecursiveType recursiveType )
     {
-        // If the user is admin, then no need to filter by permission
-        if ( user.isAdmin( ) && ( unit != null ) )
+        List<IAction> listActions = _actionService.getListActions( strActionType, locale, unit, user, strActionType, recursiveType );
+
+        if ( unit != null )
         {
             // If the unit has sectors and does not have sub units, then remove 'CREATE' action
             if ( !canCreateSubUnit( unit.getIdUnit( ) ) )
             {
-                return _actionService.getListActions( strActionType, locale, user, UnitResourceIdService.PERMISSION_CREATE );
-            }
-
-            return _actionService.getListActions( strActionType, locale, user );
-        }
-
-        List<Unit> listUnits = getUnitsByIdUser( user.getUserId( ), false );
-
-        List<IAction> listActions = new ArrayList<IAction>( );
-
-        if ( ( unit != null ) && ( listUnits.size( ) > 0 ) )
-        {
-            // If the unit has sectors and does not have sub units, then remove 'CREATE' action
-            if ( !canCreateSubUnit( unit.getIdUnit( ) ) )
-            {
-                listActions = _actionService.getListActions( strActionType, locale, unit, user, UnitResourceIdService.PERMISSION_CREATE );
-            }
-            else
-            {
-                listActions = _actionService.getListActions( strActionType, locale, unit, user );
-            }
-        }
-
-        for ( Unit unitUser : listUnits )
-        {
-            if ( ( unitUser != null ) && ( unit != null ) )
-            {
-                // If the user is in a parent unit of the current unit, then add the list of actions of the parent unit to the list
-                if ( isParent( unitUser, unit ) )
+                Integer nIndexToRemove = null;
+                for ( int i = 0; i < listActions.size( ); i++ )
                 {
-                    List<IAction> listParentUnitActions = _actionService.getListActions( strActionType, locale, unitUser, user );
-
-                    for ( IAction parentUnitAction : listParentUnitActions )
+                    if ( listActions.get( i ).getPermission( ).equals( UnitResourceIdService.PERMISSION_CREATE ) )
                     {
-                        if ( !listActions.contains( parentUnitAction ) )
-                        {
-                            listActions.add( parentUnitAction );
-                        }
+                        nIndexToRemove = i;
                     }
+                }
+                if ( nIndexToRemove != null )
+                {
+                    listActions.remove( nIndexToRemove.intValue( ) );
                 }
             }
         }
@@ -332,12 +309,19 @@ public class UnitService implements IUnitService
      * {@inheritDoc}
      */
     @Override
-    public String getXMLUnits( )
+    public String getXMLUnits( AdminUser user )
     {
+        List<Unit> listAuthorizedUnit = UnittreeRBACService.getTreeableAuthorizedUnitCollection( UnitResourceIdService.PERMISSION_SEE_UNIT, user );
+
         StringBuffer sbXML = new StringBuffer( );
         XmlUtil.beginElement( sbXML, TAG_UNITS );
 
-        getXMLUnit( sbXML, getRootUnit( false ) );
+        Unit rootUnit = getRootUnit( false );
+
+        if ( isUnitInList( rootUnit, listAuthorizedUnit ) )
+        {
+            getXMLUnit( sbXML, listAuthorizedUnit, rootUnit, user );
+        }
 
         XmlUtil.endElement( sbXML, TAG_UNITS );
 
@@ -430,64 +414,30 @@ public class UnitService implements IUnitService
      * {@inheritDoc}
      */
     @Override
-    public boolean isAuthorized( Unit unit, String strPermission, AdminUser user )
+    public boolean isAuthorized( Unit unit, String strPermission, AdminUser user, UnittreeRBACRecursiveType recursiveType )
     {
-        // 1) The given user is admin
+        // 1 The user in an admin user
         if ( user.isAdmin( ) )
         {
             return true;
         }
 
-        // 2) unitUser == null : The given user does not belong to any unit
-        List<Unit> listUnits = getUnitsByIdUser( user.getUserId( ), false );
-
-        if ( unit != null )
-        {
-            Unit targetUnit = null;
-
-            for ( Unit unitUser : listUnits )
-            {
-                // 3) The given user belongs to the given unit
-                if ( unitUser.getIdUnit( ) == unit.getIdUnit( ) )
-                {
-                    targetUnit = unit;
-                }
-
-                // 4) The given user belongs to a parent unit of the given unit
-                else
-                    if ( isParent( unitUser, unit ) )
-                    {
-                        targetUnit = unitUser;
-                    }
-
-                // 5) targetUnit == null : The given user belongs to an unit who is not a parent unit of the given unit
-                if ( targetUnit != null )
-                {
-                    if ( RBACService.isAuthorized( targetUnit, strPermission, user ) )
-                    {
-                        return true;
-                    }
-
-                    targetUnit = null;
-                }
-            }
-        }
-
-        return false;
+        // 2 The user is authorized (optionnal : recursively over the unit and unit parents)
+        return UnittreeRBACService.isAuthorized( unit, strPermission, user, recursiveType );
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean isAuthorized( String strIdUnit, String strPermission, AdminUser user )
+    public boolean isAuthorized( String strIdUnit, String strPermission, AdminUser user, UnittreeRBACRecursiveType recursiveType )
     {
         if ( StringUtils.isNotBlank( strIdUnit ) && StringUtils.isNumeric( strIdUnit ) )
         {
             int nIdUnit = Integer.parseInt( strIdUnit );
             Unit unit = getUnit( nIdUnit, false );
 
-            return isAuthorized( unit, strPermission, user );
+            return isAuthorized( unit, strPermission, user, recursiveType );
         }
 
         return false;
@@ -579,7 +529,7 @@ public class UnitService implements IUnitService
      * @param unit
      *            the unit
      */
-    private void getXMLUnit( StringBuffer sbXML, Unit unit )
+    private void getXMLUnit( StringBuffer sbXML, List<Unit> listAuthorizedUnits, Unit unit, AdminUser user )
     {
         XmlUtil.beginElement( sbXML, TAG_UNIT );
         XmlUtil.addElement( sbXML, TAG_ID_UNIT, unit.getIdUnit( ) );
@@ -594,12 +544,66 @@ public class UnitService implements IUnitService
 
             for ( Unit child : listChildren )
             {
-                getXMLUnit( sbXML, child );
+                if ( isUnitInList( child, listAuthorizedUnits ) )
+                {
+                    getXMLUnit( sbXML, listAuthorizedUnits, child, user );
+                }
             }
 
             XmlUtil.endElement( sbXML, TAG_UNIT_CHILDREN );
         }
 
         XmlUtil.endElement( sbXML, TAG_UNIT );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Unit> getListParentUnits( Unit givenUnit )
+    {
+        if ( givenUnit == null )
+        {
+            return null;
+        }
+
+        List<Unit> listAllUnits = UnitHome.findAll( );
+        List<Unit> listParentUnits = new ArrayList<>( );
+
+        // Build a map of id / unit :
+        Map<Integer, Unit> _mapIdUnit = new HashMap<>( );
+        for ( Unit unit : listAllUnits )
+        {
+            _mapIdUnit.put( unit.getIdUnit( ), unit );
+        }
+
+        Unit recursiveUnit = givenUnit;
+        while ( recursiveUnit != null )
+        {
+            listParentUnits.add( recursiveUnit );
+            if ( recursiveUnit.getIdParent( ) == -1 )
+            {
+                break;
+            }
+            recursiveUnit = _mapIdUnit.get( recursiveUnit.getIdParent( ) );
+
+        }
+        return listParentUnits;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isUnitInList( Unit unitToCheck, Collection<Unit> listUnits )
+    {
+        for ( Unit unit : listUnits )
+        {
+            if ( unit.getIdUnit( ) == unitToCheck.getIdUnit( ) )
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

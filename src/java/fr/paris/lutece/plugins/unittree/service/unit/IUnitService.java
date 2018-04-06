@@ -36,8 +36,10 @@ package fr.paris.lutece.plugins.unittree.service.unit;
 import fr.paris.lutece.plugins.unittree.business.action.IAction;
 import fr.paris.lutece.plugins.unittree.business.unit.Unit;
 import fr.paris.lutece.plugins.unittree.service.UnitErrorException;
+import fr.paris.lutece.plugins.unittree.service.rbac.UnittreeRBACRecursiveType;
 import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.util.ReferenceList;
+import java.util.Collection;
 
 import org.springframework.transaction.annotation.Transactional;
 
@@ -120,6 +122,15 @@ public interface IUnitService
     List<Unit> getSubUnits( int nIdUnit, boolean bGetAdditionalInfos );
 
     /**
+     * Get the unit parent list, from a given unit. The unit itselft is included
+     * 
+     * @param unit
+     *            the unit
+     * @return the list of parent units.
+     */
+    List<Unit> getListParentUnits( Unit unit );
+
+    /**
      * Get all the sub units in the unit tree from the specified unit
      * 
      * @param unit
@@ -141,9 +152,11 @@ public interface IUnitService
      *            the unit
      * @param user
      *            the user
+     * @param recursiveType
+     *            the recursive type
      * @return a list of {@link IAction}
      */
-    List<IAction> getListActions( String strActionType, Locale locale, Unit unit, AdminUser user );
+    List<IAction> getListActions( String strActionType, Locale locale, Unit unit, AdminUser user, UnittreeRBACRecursiveType recursiveType );
 
     /**
      * Get the direct sub units as a {@link ReferenceList}
@@ -159,9 +172,11 @@ public interface IUnitService
     /**
      * Get the XML units
      * 
+     * @param user
+     *            the admin user
      * @return an XML
      */
-    String getXMLUnits( );
+    String getXMLUnits( AdminUser user );
 
     /**
      * Get the XSL of the tree
@@ -244,7 +259,7 @@ public interface IUnitService
      *            the user
      * @return true if he is authorized, false otherwise
      */
-    boolean isAuthorized( Unit unit, String strPermission, AdminUser user );
+    boolean isAuthorized( Unit unit, String strPermission, AdminUser user, UnittreeRBACRecursiveType recursiveType );
 
     /**
      * See {@link #isAuthorized(Unit, String, AdminUser)}
@@ -255,9 +270,11 @@ public interface IUnitService
      *            the permission
      * @param user
      *            the user
+     * @param recursiveType
+     *            the type of RBAC recursivity
      * @return true if he is authorized, false otherwise
      */
-    boolean isAuthorized( String strIdResource, String strPermission, AdminUser user );
+    boolean isAuthorized( String strIdResource, String strPermission, AdminUser user, UnittreeRBACRecursiveType recursiveType );
 
     // CRUD OPERATIONS
 
@@ -310,4 +327,15 @@ public interface IUnitService
      */
     @Transactional( "unittree.transactionManager" )
     boolean moveSubTree( Unit unitToMove, Unit newUnitParent );
+
+    /**
+     * Check if an unit is in a given list of unit
+     * 
+     * @param unitToCheck
+     *            the unit to check
+     * @param listUnits
+     *            the list of units
+     * @return true if the unit is in the given list, false otherwise
+     */
+    boolean isUnitInList( Unit unitToCheck, Collection<Unit> listUnits );
 }
