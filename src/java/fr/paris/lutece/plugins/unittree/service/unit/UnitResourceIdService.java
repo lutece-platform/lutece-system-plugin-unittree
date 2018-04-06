@@ -66,6 +66,7 @@ public class UnitResourceIdService extends ResourceIdService
     public static final String PERMISSION_MOVE_USER = "MOVE_USER";
     public static final String PERMISSION_MOVE_UNIT = "MOVE_UNIT";
     public static final String PERMISSION_REMOVE_USER = "REMOVE_USER";
+    public static final String PERMISSION_SEE_UNIT = "SEE_UNIT";
     private static final String PROPERTY_LABEL_RESOURCE_TYPE = "unittree.unit.resourceType";
     private static final String PROPERTY_LABEL_CREATE = "unittree.unit.permission.label.create";
     private static final String PROPERTY_LABEL_MODIFY = "unittree.unit.permission.label.modify";
@@ -75,6 +76,7 @@ public class UnitResourceIdService extends ResourceIdService
     private static final String PROPERTY_LABEL_MOVE_USER = "unittree.unit.permission.label.moveUser";
     private static final String PROPERTY_LABEL_REMOVE_USER = "unittree.unit.permission.label.removeUser";
     private static final String PROPERTY_LABEL_MOVE_UNIT = "unittree.unit.action.moveSubTree.name";
+    private static final String PROPERTY_LABEL_SEE_UNIT = "unittree.unit.action.seeUnit.name";
 
     /**
      * Constructor
@@ -133,6 +135,11 @@ public class UnitResourceIdService extends ResourceIdService
         p = new Permission( );
         p.setPermissionKey( PERMISSION_MOVE_UNIT );
         p.setPermissionTitleKey( PROPERTY_LABEL_MOVE_UNIT );
+        rt.registerPermission( p );
+
+        p = new Permission( );
+        p.setPermissionKey( PERMISSION_SEE_UNIT );
+        p.setPermissionTitleKey( PROPERTY_LABEL_SEE_UNIT );
         rt.registerPermission( p );
 
         ResourceTypeManager.registerResourceType( rt );

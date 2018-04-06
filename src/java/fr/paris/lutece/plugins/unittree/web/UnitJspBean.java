@@ -227,7 +227,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
         }
 
         // Build the html for units tree
-        String strXmlUnits = _unitService.getXMLUnits( );
+        String strXmlUnits = _unitService.getXMLUnits( AdminUserService.getAdminUser( request ) );
         Source sourceXsl = _unitService.getTreeXsl( );
         Map<String, String> htXslParameters = new HashMap<String, String>( );
         htXslParameters.put( XSL_PARAMETER_ID_CURRENT_UNIT, Integer.toString( unit.getIdUnit( ) ) );
