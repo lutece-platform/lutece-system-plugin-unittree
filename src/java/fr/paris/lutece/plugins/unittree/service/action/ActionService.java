@@ -35,15 +35,12 @@ package fr.paris.lutece.plugins.unittree.service.action;
 
 import fr.paris.lutece.plugins.unittree.business.action.ActionHome;
 import fr.paris.lutece.plugins.unittree.business.action.IAction;
-import fr.paris.lutece.plugins.unittree.service.rbac.UnittreeRBACService;
-import fr.paris.lutece.plugins.unittree.service.rbac.UnittreeRBACRecursiveType;
 import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.service.rbac.RBACResource;
 
 import org.apache.commons.lang.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -58,35 +55,34 @@ public class ActionService implements IActionService
      * {@inheritDoc}
      */
     @Override
-    public List<IAction> getListActions( String strActionType, Locale locale, AdminUser user, UnittreeRBACRecursiveType recursiveType )
+    public List<IAction> getListActions( String strActionType, Locale locale, AdminUser user )
     {
-        return getListActions( strActionType, locale, null, user, StringUtils.EMPTY, recursiveType );
+        return getListActions( strActionType, locale, null, user, StringUtils.EMPTY );
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<IAction> getListActions( String strActionType, Locale locale, AdminUser user, String strPermission, UnittreeRBACRecursiveType recursiveType )
+    public List<IAction> getListActions( String strActionType, Locale locale, AdminUser user, String strPermission )
     {
-        return getListActions( strActionType, locale, null, user, strPermission, recursiveType );
+        return getListActions( strActionType, locale, null, user, strPermission );
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<IAction> getListActions( String strActionType, Locale locale, RBACResource resource, AdminUser user, UnittreeRBACRecursiveType recursiveType )
+    public List<IAction> getListActions( String strActionType, Locale locale, RBACResource resource, AdminUser user )
     {
-        return getListActions( strActionType, locale, resource, user, StringUtils.EMPTY, recursiveType );
+        return getListActions( strActionType, locale, resource, user, StringUtils.EMPTY );
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<IAction> getListActions( String strActionType, Locale locale, RBACResource resource, AdminUser user, String strPermission,
-            UnittreeRBACRecursiveType recursiveType )
+    public List<IAction> getListActions( String strActionType, Locale locale, RBACResource resource, AdminUser user, String strPermission )
     {
         List<IAction> listActions = null;
 
@@ -106,11 +102,6 @@ public class ActionService implements IActionService
             return listActions;
         }
 
-        if ( resource != null )
-        {
-            return UnittreeRBACService.getAuthorizedActionsCollection( listActions, resource, user, recursiveType );
-        }
-
-        return new ArrayList<IAction>( );
+        return listActions;
     }
 }

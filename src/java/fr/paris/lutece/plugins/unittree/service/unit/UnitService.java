@@ -39,10 +39,10 @@ import fr.paris.lutece.plugins.unittree.business.unit.UnitFilter;
 import fr.paris.lutece.plugins.unittree.business.unit.UnitHome;
 import fr.paris.lutece.plugins.unittree.service.UnitErrorException;
 import fr.paris.lutece.plugins.unittree.service.action.IActionService;
-import fr.paris.lutece.plugins.unittree.service.rbac.UnittreeRBACService;
 import fr.paris.lutece.plugins.unittree.service.rbac.UnittreeRBACRecursiveType;
 import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.portal.service.i18n.I18nService;
+import fr.paris.lutece.portal.service.rbac.RBACService;
 import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.util.ReferenceList;
 import fr.paris.lutece.util.xml.XmlUtil;
@@ -56,9 +56,11 @@ import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -249,29 +251,55 @@ public class UnitService implements IUnitService
     @Override
     public List<IAction> getListActions( String strActionType, Locale locale, Unit unit, AdminUser user, UnittreeRBACRecursiveType recursiveType )
     {
-        List<IAction> listActions = _actionService.getListActions( strActionType, locale, unit, user, strActionType, recursiveType );
+        List<IAction> listActions = _actionService.getListActions( strActionType, locale, unit, user, strActionType );
+        listActions = getAuthorizedActions( listActions, unit, user, recursiveType );
 
-        if ( unit != null )
+        // If the unit has sectors and does not have sub units, then remove 'CREATE' action
+        if ( unit != null && !canCreateSubUnit( unit.getIdUnit( ) ) )
         {
-            // If the unit has sectors and does not have sub units, then remove 'CREATE' action
-            if ( !canCreateSubUnit( unit.getIdUnit( ) ) )
+            Integer nIndexToRemove = null;
+            for ( int i = 0; i < listActions.size( ); i++ )
             {
-                Integer nIndexToRemove = null;
-                for ( int i = 0; i < listActions.size( ); i++ )
+                if ( listActions.get( i ).getPermission( ).equals( UnitResourceIdService.PERMISSION_CREATE ) )
                 {
-                    if ( listActions.get( i ).getPermission( ).equals( UnitResourceIdService.PERMISSION_CREATE ) )
-                    {
-                        nIndexToRemove = i;
-                    }
+                    nIndexToRemove = i;
                 }
-                if ( nIndexToRemove != null )
-                {
-                    listActions.remove( nIndexToRemove.intValue( ) );
-                }
+            }
+            if ( nIndexToRemove != null )
+            {
+                listActions.remove( nIndexToRemove.intValue( ) );
             }
         }
 
         return listActions;
+    }
+
+    /**
+     * Filter a list of RBACAction for a given user
+     *
+     * @param listActions
+     *            The list of actions
+     * @param unit
+     *            The unit linked to the actions
+     * @param user
+     *            The user
+     * @param recursiveType
+     *            the recursive type
+     * @return The filtered list
+     */
+    private List<IAction> getAuthorizedActions( List<IAction> listActions, Unit unit, AdminUser user, UnittreeRBACRecursiveType recursiveType )
+    {
+        List<IAction> listAthorizedActions = new ArrayList<>( );
+
+        for ( IAction action : listActions )
+        {
+            if ( isAuthorized( unit, action.getPermission( ), user, recursiveType ) )
+            {
+                listAthorizedActions.add( action );
+            }
+        }
+
+        return listAthorizedActions;
     }
 
     /**
@@ -311,7 +339,7 @@ public class UnitService implements IUnitService
     @Override
     public String getXMLUnits( AdminUser user )
     {
-        List<Unit> listAuthorizedUnit = UnittreeRBACService.getTreeableAuthorizedUnitCollection( UnitResourceIdService.PERMISSION_SEE_UNIT, user );
+        List<Unit> listAuthorizedUnit = getTreeableAuthorizedUnits( user );
 
         StringBuffer sbXML = new StringBuffer( );
         XmlUtil.beginElement( sbXML, TAG_UNITS );
@@ -326,6 +354,42 @@ public class UnitService implements IUnitService
         XmlUtil.endElement( sbXML, TAG_UNITS );
 
         return sbXML.toString( );
+    }
+
+    /**
+     * Get the authorized unit lists for the given user. The list is computed to be represented as a tree
+     * 
+     * @param user
+     *            the lutece AdminUser
+     * @return the list of authorized units, which can be represented as a tree.
+     */
+    private List<Unit> getTreeableAuthorizedUnits( AdminUser user )
+    {
+        List<Unit> listAllUnits = UnitHome.findAll( );
+        Set<Unit> setAuthorizedUnits = new HashSet<>( );
+
+        for ( Unit unit : listAllUnits )
+        {
+            if ( !isUnitInList( unit, setAuthorizedUnits )
+                    && isAuthorized( unit, UnitResourceIdService.PERMISSION_SEE_UNIT, user, UnittreeRBACRecursiveType.NOT_RECURSIVE ) )
+            {
+                List<Unit> listAllSubUnits = getAllSubUnits( unit, false );
+
+                for ( Unit childUnit : listAllSubUnits )
+                {
+                    setAuthorizedUnits.add( childUnit );
+                }
+
+                List<Unit> parentUnits = getListParentUnits( unit );
+
+                for ( Unit parentUnit : parentUnits )
+                {
+                    setAuthorizedUnits.add( parentUnit );
+                }
+            }
+        }
+
+        return new ArrayList<>( setAuthorizedUnits );
     }
 
     /**
@@ -416,14 +480,53 @@ public class UnitService implements IUnitService
     @Override
     public boolean isAuthorized( Unit unit, String strPermission, AdminUser user, UnittreeRBACRecursiveType recursiveType )
     {
-        // 1 The user in an admin user
         if ( user.isAdmin( ) )
         {
             return true;
         }
 
-        // 2 The user is authorized (optionnal : recursively over the unit and unit parents)
-        return UnittreeRBACService.isAuthorized( unit, strPermission, user, recursiveType );
+        List<Unit> listUnits = new ArrayList<>( );
+
+        switch( recursiveType )
+        {
+            case PARENT_RECURSIVE:
+                listUnits = getListParentUnits( unit );
+                break;
+            case NOT_RECURSIVE:
+                listUnits.add( unit );
+                break;
+            default:
+                // Nothing to do
+        }
+
+        return isAuthorizedForAtLeastOneUnit( listUnits, strPermission, user );
+    }
+
+    /**
+     * Check that a given user has the given permission for at least one unit of the given list.
+     * 
+     * @param listUnits
+     *            the unit list
+     * @param strPermission
+     *            the permission needed
+     * @param user
+     *            the user trying to access the resource
+     * @return {code true} if the given user has the given permission for at least one unit, {@code false} otherwise
+     */
+    private boolean isAuthorizedForAtLeastOneUnit( List<Unit> listUnits, String strPermission, AdminUser user )
+    {
+        boolean bIsAuthorized = false;
+
+        for ( Unit unitToCheck : listUnits )
+        {
+            if ( RBACService.isAuthorized( Unit.RESOURCE_TYPE, String.valueOf( unitToCheck.getIdUnit( ) ), strPermission, user ) )
+            {
+                bIsAuthorized = true;
+                break;
+            }
+        }
+
+        return bIsAuthorized;
     }
 
     /**
