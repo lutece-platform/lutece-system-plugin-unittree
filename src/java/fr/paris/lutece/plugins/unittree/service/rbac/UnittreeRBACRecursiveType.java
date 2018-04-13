@@ -40,12 +40,8 @@ public enum UnittreeRBACRecursiveType
      */
 
     /*
-     * CHILDREN_RECURSIVE if a child of a given unit is authorized by RBAC, then the unit is authorized
-     */
-
-    /*
      * CHILDREN_RECURSIVE normal behaviour of RBAC
      */
 
-    PARENT_RECURSIVE, CHILDREN_RECURSIVE, NOT_RECURSIVE
+    PARENT_RECURSIVE, NOT_RECURSIVE
 }
