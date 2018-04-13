@@ -629,8 +629,12 @@ public class UnitService implements IUnitService
      * 
      * @param sbXML
      *            the XML
+     * @param listAuthorizedUnits
+     *            the list of authorized units
      * @param unit
      *            the unit
+     * @param user
+     *            the user for which the XML is built
      */
     private void getXMLUnit( StringBuffer sbXML, List<Unit> listAuthorizedUnits, Unit unit, AdminUser user )
     {
@@ -674,10 +678,10 @@ public class UnitService implements IUnitService
         List<Unit> listParentUnits = new ArrayList<>( );
 
         // Build a map of id / unit :
-        Map<Integer, Unit> _mapIdUnit = new HashMap<>( );
+        Map<Integer, Unit> mapIdUnit = new HashMap<>( );
         for ( Unit unit : listAllUnits )
         {
-            _mapIdUnit.put( unit.getIdUnit( ), unit );
+            mapIdUnit.put( unit.getIdUnit( ), unit );
         }
 
         Unit recursiveUnit = givenUnit;
@@ -688,7 +692,7 @@ public class UnitService implements IUnitService
             {
                 break;
             }
-            recursiveUnit = _mapIdUnit.get( recursiveUnit.getIdParent( ) );
+            recursiveUnit = mapIdUnit.get( recursiveUnit.getIdParent( ) );
 
         }
         return listParentUnits;

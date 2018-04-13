@@ -75,7 +75,6 @@ import org.apache.commons.lang.StringUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -174,8 +173,8 @@ public class UnitJspBean extends PluginAdminPageJspBean
     private static final String XSL_PARAMETER_ID_CURRENT_UNIT = "id-current-unit";
 
     // SERVICES
-    private IUnitService _unitService = SpringContextService.getBean( IUnitService.BEAN_UNIT_SERVICE );
-    private IUnitUserService _unitUserService = SpringContextService.getBean( BEAN_UNIT_USER_SERVICE );
+    private transient IUnitService _unitService = SpringContextService.getBean( IUnitService.BEAN_UNIT_SERVICE );
+    private transient IUnitUserService _unitUserService = SpringContextService.getBean( BEAN_UNIT_USER_SERVICE );
     private IUnitSearchFields _unitUserSearchFields = new UnitUserSearchFields( );
 
     private boolean _bAdminAvatar = PluginService.isPluginEnable( "adminavatar" );

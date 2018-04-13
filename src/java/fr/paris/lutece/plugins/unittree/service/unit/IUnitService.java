@@ -257,6 +257,8 @@ public interface IUnitService
      *            the permission
      * @param user
      *            the user
+     * @param recursiveType
+     *            the recursive type of RBAC
      * @return true if he is authorized, false otherwise
      */
     boolean isAuthorized( Unit unit, String strPermission, AdminUser user, UnittreeRBACRecursiveType recursiveType );
@@ -271,7 +273,7 @@ public interface IUnitService
      * @param user
      *            the user
      * @param recursiveType
-     *            the type of RBAC recursivity
+     *            the recursive type of RBAC
      * @return true if he is authorized, false otherwise
      */
     boolean isAuthorized( String strIdResource, String strPermission, AdminUser user, UnittreeRBACRecursiveType recursiveType );

@@ -33,6 +33,10 @@
  */
 package fr.paris.lutece.plugins.unittree.service.rbac;
 
+/**
+ * This enum represents the recursive type for RBAC
+ *
+ */
 public enum UnittreeRBACRecursiveType
 {
     /*
