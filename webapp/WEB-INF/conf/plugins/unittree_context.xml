@@ -16,6 +16,7 @@
 	</bean>
 	<bean id="unittree.unitDAO" class="fr.paris.lutece.plugins.unittree.business.unit.UnitDAO" />
 	<bean id="unittree.actionDAO" class="fr.paris.lutece.plugins.unittree.business.action.ActionDAO" />
+	<bean id="unittree.unitAssignmentDAO" class="fr.paris.lutece.plugins.unittree.business.assignment.UnitAssignmentDAO" />
 	
 	<!-- Services -->
 	<bean id="unittree.actionFactory" class="fr.paris.lutece.plugins.unittree.business.action.ActionFactory" />
