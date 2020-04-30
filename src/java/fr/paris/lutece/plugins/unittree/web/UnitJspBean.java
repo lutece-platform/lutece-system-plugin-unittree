@@ -723,7 +723,6 @@ public class UnitJspBean extends PluginAdminPageJspBean
 
         int nIdUnit = Integer.parseInt( strIdUnit );
 
-        // Do no get the sectors because the list will be deleted, and we store the new id sectors
         Unit unit = _unitService.getUnit( nIdUnit, false );
 
         if ( unit == null )

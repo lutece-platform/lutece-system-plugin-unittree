@@ -64,9 +64,6 @@ public class UnitDAO implements IUnitDAO
     private static final String SQL_QUERY_DELETE = " DELETE FROM unittree_unit WHERE id_unit = ? ";
     private static final String SQL_QUERY_UPDATE = " UPDATE unittree_unit SET label = ?, description = ? WHERE id_unit = ? ";
     private static final String SQL_QUERY_HAS_SUB_UNIT = " SELECT id_unit FROM unittree_unit WHERE id_parent = ? ";
-    private static final String SQL_QUERY_SELECT_BY_SECTOR = " SELECT uu.id_unit, uu.id_parent, uu.label, uu.description "
-            + " FROM unittree_unit_sector uus INNER JOIN unittree_unit uu ON uus.id_unit = uu.id_unit"
-            + " INNER JOIN unittree_sector us ON us.id_sector = uus.id_sector WHERE us.id_sector = ? ";
     private static final String SQL_QUERY_SELECT_NO_CHILDREN = " SELECT id_unit, id_parent, label, description "
             + " FROM unittree_unit WHERE id_unit NOT IN(SELECT id_parent FROM unittree_unit) ";
     private static final String SQL_QUERY_SELECT_DIRECT_CHILDREN = "SELECT id_unit, id_parent, label, description " + " FROM unittree_unit WHERE id_parent = ?";
@@ -421,32 +418,6 @@ public class UnitDAO implements IUnitDAO
         return bIsUserInAnUnit;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<Unit> findBySectorId( int nIdSector, Plugin plugin )
-    {
-        List<Unit> listUnits = new ArrayList<Unit>( );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_SECTOR + SQL_ORDER_BY_LABEL_ASC, plugin );
-        daoUtil.setInt( 1, nIdSector );
-        daoUtil.executeQuery( );
-
-        while ( daoUtil.next( ) )
-        {
-            int nIndex = 1;
-            Unit unit = new Unit( );
-            unit.setIdUnit( daoUtil.getInt( nIndex++ ) );
-            unit.setIdParent( daoUtil.getInt( nIndex++ ) );
-            unit.setLabel( daoUtil.getString( nIndex++ ) );
-            unit.setDescription( daoUtil.getString( nIndex++ ) );
-            listUnits.add( unit );
-        }
-
-        daoUtil.free( );
-
-        return listUnits;
-    }
 
     /**
      * {@inheritDoc}

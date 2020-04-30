@@ -267,18 +267,6 @@ public final class UnitHome
     }
 
     /**
-     * Find the sector id
-     * 
-     * @param nIdSector
-     *            the id sector
-     * @return a list of {@link Unit}
-     */
-    public static List<Unit> findBySectorId( int nIdSector )
-    {
-        return _dao.findBySectorId( nIdSector, _plugin );
-    }
-
-    /**
      * Update the parent of a unit
      * 
      * @param nIdUnitToMove

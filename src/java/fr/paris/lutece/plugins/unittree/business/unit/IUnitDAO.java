@@ -215,17 +215,6 @@ public interface IUnitDAO
     void removeUsersFromUnit( int nIdUnit, Plugin plugin );
 
     /**
-     * Return all the Unit of the Sector
-     * 
-     * @param nIdSector
-     *            id sector
-     * @param plugin
-     *            the plugin
-     * @return all the Unit of the Sector
-     */
-    List<Unit> findBySectorId( int nIdSector, Plugin plugin );
-
-    /**
      * Return all the Unit with no children (level 0)
      * 
      * @param plugin

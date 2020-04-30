@@ -229,7 +229,7 @@ public class UnitService implements IUnitService
      * @param listUnits
      *            the list of units the method has to search the sub units
      * @param bGetAdditionalInfos
-     *            {@code true} if it must get the ids sector, {@code false} otherwise
+     *            {@code true} if it must get the additionnal infos, {@code false} otherwise
      * @return all the sub units
      */
     private List<Unit> getAllSubUnitsRecursive( List<Unit> listUnits, boolean bGetAdditionalInfos )
@@ -254,7 +254,7 @@ public class UnitService implements IUnitService
         List<IAction> listActions = _actionService.getListActions( strActionType, locale, unit, user, strActionType );
         listActions = getAuthorizedActions( listActions, unit, user, recursiveType );
 
-        // If the unit has sectors and does not have sub units, then remove 'CREATE' action
+        // If the unit can't be created, then remove 'CREATE' action
         if ( unit != null && !canCreateSubUnit( unit.getIdUnit( ) ) )
         {
             Integer nIndexToRemove = null;
@@ -401,18 +401,6 @@ public class UnitService implements IUnitService
         FileInputStream fis = AppPathService.getResourceAsStream( PATH_XSL, FILE_TREE_XSL );
 
         return new StreamSource( fis );
-    }
-
-    /**
-     * Find by sector id
-     * 
-     * @param nIdSector
-     *            id sector
-     * @return list of Unit found
-     */
-    public List<Unit> findBySectorId( int nIdSector )
-    {
-        return UnitHome.findBySectorId( nIdSector );
     }
 
     /**

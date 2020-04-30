@@ -76,7 +76,7 @@ public interface IUnitService
      * Get the root unit
      * 
      * @param bGetAdditionalInfos
-     *            true if it must get the ids sector
+     *            true if it must get the additionnal infos
      * @return an instance of {@link Unit}
      */
     Unit getRootUnit( boolean bGetAdditionalInfos );
@@ -87,7 +87,7 @@ public interface IUnitService
      * @param nIdUser
      *            the id user
      * @param bGetAdditionalInfos
-     *            true if it must get the ids sector
+     *            true if it must get the additionnal infos
      * @return a list of {@link Unit}
      */
     List<Unit> getUnitsByIdUser( int nIdUser, boolean bGetAdditionalInfos );
@@ -96,7 +96,7 @@ public interface IUnitService
      * Get all units
      * 
      * @param bGetAdditionalInfos
-     *            true if it must get the ids sector
+     *            true if it must get the additionnal infos
      * @return a list of {@link Unit}
      */
     List<Unit> getAllUnits( boolean bGetAdditionalInfos );
@@ -105,7 +105,7 @@ public interface IUnitService
      * Get the units first level
      * 
      * @param bGetAdditionalInfos
-     *            true if it must get the ids sector
+     *            true if it must get the additionnal infos
      * @return a list of {@link Unit}
      */
     List<Unit> getUnitsFirstLevel( boolean bGetAdditionalInfos );
@@ -116,7 +116,7 @@ public interface IUnitService
      * @param nIdUnit
      *            the id unit
      * @param bGetAdditionalInfos
-     *            true if it must get the ids sector
+     *            true if it must get the additionnal infos
      * @return a list of {@link Unit}
      */
     List<Unit> getSubUnits( int nIdUnit, boolean bGetAdditionalInfos );
@@ -136,7 +136,7 @@ public interface IUnitService
      * @param unit
      *            the unit
      * @param bGetAdditionalInfos
-     *            true if it must get the ids sector
+     *            true if it must get the additionnal infos
      * @return a list of {@link Unit}
      */
     List<Unit> getAllSubUnits( Unit unit, boolean bGetAdditionalInfos );
@@ -186,15 +186,6 @@ public interface IUnitService
     Source getTreeXsl( );
 
     /**
-     * Find by sector id
-     * 
-     * @param nIdSector
-     *            id sector
-     * @return list of Unit found
-     */
-    List<Unit> findBySectorId( int nIdSector );
-
-    /**
      * Return all the Unit with no children (level 0)
      * 
      * @return all the Unit with no children (level 0)
@@ -225,7 +216,7 @@ public interface IUnitService
 
     /**
      * Check if the given id unit, we can create sub unit. <br />
-     * Return false if the unit does not have sub units and has sectors
+     * Return false if the unit can not be created
      * 
      * @param nIdUnit
      *            the id unit
