@@ -701,4 +701,13 @@ public class UnitService implements IUnitService
         }
         return false;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+	@Override
+	public Unit getUnitByCode(String strCode, boolean bGetAdditionalInfos) {
+		
+		return UnitHome.findByCode( strCode );
+	}
 }

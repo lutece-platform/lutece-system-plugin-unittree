@@ -64,6 +64,17 @@ public interface IUnitDAO
     Unit load( int nIdUnit, Plugin plugin );
 
     /**
+     * Load the unit by code
+     * 
+     * @param strCode
+     *            the unit code
+     * @param plugin
+     *            the plugin
+     * @return an instance of {@link Unit}
+     */
+    Unit findByCode( String strCode, Plugin plugin );
+
+    /**
      * Load an unit by id user
      * 
      * @param nIdUser

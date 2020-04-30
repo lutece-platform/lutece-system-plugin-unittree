@@ -73,6 +73,18 @@ public final class UnitHome
     }
 
     /**
+     * Load the unit
+     * 
+     * @param strCode
+     *            the code
+     * @return an instance of {@link Unit}
+     */
+    public static Unit findByCode( String strCode )
+    {
+        return _dao.findByCode( strCode, _plugin );
+    }
+
+    /**
      * Load an unit by id user
      * 
      * @param nIdUser

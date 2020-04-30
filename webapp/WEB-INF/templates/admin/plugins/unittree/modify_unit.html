@@ -14,18 +14,24 @@
           			<p class="form-control-static">${parentUnit.label!}</p>
           		</div>
           	</div>
-          </#if>
+          	</#if>
          	<div class="form-group">
-         		<label class="col-xs-12 col-sm-2 control-label" for="label">#i18n{unittree.modifyUnit.labelLabel} *</label>
+         		<label class="col-xs-12 col-sm-2 control-label" for="code">#i18n{unittree.modifyUnit.labelCode} * :</label>
         		<div class="col-xs-12 col-sm-9">
-          		<input type="text" class="form-control" value="${unit.label!}" name="label">
-          	</div>
+          		<input type="text" class="form-control" value="${unit.code!}" name="code" id="code">
+          		</div>
+            </div>
+         	<div class="form-group">
+         		<label class="col-xs-12 col-sm-2 control-label" for="label">#i18n{unittree.modifyUnit.labelLabel} * :</label>
+        		<div class="col-xs-12 col-sm-9">
+          		<input type="text" class="form-control" value="${unit.label!}" name="label" id="label">
+          		</div>
          	</div>
          	<div class="form-group">
-         		<label class="col-xs-12 col-sm-2 control-label" for="label">#i18n{unittree.modifyUnit.labelDescription} * : </label>
+         		<label class="col-xs-12 col-sm-2 control-label" for="description">#i18n{unittree.modifyUnit.labelDescription} * : </label>
         		<div class="col-xs-12 col-sm-9">
-          		<input type="text" class="form-control" value="${unit.description!}" name="description">
-          	</div>
+          		<input type="text" class="form-control" value="${unit.description!}" name="description" id="description">
+          		</div>
          	</div>
          	<#if listUnitAttributes?? && listUnitAttributes?has_content>
       			<#list listUnitAttributes as unitAttribute>
@@ -35,7 +41,7 @@
       			</#list>
       		</#if>
        		<div class="form-group">
-            <div class="col-xs-12 col-sm-offset-2 col-sm-9">
+              <div class="col-xs-12 col-sm-offset-2 col-sm-9">
         			<button type="submit" name="save" class="btn btn-primary" value="#i18n{portal.util.labelModify}" >
         				<i class="fa fa-check"></i> #i18n{portal.util.labelModify}
         			</button>

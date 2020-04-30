@@ -9,10 +9,13 @@ DROP TABLE IF EXISTS unittree_unit_assignment;
 CREATE TABLE unittree_unit (
 	id_unit INT DEFAULT 0 NOT NULL,
 	id_parent INT DEFAULT 0 NOT NULL,
+	code VARCHAR(255) DEFAULT '' NOT NULL,
 	label VARCHAR(255) DEFAULT '' NOT NULL,
 	description VARCHAR(255) DEFAULT '' NOT NULL,
 	PRIMARY KEY (id_unit)
 );
+
+CREATE INDEX index_unittree_unit_code ON unittree_unit (code);
 
 --
 -- Table structure for table unittree_unit_user

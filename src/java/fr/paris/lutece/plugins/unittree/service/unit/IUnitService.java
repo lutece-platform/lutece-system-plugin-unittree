@@ -73,6 +73,17 @@ public interface IUnitService
     Unit getUnit( int nIdUnit, boolean bGetAdditionalInfos );
 
     /**
+     * Get the unit by code
+     * 
+     * @param strCode
+     *            the unit code
+     * @param bGetAdditionalInfos
+     *            true if it must get the additional infos
+     * @return an instance of {@link Unit}
+     */
+    Unit getUnitByCode( String strCode, boolean bGetAdditionalInfos );
+
+    /**
      * Get the root unit
      * 
      * @param bGetAdditionalInfos

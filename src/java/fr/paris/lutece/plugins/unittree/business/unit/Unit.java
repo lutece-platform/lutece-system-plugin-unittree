@@ -54,6 +54,8 @@ public class Unit implements RBACResource
     @NotNull
     private int _nIdParent;
     @NotNull
+    private String _strCode;
+    @NotNull
     private String _strLabel;
     @NotNull
     private String _strDescription;
@@ -80,6 +82,28 @@ public class Unit implements RBACResource
         _nIdUnit = nIdUnit;
     }
 
+    /**
+     * Get the code
+     * 
+     * @return the code
+     */
+    public String getCode( )
+    {
+        return _strCode;
+    }
+
+    /**
+     * Set the code
+     * 
+     * @param strCode
+     *            the code
+     */
+    public void setCode( String strCode )
+    {
+        _strCode = strCode;
+    }
+
+    
     /**
      * Get the label
      * 

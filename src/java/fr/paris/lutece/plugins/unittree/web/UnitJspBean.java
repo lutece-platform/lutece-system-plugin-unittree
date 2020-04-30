@@ -689,8 +689,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
             return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_GENERIC_MESSAGE, AdminMessage.TYPE_ERROR );
         }
 
-        UrlItem url = new UrlItem( JSP_MODIFY_UNIT );
-        url.addParameter( PARAMETER_ID_UNIT, unit.getIdUnit( ) );
+        UrlItem url = new UrlItem( JSP_MANAGE_UNITS );
 
         return url.getUrl( );
     }
@@ -768,8 +767,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
             return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_GENERIC_MESSAGE, AdminMessage.TYPE_ERROR );
         }
 
-        UrlItem url = new UrlItem( JSP_MODIFY_UNIT );
-        url.addParameter( PARAMETER_ID_UNIT, unit.getIdUnit( ) );
+        UrlItem url = new UrlItem( JSP_MANAGE_UNITS );
 
         return url.getUrl( );
     }
