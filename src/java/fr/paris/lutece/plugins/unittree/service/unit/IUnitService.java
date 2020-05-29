@@ -34,6 +34,7 @@
 package fr.paris.lutece.plugins.unittree.service.unit;
 
 import fr.paris.lutece.plugins.unittree.business.action.IAction;
+import fr.paris.lutece.plugins.unittree.business.unit.TreeUnit;
 import fr.paris.lutece.plugins.unittree.business.unit.Unit;
 import fr.paris.lutece.plugins.unittree.service.UnitErrorException;
 import fr.paris.lutece.plugins.unittree.service.rbac.UnittreeRBACRecursiveType;
@@ -342,4 +343,16 @@ public interface IUnitService
      * @return true if the unit is in the given list, false otherwise
      */
     boolean isUnitInList( Unit unitToCheck, Collection<Unit> listUnits );
+    
+    /**
+     * populate a TreeUnit with all sub units (recursive)
+     * 
+     * @param treeUnit
+     *              the treeUnit
+     * @param user
+     *              the admin user (for RBAC)
+     * @param bGetAdditionnalInfos
+     *              if true, populate the tree units with additionnal infos
+     */
+    public void populateTreeUnit( TreeUnit treeUnit, AdminUser user, boolean bGetAdditionnalInfos );
 }

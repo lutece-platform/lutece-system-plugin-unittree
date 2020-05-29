@@ -34,6 +34,7 @@
 package fr.paris.lutece.plugins.unittree.service.unit;
 
 import fr.paris.lutece.plugins.unittree.business.action.IAction;
+import fr.paris.lutece.plugins.unittree.business.unit.TreeUnit;
 import fr.paris.lutece.plugins.unittree.business.unit.Unit;
 import fr.paris.lutece.plugins.unittree.business.unit.UnitFilter;
 import fr.paris.lutece.plugins.unittree.business.unit.UnitHome;
@@ -333,6 +334,37 @@ public class UnitService implements IUnitService
         return new ReferenceList( );
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void populateTreeUnit( TreeUnit treeUnit, AdminUser user, boolean bGetAdditionnalInfos )
+    {
+        if ( treeUnit == null || treeUnit.getUnitNode( ) == null )
+        {
+            return;
+        }
+        
+        List<Unit> subUnits = getSubUnits( treeUnit.getUnitNode( ).getIdUnit( ), bGetAdditionnalInfos );
+        
+        // set sub units
+        for ( Unit subUnit : subUnits )
+        {
+            if ( isAuthorized( subUnit, UnitResourceIdService.PERMISSION_SEE_UNIT, user, UnittreeRBACRecursiveType.NOT_RECURSIVE ) )
+            {
+                treeUnit.addSubUnit( subUnit );
+            }
+        }
+        
+        // recursive search to get the complete tree
+        for ( TreeUnit subTreeUnit : treeUnit.getSubUnits( ) )
+        {
+            populateTreeUnit( subTreeUnit, user, bGetAdditionnalInfos );
+        }
+
+        
+    }
+    
     /**
      * {@inheritDoc}
      */

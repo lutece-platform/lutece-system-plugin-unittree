@@ -114,3 +114,18 @@ $( function(){
 	</form>
 	<#-- END PAGINATOR FORM -->
 </#macro>
+
+<!-- unit TREE display  -->
+<#macro displaySubUnits treeUnit >
+	<li id="node-${treeUnit.unitNode.idUnit}">${treeUnit.unitNode.code}
+<a title="${treeUnit.unitNode.label}" href="jsp/admin/plugins/unittree/ManageUnits.jsp?idUnit=${treeUnit.unitNode.idUnit}"><i class="fa fa-folder"> </i> 
+ ${treeUnit.unitNode.label} (${treeUnit.unitNode.code})</a>
+		<#if treeUnit.subUnits?? >
+		<ul>
+		<#list treeUnit.subUnits as subTreeUnit >
+			<@displaySubUnits treeUnit=subTreeUnit />
+		</#list>
+		</ul>
+		</#if>
+	</li>
+</#macro>

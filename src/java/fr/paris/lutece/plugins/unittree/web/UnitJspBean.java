@@ -35,6 +35,7 @@ package fr.paris.lutece.plugins.unittree.web;
 
 import fr.paris.lutece.plugins.unittree.business.action.UnitAction;
 import fr.paris.lutece.plugins.unittree.business.action.UnitUserAction;
+import fr.paris.lutece.plugins.unittree.business.unit.TreeUnit;
 import fr.paris.lutece.plugins.unittree.business.unit.Unit;
 import fr.paris.lutece.plugins.unittree.service.UnitErrorException;
 import fr.paris.lutece.plugins.unittree.service.rbac.UnittreeRBACRecursiveType;
@@ -177,7 +178,9 @@ public class UnitJspBean extends PluginAdminPageJspBean
     private transient IUnitUserService _unitUserService = SpringContextService.getBean( BEAN_UNIT_USER_SERVICE );
     private IUnitSearchFields _unitUserSearchFields = new UnitUserSearchFields( );
 
+    // INSTANCE VARS
     private boolean _bAdminAvatar = PluginService.isPluginEnable( "adminavatar" );
+    private TreeUnit _fullUnitTree;
 
     /**
      * Get manage units
@@ -224,17 +227,12 @@ public class UnitJspBean extends PluginAdminPageJspBean
         {
             reInitSearchFields( request );
         }
-
-        // Build the html for units tree
-        String strXmlUnits = _unitService.getXMLUnits( AdminUserService.getAdminUser( request ) );
-        Source sourceXsl = _unitService.getTreeXsl( );
-        Map<String, String> htXslParameters = new HashMap<String, String>( );
-        htXslParameters.put( XSL_PARAMETER_ID_CURRENT_UNIT, Integer.toString( unit.getIdUnit( ) ) );
-
-        XmlTransformerService xmlTransformerService = new XmlTransformerService( );
-        String strHtmlUnitsTree = xmlTransformerService.transformBySourceWithXslCache( strXmlUnits, sourceXsl, UNIT_TREE_XSL_UNIQUE_PREFIX, htXslParameters,
-                null );
-
+        
+        if ( _fullUnitTree == null )
+        {
+            initTreeUnit( request );
+        }
+                
         Map<String, Object> model = new HashMap<String, Object>( );
 
         // Add elements for user search form in the model
@@ -245,7 +243,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
         String strBaseUrl = AppPathService.getBaseUrl( request ) + JSP_URL_MANAGE_UNITS;
         _unitUserSearchFields.fillModelForUserSearchForm( listUsers, strBaseUrl, request, model, unit );
 
-        model.put( MARK_UNIT_TREE, strHtmlUnitsTree );
+        model.put( MARK_UNIT_TREE, _fullUnitTree );
         model.put( MARK_UNIT, unit );
         model.put( MARK_LIST_SUB_UNITS, _unitService.getSubUnits( unit.getIdUnit( ), false ) );
         model.put( MARK_MAP_ID_USER_UNIT, mapIdUserUnit );
@@ -689,6 +687,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
             return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_GENERIC_MESSAGE, AdminMessage.TYPE_ERROR );
         }
 
+        initTreeUnit( request );
         UrlItem url = new UrlItem( JSP_MANAGE_UNITS );
 
         return url.getUrl( );
@@ -767,6 +766,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
             return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_GENERIC_MESSAGE, AdminMessage.TYPE_ERROR );
         }
 
+        initTreeUnit( request );
         UrlItem url = new UrlItem( JSP_MANAGE_UNITS );
 
         return url.getUrl( );
@@ -833,6 +833,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
             }
         }
 
+        initTreeUnit( request );
         UrlItem url = new UrlItem( JSP_MANAGE_UNITS );
         url.addParameter( PARAMETER_ID_UNIT, nIdParent );
 
@@ -1186,10 +1187,12 @@ public class UnitJspBean extends PluginAdminPageJspBean
         {
             UrlItem urlItem = new UrlItem( JSP_URL_MANAGE_UNITS );
             urlItem.addParameter( PARAMETER_ID_UNIT, unitToMove.getIdUnit( ) );
-
+            
+            initTreeUnit( request );
             return AdminMessageService.getMessageUrl( request, MESSAGE_SUB_TREE_MOVED, urlItem.getUrl( ), AdminMessage.TYPE_INFO );
         }
 
+        
         return AdminMessageService.getMessageUrl( request, MESSAGE_CANT_MOVE_SUB_TREE_TO_CHILD, AdminMessage.TYPE_ERROR );
     }
 
@@ -1204,5 +1207,17 @@ public class UnitJspBean extends PluginAdminPageJspBean
     private void reInitSearchFields( HttpServletRequest request )
     {
         _unitUserSearchFields = new UnitUserSearchFields( request );
+    }
+    
+    /**
+     * Reinit the tree
+     * 
+     * @param request
+     *            the HTTP request
+     */
+    private void initTreeUnit( HttpServletRequest request )
+    {
+        _fullUnitTree = new TreeUnit( _unitService.getRootUnit( false ) ) ;
+        _unitService.populateTreeUnit( _fullUnitTree, AdminUserService.getAdminUser( request ), false );
     }
 }

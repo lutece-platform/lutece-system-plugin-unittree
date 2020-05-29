@@ -1,6 +1,6 @@
 <#include "unittree_commons.html" />
 <div class="row">
-  <div class="col-md-3">
+  <div class="col-md-4">
     <div class="box box-solid">
       <div class="box-header with-border">
         <h3 class="box-title">#i18n{unittree.manageUnits.labelUnits}</h3>
@@ -18,11 +18,15 @@
         </div>
       </div>
       <div class="box-body">
-        ${unitTree!}
+	<div class="jstree-default" id="tree">
+	<ul>
+         <@displaySubUnits treeUnit=unitTree />
+	</ul>
+	</div>
       </div>
     </div>
   </div>
-  <div class="col-md-9">
+  <div class="col-md-8">
     <@searchAdminUsersForm urlAction="jsp/admin/plugins/unittree/ManageUnits.jsp" displayInDepthOption=true />
     <div class="box box-primary">
       <div class="box-header with-border">
