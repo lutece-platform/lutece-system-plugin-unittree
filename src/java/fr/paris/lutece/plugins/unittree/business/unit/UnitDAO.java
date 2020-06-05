@@ -86,18 +86,15 @@ public class UnitDAO implements IUnitDAO
     @Override
     public int newPrimaryKey( Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PK, plugin );
-        daoUtil.executeQuery( );
-
         int nKey = 1;
-
-        if ( daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PK, plugin ) )
         {
-            nKey = daoUtil.getInt( 1 ) + 1;
+            daoUtil.executeQuery( );
+            if ( daoUtil.next( ) )
+            {
+                nKey = daoUtil.getInt( 1 ) + 1;
+            }
         }
-
-        daoUtil.free( );
-
         return nKey;
     }
 
@@ -111,15 +108,16 @@ public class UnitDAO implements IUnitDAO
         int nIdUnit = newPrimaryKey( plugin );
         unit.setIdUnit( nIdUnit );
 
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin );
-        daoUtil.setInt( nIndex++, unit.getIdUnit( ) );
-        daoUtil.setInt( nIndex++, unit.getIdParent( ) );
-        daoUtil.setString( nIndex++, unit.getCode( ) );
-        daoUtil.setString( nIndex++, unit.getLabel( ) );
-        daoUtil.setString( nIndex, unit.getDescription( ) );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin ) )
+        {
+            daoUtil.setInt( nIndex++, unit.getIdUnit( ) );
+            daoUtil.setInt( nIndex++, unit.getIdParent( ) );
+            daoUtil.setString( nIndex++, unit.getCode( ) );
+            daoUtil.setString( nIndex++, unit.getLabel( ) );
+            daoUtil.setString( nIndex, unit.getDescription( ) );
 
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+            daoUtil.executeUpdate( );
+        }
 
         return nIdUnit;
     }
@@ -132,23 +130,16 @@ public class UnitDAO implements IUnitDAO
     {
         Unit unit = null;
         int nIndex = 1;
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin );
-        daoUtil.setInt( nIndex, nIdUnit );
-        daoUtil.executeQuery( );
-
-        if ( daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin ) )
         {
-            nIndex = 1;
+            daoUtil.setInt( nIndex, nIdUnit );
+            daoUtil.executeQuery( );
 
-            unit = new Unit( );
-            unit.setIdUnit( daoUtil.getInt( nIndex++ ) );
-            unit.setIdParent( daoUtil.getInt( nIndex++ ) );
-            unit.setCode( daoUtil.getString( nIndex++ ) );
-            unit.setLabel( daoUtil.getString( nIndex++ ) );
-            unit.setDescription( daoUtil.getString( nIndex ) );
+            if ( daoUtil.next( ) )
+            {
+                unit = dataToObject( daoUtil );
+            }
         }
-
-        daoUtil.free( );
 
         return unit;
     }
@@ -159,26 +150,19 @@ public class UnitDAO implements IUnitDAO
     @Override
     public List<Unit> selectByIdUser( int nIdUser, Plugin plugin )
     {
-        List<Unit> listUnits = new ArrayList<Unit>( );
+        List<Unit> listUnits = new ArrayList<>( );
         int nIndex = 1;
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_ID_USER, plugin );
-        daoUtil.setInt( nIndex, nIdUser );
-        daoUtil.executeQuery( );
-
-        while ( daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_ID_USER, plugin ) )
         {
-            nIndex = 1;
+            daoUtil.setInt( nIndex, nIdUser );
+            daoUtil.executeQuery( );
 
-            Unit unit = new Unit( );
-            unit.setIdUnit( daoUtil.getInt( nIndex++ ) );
-            unit.setIdParent( daoUtil.getInt( nIndex++ ) );
-            unit.setCode( daoUtil.getString( nIndex++ ) );
-            unit.setLabel( daoUtil.getString( nIndex++ ) );
-            unit.setDescription( daoUtil.getString( nIndex ) );
-            listUnits.add( unit );
+            while ( daoUtil.next( ) )
+            {
+                Unit unit = dataToObject( daoUtil );
+                listUnits.add( unit );
+            }
         }
-
-        daoUtil.free( );
 
         return listUnits;
     }
@@ -189,25 +173,16 @@ public class UnitDAO implements IUnitDAO
     @Override
     public List<Unit> selectAll( Plugin plugin )
     {
-        List<Unit> listUnits = new ArrayList<Unit>( );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ALL + SQL_ORDER_BY_LABEL_ASC, plugin );
-        daoUtil.executeQuery( );
-
-        while ( daoUtil.next( ) )
+        List<Unit> listUnits = new ArrayList<>( );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ALL + SQL_ORDER_BY_LABEL_ASC, plugin ) )
         {
-            int nIndex = 1;
-
-            Unit unit = new Unit( );
-            unit.setIdUnit( daoUtil.getInt( nIndex++ ) );
-            unit.setIdParent( daoUtil.getInt( nIndex++ ) );
-            unit.setCode( daoUtil.getString( nIndex++ ) );
-            unit.setLabel( daoUtil.getString( nIndex++ ) );
-            unit.setDescription( daoUtil.getString( nIndex ) );
-
-            listUnits.add( unit );
+            daoUtil.executeQuery( );
+            while ( daoUtil.next( ) )
+            {
+                Unit unit = dataToObject( daoUtil );
+                listUnits.add( unit );
+            }
         }
-
-        daoUtil.free( );
 
         return listUnits;
     }
@@ -218,10 +193,11 @@ public class UnitDAO implements IUnitDAO
     @Override
     public void remove( int nIdUnit, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin );
-        daoUtil.setInt( 1, nIdUnit );
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin ) )
+        {
+            daoUtil.setInt( 1, nIdUnit );
+            daoUtil.executeUpdate( );
+        }
     }
 
     /**
@@ -231,17 +207,15 @@ public class UnitDAO implements IUnitDAO
     public boolean hasSubUnits( int nIdUnit, Plugin plugin )
     {
         boolean bHasSubUnits = false;
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_HAS_SUB_UNIT, plugin );
-        daoUtil.setInt( 1, nIdUnit );
-        daoUtil.executeQuery( );
-
-        if ( daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_HAS_SUB_UNIT, plugin ) )
         {
-            bHasSubUnits = true;
+            daoUtil.setInt( 1, nIdUnit );
+            daoUtil.executeQuery( );
+            if ( daoUtil.next( ) )
+            {
+                bHasSubUnits = true;
+            }
         }
-
-        daoUtil.free( );
-
         return bHasSubUnits;
     }
 
@@ -251,26 +225,18 @@ public class UnitDAO implements IUnitDAO
     @Override
     public List<Unit> getSubUnits( int nIdUnit, Plugin plugin )
     {
-        List<Unit> listUnits = new ArrayList<Unit>( );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_DIRECT_CHILDREN, plugin );
-        daoUtil.setInt( 1, nIdUnit );
-        daoUtil.executeQuery( );
-
-        while ( daoUtil.next( ) )
+        List<Unit> listUnits = new ArrayList<>( );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_DIRECT_CHILDREN, plugin ) )
         {
-            int nIndex = 1;
+            daoUtil.setInt( 1, nIdUnit );
+            daoUtil.executeQuery( );
 
-            Unit unit = new Unit( );
-            unit.setIdUnit( daoUtil.getInt( nIndex++ ) );
-            unit.setIdParent( daoUtil.getInt( nIndex++ ) );
-            unit.setCode( daoUtil.getString( nIndex++ ) );
-            unit.setLabel( daoUtil.getString( nIndex++ ) );
-            unit.setDescription( daoUtil.getString( nIndex ) );
-
-            listUnits.add( unit );
+            while ( daoUtil.next( ) )
+            {
+                Unit unit = dataToObject( daoUtil );
+                listUnits.add( unit );
+            }
         }
-
-        daoUtil.free( );
 
         return listUnits;
     }
@@ -281,11 +247,12 @@ public class UnitDAO implements IUnitDAO
     @Override
     public void removeUserFromUnit( int nIdUser, int nIdUnit, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_REMOVE_USER_FROM_UNIT, plugin );
-        daoUtil.setInt( 1, nIdUser );
-        daoUtil.setInt( 2, nIdUnit );
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_REMOVE_USER_FROM_UNIT, plugin ) )
+        {
+            daoUtil.setInt( 1, nIdUser );
+            daoUtil.setInt( 2, nIdUnit );
+            daoUtil.executeUpdate( );
+        }
     }
 
     /**
@@ -294,10 +261,11 @@ public class UnitDAO implements IUnitDAO
     @Override
     public void removeUsersFromUnit( int nIdUnit, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_REMOVE_USERS_FROM_UNIT, plugin );
-        daoUtil.setInt( 1, nIdUnit );
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_REMOVE_USERS_FROM_UNIT, plugin ) )
+        {
+            daoUtil.setInt( 1, nIdUnit );
+            daoUtil.executeUpdate( );
+        }
     }
 
     /**
@@ -307,15 +275,16 @@ public class UnitDAO implements IUnitDAO
     public void update( Unit unit, Plugin plugin )
     {
         int nIndex = 1;
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin );
-        daoUtil.setString( nIndex++, unit.getCode( ) );
-        daoUtil.setString( nIndex++, unit.getLabel( ) );
-        daoUtil.setString( nIndex++, unit.getDescription( ) );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin ) )
+        {
+            daoUtil.setString( nIndex++, unit.getCode( ) );
+            daoUtil.setString( nIndex++, unit.getLabel( ) );
+            daoUtil.setString( nIndex++, unit.getDescription( ) );
 
-        daoUtil.setInt( nIndex, unit.getIdUnit( ) );
+            daoUtil.setInt( nIndex, unit.getIdUnit( ) );
 
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+            daoUtil.executeUpdate( );
+        }
     }
 
     /**
@@ -324,27 +293,19 @@ public class UnitDAO implements IUnitDAO
     @Override
     public List<Unit> selectByFilter( UnitFilter cmFilter, Plugin plugin )
     {
-        List<Unit> listUnits = new ArrayList<Unit>( );
+        List<Unit> listUnits = new ArrayList<>( );
         StringBuilder sbSQL = new StringBuilder( buildSQLQuery( cmFilter ) );
 
-        DAOUtil daoUtil = new DAOUtil( sbSQL.toString( ), plugin );
-        setFilterValues( cmFilter, daoUtil );
-        daoUtil.executeQuery( );
-
-        while ( daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( sbSQL.toString( ), plugin ) )
         {
-            int nIndex = 1;
-            Unit unit = new Unit( );
-            unit.setIdUnit( daoUtil.getInt( nIndex++ ) );
-            unit.setIdParent( daoUtil.getInt( nIndex++ ) );
-            unit.setCode( daoUtil.getString( nIndex++ ) );
-            unit.setLabel( daoUtil.getString( nIndex++ ) );
-            unit.setDescription( daoUtil.getString( nIndex ) );
-
-            listUnits.add( unit );
+            setFilterValues( cmFilter, daoUtil );
+            daoUtil.executeQuery( );
+            while ( daoUtil.next( ) )
+            {
+                Unit unit = dataToObject( daoUtil );
+                listUnits.add( unit );
+            }
         }
-
-        daoUtil.free( );
 
         return listUnits;
     }
@@ -355,17 +316,16 @@ public class UnitDAO implements IUnitDAO
     @Override
     public List<Integer> selectAllIdsUser( Plugin plugin )
     {
-        List<Integer> listIdUsers = new ArrayList<Integer>( );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ALL_IDS_USER, plugin );
-        daoUtil.executeQuery( );
-
-        while ( daoUtil.next( ) )
+        List<Integer> listIdUsers = new ArrayList<>( );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ALL_IDS_USER, plugin ) )
         {
-            listIdUsers.add( daoUtil.getInt( 1 ) );
+            daoUtil.executeQuery( );
+
+            while ( daoUtil.next( ) )
+            {
+                listIdUsers.add( daoUtil.getInt( 1 ) );
+            }
         }
-
-        daoUtil.free( );
-
         return listIdUsers;
     }
 
@@ -375,17 +335,17 @@ public class UnitDAO implements IUnitDAO
     @Override
     public List<Integer> selectIdsUser( int nIdUnit, Plugin plugin )
     {
-        List<Integer> listIdUsers = new ArrayList<Integer>( );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_IDS_USER, plugin );
-        daoUtil.setInt( 1, nIdUnit );
-        daoUtil.executeQuery( );
-
-        while ( daoUtil.next( ) )
+        List<Integer> listIdUsers = new ArrayList<>( );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_IDS_USER, plugin ) )
         {
-            listIdUsers.add( daoUtil.getInt( 1 ) );
-        }
+            daoUtil.setInt( 1, nIdUnit );
+            daoUtil.executeQuery( );
 
-        daoUtil.free( );
+            while ( daoUtil.next( ) )
+            {
+                listIdUsers.add( daoUtil.getInt( 1 ) );
+            }
+        }
 
         return listIdUsers;
     }
@@ -397,13 +357,13 @@ public class UnitDAO implements IUnitDAO
     public synchronized void addUserToUnit( int nIdUnit, int nIdUser, Plugin plugin )
     {
         int nIndex = 1;
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_ADD_USER_TO_UNIT, plugin ) )
+        {
+            daoUtil.setInt( nIndex++, nIdUnit );
+            daoUtil.setInt( nIndex, nIdUser );
 
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_ADD_USER_TO_UNIT, plugin );
-        daoUtil.setInt( nIndex++, nIdUnit );
-        daoUtil.setInt( nIndex, nIdUser );
-
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+            daoUtil.executeUpdate( );
+        }
     }
 
     /**
@@ -413,18 +373,17 @@ public class UnitDAO implements IUnitDAO
     public boolean isUserInUnit( int nIdUser, int nIdUnit, Plugin plugin )
     {
         boolean bIsUserInAnUnit = false;
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_CHECK_USER, plugin );
-        daoUtil.setInt( 1, nIdUser );
-        daoUtil.setInt( 2, nIdUnit );
-        daoUtil.executeQuery( );
-
-        if ( daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_CHECK_USER, plugin ) )
         {
-            bIsUserInAnUnit = true;
+            daoUtil.setInt( 1, nIdUser );
+            daoUtil.setInt( 2, nIdUnit );
+            daoUtil.executeQuery( );
+
+            if ( daoUtil.next( ) )
+            {
+                bIsUserInAnUnit = true;
+            }
         }
-
-        daoUtil.free( );
-
         return bIsUserInAnUnit;
     }
 
@@ -434,24 +393,17 @@ public class UnitDAO implements IUnitDAO
     @Override
     public List<Unit> getUnitWithNoChildren( Plugin plugin )
     {
-        List<Unit> listUnits = new ArrayList<Unit>( );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_NO_CHILDREN + SQL_ORDER_BY_LABEL_ASC, plugin );
-        daoUtil.executeQuery( );
-
-        while ( daoUtil.next( ) )
+        List<Unit> listUnits = new ArrayList<>( );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_NO_CHILDREN + SQL_ORDER_BY_LABEL_ASC, plugin ) )
         {
-            int nIndex = 1;
-            Unit unit = new Unit( );
-            unit.setIdUnit( daoUtil.getInt( nIndex++ ) );
-            unit.setCode( daoUtil.getString( nIndex++ ) );
-            unit.setLabel( daoUtil.getString( nIndex++ ) );
-            unit.setIdParent( daoUtil.getInt( nIndex++ ) );
-            unit.setDescription( daoUtil.getString( nIndex++ ) );
-            listUnits.add( unit );
+            daoUtil.executeQuery( );
+
+            while ( daoUtil.next( ) )
+            {
+                Unit unit = dataToObject( daoUtil );
+                listUnits.add( unit );
+            }
         }
-
-        daoUtil.free( );
-
         return listUnits;
     }
 
@@ -461,11 +413,12 @@ public class UnitDAO implements IUnitDAO
     @Override
     public void updateParent( int nIdUnitToMove, int nIdNewParent, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE_UNIT_PARENT, plugin );
-        daoUtil.setInt( 1, nIdNewParent );
-        daoUtil.setInt( 2, nIdUnitToMove );
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE_UNIT_PARENT, plugin ) )
+        {
+            daoUtil.setInt( 1, nIdNewParent );
+            daoUtil.setInt( 2, nIdUnitToMove );
+            daoUtil.executeUpdate( );
+        }
     }
 
     // PRIVATE METHODS
@@ -569,24 +522,30 @@ public class UnitDAO implements IUnitDAO
         Unit unit = null;
         int nIndex = 1;
 
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_CODE, plugin );
-        daoUtil.setString( nIndex, strCode );
-        daoUtil.executeQuery( );
-
-        if ( daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_CODE, plugin ) )
         {
-            nIndex = 1;
+            daoUtil.setString( nIndex, strCode );
+            daoUtil.executeQuery( );
 
-            unit = new Unit( );
-            unit.setIdUnit( daoUtil.getInt( nIndex++ ) );
-            unit.setIdParent( daoUtil.getInt( nIndex++ ) );
-            unit.setCode( daoUtil.getString( nIndex++ ) );
-            unit.setLabel( daoUtil.getString( nIndex++ ) );
-            unit.setDescription( daoUtil.getString( nIndex ) );
+            if ( daoUtil.next( ) )
+            {
+                nIndex = 1;
+                unit = dataToObject( daoUtil );
+            }
         }
 
-        daoUtil.free( );
+        return unit;
+    }
 
+    private Unit dataToObject( DAOUtil daoUtil )
+    {
+        int nIndex = 0;
+        Unit unit = new Unit( );
+        unit.setIdUnit( daoUtil.getInt( ++nIndex ) );
+        unit.setIdParent( daoUtil.getInt( ++nIndex ) );
+        unit.setCode( daoUtil.getString( ++nIndex ) );
+        unit.setLabel( daoUtil.getString( ++nIndex ) );
+        unit.setDescription( daoUtil.getString( ++nIndex ) );
         return unit;
     }
 }

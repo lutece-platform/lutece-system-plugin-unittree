@@ -196,14 +196,14 @@ public final class UnitHome
      */
     public static Set<Integer> getAllSubUnitsId( int nIdUnit )
     {
-        Set<Integer> _setResult = new HashSet<Integer>( );
-        List<Unit> _listUnits = _dao.getSubUnits( nIdUnit, _plugin );
-        for ( Unit unit : _listUnits )
+        Set<Integer> setResult = new HashSet<>( );
+        List<Unit> listUnits = _dao.getSubUnits( nIdUnit, _plugin );
+        for ( Unit unit : listUnits )
         {
-            _setResult.add( unit.getIdUnit( ) );
-            _setResult.addAll( getAllSubUnitsId( unit.getIdUnit( ) ) );
+            setResult.add( unit.getIdUnit( ) );
+            setResult.addAll( getAllSubUnitsId( unit.getIdUnit( ) ) );
         }
-        return _setResult;
+        return setResult;
     }
 
     /**

@@ -245,11 +245,6 @@ public abstract class AbstractAction implements IAction
 
         AbstractAction other = (AbstractAction) obj;
 
-        if ( _nIdAction != other._nIdAction )
-        {
-            return false;
-        }
-
-        return true;
+        return _nIdAction == other._nIdAction;
     }
 }

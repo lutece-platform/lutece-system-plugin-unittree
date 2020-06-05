@@ -42,6 +42,7 @@ import fr.paris.lutece.portal.service.util.AppPropertiesService;
 import fr.paris.lutece.util.ReferenceItem;
 import fr.paris.lutece.util.ReferenceList;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -81,7 +82,7 @@ public class UnitUserService implements IUnitUserService
     @Override
     public List<AdminUser> getUsers( int nIdUnit, Map<String, Unit> mapIdUserUnit, boolean isInDepthSearch )
     {
-        List<AdminUser> listAdminUsers = new ArrayList<AdminUser>( );
+        List<AdminUser> listAdminUsers = new ArrayList<>( );
 
         // First add the users from the current unit
         listAdminUsers.addAll( getUsers( nIdUnit, mapIdUserUnit ) );
@@ -105,7 +106,7 @@ public class UnitUserService implements IUnitUserService
     @Override
     public List<AdminUser> getAvailableUsers( AdminUser currentUser, int nIdUnit, boolean bMultiAffectationEnabled )
     {
-        List<AdminUser> listUsers = new ArrayList<AdminUser>( );
+        List<AdminUser> listUsers = new ArrayList<>( );
         Unit unit = _unitService.getUnit( nIdUnit, false );
 
         for ( AdminUser user : AdminUserHome.findUserList( ) )
@@ -194,7 +195,7 @@ public class UnitUserService implements IUnitUserService
             List<Unit> listUnits = _unitService.getUnitsByIdUser( nIdUser, false );
             boolean bMultiAffectationEnabled = isMultiAffectationEnabled( );
 
-            if ( !bMultiAffectationEnabled && ( listUnits.size( ) > 0 ) )
+            if ( !bMultiAffectationEnabled && CollectionUtils.isNotEmpty( listUnits ) )
             {
                 return false;
             }
@@ -259,7 +260,7 @@ public class UnitUserService implements IUnitUserService
     {
         ReferenceList workgroups = AdminWorkgroupHome.getUserWorkgroups( user1 );
 
-        if ( workgroups.size( ) == 0 )
+        if ( CollectionUtils.isEmpty( workgroups ) )
         {
             return true;
         }
@@ -292,7 +293,7 @@ public class UnitUserService implements IUnitUserService
     {
         List<Unit> listUnits = _unitService.getUnitsByIdUser( userToCheck.getUserId( ), false );
 
-        if ( !bMultiAffectationEnabled && ( listUnits.size( ) > 0 ) )
+        if ( !bMultiAffectationEnabled && CollectionUtils.isNotEmpty( listUnits ) )
         {
             return false;
         }
@@ -313,16 +314,9 @@ public class UnitUserService implements IUnitUserService
         }
 
         // Check if the current user is parent to the user to check
-        if ( currentUser.isParent( userToCheck ) )
-        {
-            // Then check if they have the same workgroup, or the user to check does not have any workgroup
-            if ( haveCommonWorkgroups( currentUser, userToCheck ) || !AdminWorkgroupHome.checkUserHasWorkgroup( userToCheck.getUserId( ) ) )
-            {
-                return true;
-            }
-        }
-
-        return false;
+        // Then check if they have the same workgroup, or the user to check does not have any workgroup
+        return currentUser.isParent( userToCheck )
+                && ( haveCommonWorkgroups( currentUser, userToCheck ) || !AdminWorkgroupHome.checkUserHasWorkgroup( userToCheck.getUserId( ) ) );
     }
 
     /**
@@ -337,10 +331,10 @@ public class UnitUserService implements IUnitUserService
     private List<AdminUser> getUsers( int nIdUnit, Map<String, Unit> mapIdUserUnit )
     {
         Unit unit = _unitService.getUnit( nIdUnit, false );
-        List<AdminUser> listUsers = new ArrayList<AdminUser>( );
+        List<AdminUser> listUsers = new ArrayList<>( );
         List<Integer> listIdUsers = UnitHome.findIdsUser( nIdUnit );
 
-        if ( ( listIdUsers != null ) && !listIdUsers.isEmpty( ) )
+        if ( CollectionUtils.isNotEmpty( listIdUsers ) )
         {
             for ( int nIdUser : listIdUsers )
             {

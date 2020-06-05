@@ -33,6 +33,7 @@
  */
 package fr.paris.lutece.plugins.unittree.service.unit;
 
+import fr.paris.lutece.api.user.User;
 import fr.paris.lutece.plugins.unittree.business.action.IAction;
 import fr.paris.lutece.plugins.unittree.business.unit.TreeUnit;
 import fr.paris.lutece.plugins.unittree.business.unit.Unit;
@@ -188,7 +189,7 @@ public class UnitService implements IUnitService
         // If the ID unit == -1, then only return the root unit
         if ( nIdUnit == Unit.ID_NULL )
         {
-            List<Unit> listUnits = new ArrayList<Unit>( );
+            List<Unit> listUnits = new ArrayList<>( );
             listUnits.add( getRootUnit( bGetAdditionalInfos ) );
 
             return listUnits;
@@ -538,7 +539,7 @@ public class UnitService implements IUnitService
 
         for ( Unit unitToCheck : listUnits )
         {
-            if ( RBACService.isAuthorized( Unit.RESOURCE_TYPE, String.valueOf( unitToCheck.getIdUnit( ) ), strPermission, user ) )
+            if ( RBACService.isAuthorized( Unit.RESOURCE_TYPE, String.valueOf( unitToCheck.getIdUnit( ) ), strPermission, (User) user ) )
             {
                 bIsAuthorized = true;
                 break;
@@ -574,11 +575,9 @@ public class UnitService implements IUnitService
     @Transactional( "unittree.transactionManager" )
     public int createUnit( Unit unit, HttpServletRequest request ) throws UnitErrorException
     {
-        int nIdUnit = Unit.ID_NULL;
-
         if ( unit != null )
         {
-            nIdUnit = UnitHome.create( unit );
+            int nIdUnit = UnitHome.create( unit );
             UnitAttributeManager.doCreateUnit( unit, request );
 
             return nIdUnit;
@@ -690,7 +689,7 @@ public class UnitService implements IUnitService
     {
         if ( givenUnit == null )
         {
-            return null;
+            return new ArrayList<>( );
         }
 
         List<Unit> listAllUnits = UnitHome.findAll( );

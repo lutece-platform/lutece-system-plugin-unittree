@@ -67,9 +67,7 @@ public class UnitAssignmentDAO implements IUnitAssignmentDAO
     @Override
     public void insert( UnitAssignment unitAssignment, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, Statement.RETURN_GENERATED_KEYS, plugin );
-
-        try
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, Statement.RETURN_GENERATED_KEYS, plugin ) )
         {
             int nIndex = 0;
             daoUtil.setInt( ++nIndex, unitAssignment.getId( ) );
@@ -88,10 +86,6 @@ public class UnitAssignmentDAO implements IUnitAssignmentDAO
                 unitAssignment.setId( daoUtil.getGeneratedKeyInt( 1 ) );
             }
         }
-        finally
-        {
-            daoUtil.free( );
-        }
     }
 
     /**
@@ -100,22 +94,19 @@ public class UnitAssignmentDAO implements IUnitAssignmentDAO
     @Override
     public UnitAssignment loadCurrentAssignment( int nIdResource, String strResourceType, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_CURRENT, plugin );
-
-        int nIndex = 0;
-        daoUtil.setInt( ++nIndex, nIdResource );
-        daoUtil.setString( ++nIndex, strResourceType );
-        daoUtil.executeQuery( );
-
         UnitAssignment unitAssignment = null;
-
-        if ( daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_CURRENT, plugin ) )
         {
-            unitAssignment = dataToUnitAssignment( daoUtil );
+            int nIndex = 0;
+            daoUtil.setInt( ++nIndex, nIdResource );
+            daoUtil.setString( ++nIndex, strResourceType );
+            daoUtil.executeQuery( );
+
+            if ( daoUtil.next( ) )
+            {
+                unitAssignment = dataToUnitAssignment( daoUtil );
+            }
         }
-
-        daoUtil.free( );
-
         return unitAssignment;
     }
 
@@ -125,13 +116,13 @@ public class UnitAssignmentDAO implements IUnitAssignmentDAO
     @Override
     public void deactivate( UnitAssignment unitAssignment, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DESACTIVATE, plugin );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DESACTIVATE, plugin ) )
+        {
+            int nIndex = 0;
+            daoUtil.setInt( ++nIndex, unitAssignment.getId( ) );
 
-        int nIndex = 0;
-        daoUtil.setInt( ++nIndex, unitAssignment.getId( ) );
-
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+            daoUtil.executeUpdate( );
+        }
     }
 
     /**
@@ -141,20 +132,19 @@ public class UnitAssignmentDAO implements IUnitAssignmentDAO
     public List<UnitAssignment> selectByResource( int nIdResource, String strResourceType, Plugin plugin )
     {
         List<UnitAssignment> listUnitAssignments = new ArrayList<>( );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_RESOURCE, plugin );
 
-        int nIndex = 0;
-        daoUtil.setInt( ++nIndex, nIdResource );
-        daoUtil.setString( ++nIndex, strResourceType );
-        daoUtil.executeQuery( );
-
-        while ( daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_RESOURCE, plugin ) )
         {
-            listUnitAssignments.add( dataToUnitAssignment( daoUtil ) );
+            int nIndex = 0;
+            daoUtil.setInt( ++nIndex, nIdResource );
+            daoUtil.setString( ++nIndex, strResourceType );
+            daoUtil.executeQuery( );
+
+            while ( daoUtil.next( ) )
+            {
+                listUnitAssignments.add( dataToUnitAssignment( daoUtil ) );
+            }
         }
-
-        daoUtil.free( );
-
         return listUnitAssignments;
     }
 
@@ -165,19 +155,17 @@ public class UnitAssignmentDAO implements IUnitAssignmentDAO
     public List<UnitAssignment> selectByUnit( int nIdUnit, Plugin plugin )
     {
         List<UnitAssignment> listUnitAssignments = new ArrayList<>( );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_UNIT, plugin );
-
-        int nIndex = 0;
-        daoUtil.setInt( ++nIndex, nIdUnit );
-        daoUtil.executeQuery( );
-
-        while ( daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_UNIT, plugin ) )
         {
-            listUnitAssignments.add( dataToUnitAssignment( daoUtil ) );
+            int nIndex = 0;
+            daoUtil.setInt( ++nIndex, nIdUnit );
+            daoUtil.executeQuery( );
+
+            while ( daoUtil.next( ) )
+            {
+                listUnitAssignments.add( dataToUnitAssignment( daoUtil ) );
+            }
         }
-
-        daoUtil.free( );
-
         return listUnitAssignments;
     }
 
@@ -219,14 +207,14 @@ public class UnitAssignmentDAO implements IUnitAssignmentDAO
     @Override
     public void deactivateByResource( int nIdResource, String strResourceType, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DESACTIVATE_BY_RESOURCE, plugin );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DESACTIVATE_BY_RESOURCE, plugin ) )
+        {
+            int nIndex = 0;
+            daoUtil.setInt( ++nIndex, nIdResource );
+            daoUtil.setString( ++nIndex, strResourceType );
 
-        int nIndex = 0;
-        daoUtil.setInt( ++nIndex, nIdResource );
-        daoUtil.setString( ++nIndex, strResourceType );
-
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+            daoUtil.executeUpdate( );
+        }
     }
 
 }

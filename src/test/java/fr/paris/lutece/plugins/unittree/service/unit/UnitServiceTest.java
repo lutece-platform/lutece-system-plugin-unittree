@@ -55,7 +55,7 @@ public class UnitServiceTest extends LuteceTestCase
 
         _unitService = new UnitService( );
     }
-
+    
     public void testAllSubUnitsOfNotExistingUnit( )
     {
         Unit unit = MockUnit.create( );
@@ -72,13 +72,13 @@ public class UnitServiceTest extends LuteceTestCase
         List<Unit> listSubUnits = _unitService.getAllSubUnits( unit, false );
 
         assertThat( listSubUnits.size( ), is( 0 ) );
+        UnitHome.remove( unit.getIdUnit( ) );
     }
 
     private Unit insertUnitInDatabase( )
     {
         Unit unit = MockUnit.create( );
         UnitHome.create( unit );
-
         return unit;
     }
 
@@ -91,6 +91,8 @@ public class UnitServiceTest extends LuteceTestCase
         List<Unit> listSubUnits = _unitService.getAllSubUnits( unitParent, false );
 
         assertThatSubUnitListsAreEqual( listSubUnits, unitChild );
+        UnitHome.remove( unitChild.getIdUnit( ) );
+        UnitHome.remove( unitParent.getIdUnit( ) );
     }
 
     private void setParentUnit( Unit unitChild, Unit unitParent )
@@ -127,6 +129,9 @@ public class UnitServiceTest extends LuteceTestCase
         List<Unit> listSubUnits = _unitService.getAllSubUnits( unitParent, false );
 
         assertThatSubUnitListsAreEqual( listSubUnits, unitChild1, unitChild2 );
+        UnitHome.remove( unitChild2.getIdUnit( ) );
+        UnitHome.remove( unitChild1.getIdUnit( ) );
+        UnitHome.remove( unitParent.getIdUnit( ) );
     }
 
     public void testAllSubUnitsOfUnitWithSubSubUnit( )
@@ -140,6 +145,9 @@ public class UnitServiceTest extends LuteceTestCase
         List<Unit> listSubUnits = _unitService.getAllSubUnits( unitParent, false );
 
         assertThatSubUnitListsAreEqual( listSubUnits, unitChild1, unitChild2 );
+        UnitHome.remove( unitChild2.getIdUnit( ) );
+        UnitHome.remove( unitChild1.getIdUnit( ) );
+        UnitHome.remove( unitParent.getIdUnit( ) );
     }
 
     public void testAllSubUnitsWithComplexUnitTree( )
@@ -161,6 +169,14 @@ public class UnitServiceTest extends LuteceTestCase
         List<Unit> listSubUnits = _unitService.getAllSubUnits( unitParent, false );
 
         assertThatSubUnitListsAreEqual( listSubUnits, unitChild1, unitChild1_1, unitChild2, unitChild2_1, unitChild2_1_1, unitChild2_2 );
+        UnitHome.remove( unitChild2_1_1.getIdUnit( ) );
+        UnitHome.remove( unitChild2_1.getIdUnit( ) );
+        UnitHome.remove( unitChild2_2.getIdUnit( ) );
+        UnitHome.remove( unitChild1_1.getIdUnit( ) );
+        UnitHome.remove( unitChild1.getIdUnit( ) );
+        UnitHome.remove( unitChild2.getIdUnit( ) );
+        UnitHome.remove( unitParent.getIdUnit( ) );
+        
     }
 
     public void testAllSubUnitsOfUnitInTheMiddleOfComplexUnitTree( )
@@ -182,5 +198,12 @@ public class UnitServiceTest extends LuteceTestCase
         List<Unit> listSubUnits = _unitService.getAllSubUnits( unitChild2, false );
 
         assertThatSubUnitListsAreEqual( listSubUnits, unitChild2_1, unitChild2_1_1, unitChild2_2 );
+        UnitHome.remove( unitChild2_1_1.getIdUnit( ) );
+        UnitHome.remove( unitChild2_1.getIdUnit( ) );
+        UnitHome.remove( unitChild2_2.getIdUnit( ) );
+        UnitHome.remove( unitChild1_1.getIdUnit( ) );
+        UnitHome.remove( unitChild1.getIdUnit( ) );
+        UnitHome.remove( unitChild2.getIdUnit( ) );
+        UnitHome.remove( unitParent.getIdUnit( ) );
     }
 }
