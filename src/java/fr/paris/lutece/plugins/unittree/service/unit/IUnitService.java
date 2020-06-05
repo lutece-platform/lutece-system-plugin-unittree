@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2017, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -242,16 +242,11 @@ public interface IUnitService
      * given unit. It may be a parent unit of the given unit. <br />
      * There are 5 cases to handle :
      * <ul>
-     * <li>
-     * 1) The given user is admin => The user is always authorized</li>
-     * <li>
-     * 2) The given user does not belong to any unit => The user is not authorized</li>
-     * <li>
-     * 3) The given user belongs to the given unit => Check with RBACService with the given unit</li>
-     * <li>
-     * 4) The given user belongs to a parent unit of the given unit => Check with RBACService with the parent unit</li>
-     * <li>
-     * 5) The given user belongs to an unit who is not a parent unit of the given unit => The user is not authorized</li>
+     * <li>1) The given user is admin => The user is always authorized</li>
+     * <li>2) The given user does not belong to any unit => The user is not authorized</li>
+     * <li>3) The given user belongs to the given unit => Check with RBACService with the given unit</li>
+     * <li>4) The given user belongs to a parent unit of the given unit => Check with RBACService with the parent unit</li>
+     * <li>5) The given user belongs to an unit who is not a parent unit of the given unit => The user is not authorized</li>
      * </ul>
      * 
      * @param unit
@@ -343,16 +338,16 @@ public interface IUnitService
      * @return true if the unit is in the given list, false otherwise
      */
     boolean isUnitInList( Unit unitToCheck, Collection<Unit> listUnits );
-    
+
     /**
      * populate a TreeUnit with all sub units (recursive)
      * 
      * @param treeUnit
-     *              the treeUnit
+     *            the treeUnit
      * @param user
-     *              the admin user (for RBAC)
+     *            the admin user (for RBAC)
      * @param bGetAdditionnalInfos
-     *              if true, populate the tree units with additionnal infos
+     *            if true, populate the tree units with additionnal infos
      */
     public void populateTreeUnit( TreeUnit treeUnit, AdminUser user, boolean bGetAdditionnalInfos );
 }

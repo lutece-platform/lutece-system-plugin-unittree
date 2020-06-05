@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2017, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -68,7 +68,8 @@ public class UnitDAO implements IUnitDAO
     private static final String SQL_QUERY_HAS_SUB_UNIT = " SELECT id_unit FROM unittree_unit WHERE id_parent = ? ";
     private static final String SQL_QUERY_SELECT_NO_CHILDREN = " SELECT id_unit, id_parent, code, label, description "
             + " FROM unittree_unit WHERE id_unit NOT IN(SELECT id_parent FROM unittree_unit) ";
-    private static final String SQL_QUERY_SELECT_DIRECT_CHILDREN = "SELECT id_unit, id_parent, code, label, description " + " FROM unittree_unit WHERE id_parent = ?";
+    private static final String SQL_QUERY_SELECT_DIRECT_CHILDREN = "SELECT id_unit, id_parent, code, label, description "
+            + " FROM unittree_unit WHERE id_parent = ?";
 
     // Table unittree_unit_user
     private static final String SQL_QUERY_ADD_USER_TO_UNIT = " INSERT INTO unittree_unit_user ( id_unit, id_user ) VALUES ( ?, ? ) ";
@@ -427,7 +428,6 @@ public class UnitDAO implements IUnitDAO
         return bIsUserInAnUnit;
     }
 
-
     /**
      * {@inheritDoc}
      */
@@ -562,12 +562,13 @@ public class UnitDAO implements IUnitDAO
         }
     }
 
-	@Override
-	public Unit findByCode(String strCode, Plugin plugin) {
-		
-		Unit unit = null;
+    @Override
+    public Unit findByCode( String strCode, Plugin plugin )
+    {
+
+        Unit unit = null;
         int nIndex = 1;
-        
+
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_CODE, plugin );
         daoUtil.setString( nIndex, strCode );
         daoUtil.executeQuery( );
@@ -587,5 +588,5 @@ public class UnitDAO implements IUnitDAO
         daoUtil.free( );
 
         return unit;
-	}
+    }
 }

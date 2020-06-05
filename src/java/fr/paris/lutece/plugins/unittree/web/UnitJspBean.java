@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2017, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -227,12 +227,12 @@ public class UnitJspBean extends PluginAdminPageJspBean
         {
             reInitSearchFields( request );
         }
-        
+
         if ( _fullUnitTree == null )
         {
             initTreeUnit( request );
         }
-                
+
         Map<String, Object> model = new HashMap<String, Object>( );
 
         // Add elements for user search form in the model
@@ -478,8 +478,8 @@ public class UnitJspBean extends PluginAdminPageJspBean
 
         for ( Unit unit : listUnits )
         {
-            bPermission = _unitService
-                    .isAuthorized( unit, UnitResourceIdService.PERMISSION_MODIFY_USER, getUser( ), UnittreeRBACRecursiveType.PARENT_RECURSIVE );
+            bPermission = _unitService.isAuthorized( unit, UnitResourceIdService.PERMISSION_MODIFY_USER, getUser( ),
+                    UnittreeRBACRecursiveType.PARENT_RECURSIVE );
 
             if ( bPermission )
             {
@@ -601,7 +601,8 @@ public class UnitJspBean extends PluginAdminPageJspBean
         String strIdUnit = request.getParameter( PARAMETER_ID_UNIT );
         String strIdUser = request.getParameter( PARAMETER_ID_USER );
 
-        if ( StringUtils.isBlank( strIdUnit ) || !StringUtils.isNumeric( strIdUnit ) || StringUtils.isBlank( strIdUser ) || !StringUtils.isNumeric( strIdUser ) )
+        if ( StringUtils.isBlank( strIdUnit ) || !StringUtils.isNumeric( strIdUnit ) || StringUtils.isBlank( strIdUser )
+                || !StringUtils.isNumeric( strIdUser ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
         }
@@ -908,7 +909,8 @@ public class UnitJspBean extends PluginAdminPageJspBean
         String strIdUnit = request.getParameter( PARAMETER_ID_UNIT );
         String strIdUser = request.getParameter( PARAMETER_ID_USER );
 
-        if ( StringUtils.isBlank( strIdUnit ) || !StringUtils.isNumeric( strIdUnit ) || StringUtils.isBlank( strIdUser ) || !StringUtils.isNumeric( strIdUser ) )
+        if ( StringUtils.isBlank( strIdUnit ) || !StringUtils.isNumeric( strIdUnit ) || StringUtils.isBlank( strIdUser )
+                || !StringUtils.isNumeric( strIdUser ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
         }
@@ -994,7 +996,8 @@ public class UnitJspBean extends PluginAdminPageJspBean
         }
 
         // The user must have the permission to move on both units (from and to)
-        if ( !_unitService.isAuthorized( strIdSelectedUnit, UnitResourceIdService.PERMISSION_MOVE_USER, getUser( ), UnittreeRBACRecursiveType.PARENT_RECURSIVE ) )
+        if ( !_unitService.isAuthorized( strIdSelectedUnit, UnitResourceIdService.PERMISSION_MOVE_USER, getUser( ),
+                UnittreeRBACRecursiveType.PARENT_RECURSIVE ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP );
         }
@@ -1043,7 +1046,8 @@ public class UnitJspBean extends PluginAdminPageJspBean
         String strIdUnit = request.getParameter( PARAMETER_ID_UNIT );
         String strIdUser = request.getParameter( PARAMETER_ID_USER );
 
-        if ( StringUtils.isBlank( strIdUnit ) || !StringUtils.isNumeric( strIdUnit ) || StringUtils.isBlank( strIdUser ) || !StringUtils.isNumeric( strIdUser ) )
+        if ( StringUtils.isBlank( strIdUnit ) || !StringUtils.isNumeric( strIdUnit ) || StringUtils.isBlank( strIdUser )
+                || !StringUtils.isNumeric( strIdUser ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
         }
@@ -1187,12 +1191,11 @@ public class UnitJspBean extends PluginAdminPageJspBean
         {
             UrlItem urlItem = new UrlItem( JSP_URL_MANAGE_UNITS );
             urlItem.addParameter( PARAMETER_ID_UNIT, unitToMove.getIdUnit( ) );
-            
+
             initTreeUnit( request );
             return AdminMessageService.getMessageUrl( request, MESSAGE_SUB_TREE_MOVED, urlItem.getUrl( ), AdminMessage.TYPE_INFO );
         }
 
-        
         return AdminMessageService.getMessageUrl( request, MESSAGE_CANT_MOVE_SUB_TREE_TO_CHILD, AdminMessage.TYPE_ERROR );
     }
 
@@ -1208,7 +1211,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
     {
         _unitUserSearchFields = new UnitUserSearchFields( request );
     }
-    
+
     /**
      * Reinit the tree
      * 
@@ -1217,7 +1220,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
      */
     private void initTreeUnit( HttpServletRequest request )
     {
-        _fullUnitTree = new TreeUnit( _unitService.getRootUnit( false ) ) ;
+        _fullUnitTree = new TreeUnit( _unitService.getRootUnit( false ) );
         _unitService.populateTreeUnit( _fullUnitTree, AdminUserService.getAdminUser( request ), false );
     }
 }

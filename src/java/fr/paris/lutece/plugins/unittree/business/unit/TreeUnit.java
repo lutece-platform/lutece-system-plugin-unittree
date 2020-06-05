@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2017, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,8 +36,6 @@ package fr.paris.lutece.plugins.unittree.business.unit;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
 /**
  *
  * UnitFilter
@@ -51,59 +49,64 @@ public class TreeUnit
     /**
      * constructor
      */
-    public TreeUnit() 
+    public TreeUnit( )
     {
-        _subUnits = new ArrayList<>();
+        _subUnits = new ArrayList<>( );
     }
 
     /**
      * constructor
      */
-    public TreeUnit( Unit unit ) 
+    public TreeUnit( Unit unit )
     {
         _unitNode = unit;
-        _subUnits = new ArrayList<>();
+        _subUnits = new ArrayList<>( );
     }
 
     /**
      * get the unit node
+     * 
      * @return the unit
      */
-    public Unit getUnitNode() 
+    public Unit getUnitNode( )
     {
         return _unitNode;
     }
 
     /**
-     * set unit node 
-     * @param unitNode 
+     * set unit node
+     * 
+     * @param unitNode
      */
-    public void setUnitNode(Unit unitNode) 
+    public void setUnitNode( Unit unitNode )
     {
         this._unitNode = unitNode;
     }
 
     /**
      * get sub units
+     * 
      * @return list of TreeUnit
      */
-    public List<TreeUnit> getSubUnits() 
+    public List<TreeUnit> getSubUnits( )
     {
         return _subUnits;
     }
 
     /**
      * set sub units
-     * @param subUnits 
+     * 
+     * @param subUnits
      */
-    public void setSubUnits(List<TreeUnit> subUnits) 
+    public void setSubUnits( List<TreeUnit> subUnits )
     {
         this._subUnits = subUnits;
     }
 
     /**
      * add sub unit
-     * @param subUnit 
+     * 
+     * @param subUnit
      */
     public void addSubUnit( Unit subUnit )
     {

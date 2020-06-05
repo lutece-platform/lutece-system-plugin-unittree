@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2017, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -344,9 +344,9 @@ public class UnitService implements IUnitService
         {
             return;
         }
-        
+
         List<Unit> subUnits = getSubUnits( treeUnit.getUnitNode( ).getIdUnit( ), bGetAdditionnalInfos );
-        
+
         // set sub units
         for ( Unit subUnit : subUnits )
         {
@@ -355,16 +355,15 @@ public class UnitService implements IUnitService
                 treeUnit.addSubUnit( subUnit );
             }
         }
-        
+
         // recursive search to get the complete tree
         for ( TreeUnit subTreeUnit : treeUnit.getSubUnits( ) )
         {
             populateTreeUnit( subTreeUnit, user, bGetAdditionnalInfos );
         }
 
-        
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -737,9 +736,10 @@ public class UnitService implements IUnitService
     /**
      * {@inheritDoc}
      */
-	@Override
-	public Unit getUnitByCode(String strCode, boolean bGetAdditionalInfos) {
-		
-		return UnitHome.findByCode( strCode );
-	}
+    @Override
+    public Unit getUnitByCode( String strCode, boolean bGetAdditionalInfos )
+    {
+
+        return UnitHome.findByCode( strCode );
+    }
 }

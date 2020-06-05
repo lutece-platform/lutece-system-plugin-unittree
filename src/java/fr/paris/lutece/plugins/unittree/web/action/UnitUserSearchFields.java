@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2017, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -160,7 +160,8 @@ public class UnitUserSearchFields extends DefaultUnitSearchFields
         }
 
         this.setCurrentPageIndex( Paginator.getPageIndex( request, Paginator.PARAMETER_PAGE_INDEX, this.getCurrentPageIndex( ) ) );
-        this.setItemsPerPage( Paginator.getItemsPerPage( request, Paginator.PARAMETER_ITEMS_PER_PAGE, this.getItemsPerPage( ), this.getDefaultItemsPerPage( ) ) );
+        this.setItemsPerPage(
+                Paginator.getItemsPerPage( request, Paginator.PARAMETER_ITEMS_PER_PAGE, this.getItemsPerPage( ), this.getDefaultItemsPerPage( ) ) );
 
         if ( getSortedAttributeName( ) != null )
         {

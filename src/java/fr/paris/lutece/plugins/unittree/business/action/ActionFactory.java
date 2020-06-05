@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2017, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -44,8 +44,7 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
  *
  * This factory is used for :
  * <ul>
- * <li>
- * creating new instance of {@link IAction} depending of the action type</li>
+ * <li>creating new instance of {@link IAction} depending of the action type</li>
  * </ul>
  *
  */
