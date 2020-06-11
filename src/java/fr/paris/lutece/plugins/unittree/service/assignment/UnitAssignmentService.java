@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2017, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -94,7 +94,7 @@ public final class UnitAssignmentService
     {
         List<UnitAssignment> listUnitAssignment = _dao.selectByResource( nIdResource, strResourceType, _plugin );
 
-        return listUnitAssignment.stream( ).filter( unitAssignment -> unitAssignment.isActive( ) ).collect( Collectors.toList( ) );
+        return listUnitAssignment.stream( ).filter( UnitAssignment::isActive ).collect( Collectors.toList( ) );
     }
 
     /**
@@ -113,7 +113,7 @@ public final class UnitAssignmentService
     {
         List<UnitAssignment> listUnitAssignment = _dao.selectByUnit( nIdUnit, _plugin );
 
-        return listUnitAssignment.stream( ).filter( unitAssignment -> unitAssignment.isActive( ) ).collect( Collectors.toList( ) );
+        return listUnitAssignment.stream( ).filter( UnitAssignment::isActive ).collect( Collectors.toList( ) );
     }
 
 }

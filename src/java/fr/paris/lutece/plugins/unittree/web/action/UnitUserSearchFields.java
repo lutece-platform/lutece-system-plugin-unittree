@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2017, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,6 +33,17 @@
  */
 package fr.paris.lutece.plugins.unittree.web.action;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
+
 import fr.paris.lutece.plugins.unittree.business.unit.Unit;
 import fr.paris.lutece.portal.business.right.Level;
 import fr.paris.lutece.portal.business.right.LevelHome;
@@ -44,19 +55,9 @@ import fr.paris.lutece.portal.service.admin.AdminUserService;
 import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.web.constants.Parameters;
 import fr.paris.lutece.portal.web.util.LocalizedPaginator;
-import fr.paris.lutece.util.html.Paginator;
+import fr.paris.lutece.util.html.AbstractPaginator;
 import fr.paris.lutece.util.sort.AttributeComparator;
 import fr.paris.lutece.util.url.UrlItem;
-
-import org.apache.commons.lang.StringUtils;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -127,7 +128,7 @@ public class UnitUserSearchFields extends DefaultUnitSearchFields
 
         UrlItem url = new UrlItem( strBaseUrl );
 
-        List<AdminUser> listFilteredUsers = new ArrayList<AdminUser>( );
+        List<AdminUser> listFilteredUsers = new ArrayList<>( );
 
         for ( AdminUser filteredUser : AdminUserHome.findUserByFilter( _auFilter ) )
         {
@@ -159,8 +160,9 @@ public class UnitUserSearchFields extends DefaultUnitSearchFields
             Collections.sort( listFilteredUsers, new AttributeComparator( getSortedAttributeName( ), this.isAscSort( ) ) );
         }
 
-        this.setCurrentPageIndex( Paginator.getPageIndex( request, Paginator.PARAMETER_PAGE_INDEX, this.getCurrentPageIndex( ) ) );
-        this.setItemsPerPage( Paginator.getItemsPerPage( request, Paginator.PARAMETER_ITEMS_PER_PAGE, this.getItemsPerPage( ), this.getDefaultItemsPerPage( ) ) );
+        this.setCurrentPageIndex( AbstractPaginator.getPageIndex( request, AbstractPaginator.PARAMETER_PAGE_INDEX, this.getCurrentPageIndex( ) ) );
+        this.setItemsPerPage( AbstractPaginator.getItemsPerPage( request, AbstractPaginator.PARAMETER_ITEMS_PER_PAGE, this.getItemsPerPage( ),
+                this.getDefaultItemsPerPage( ) ) );
 
         if ( getSortedAttributeName( ) != null )
         {
@@ -171,19 +173,12 @@ public class UnitUserSearchFields extends DefaultUnitSearchFields
         url.addParameter( PARAMETER_ID_UNIT, unit.getIdUnit( ) );
         url.addParameter( PARAMETER_SESSION, PARAMETER_SESSION );
 
-        LocalizedPaginator<AdminUser> paginator = new LocalizedPaginator<AdminUser>( listFilteredUsers, getItemsPerPage( ), url.getUrl( ),
-                Paginator.PARAMETER_PAGE_INDEX, getCurrentPageIndex( ), request.getLocale( ) );
+        LocalizedPaginator<AdminUser> paginator = new LocalizedPaginator<>( listFilteredUsers, getItemsPerPage( ), url.getUrl( ),
+                AbstractPaginator.PARAMETER_PAGE_INDEX, getCurrentPageIndex( ), request.getLocale( ) );
 
         // USER LEVEL
-        Collection<Level> filteredLevels = new ArrayList<Level>( );
-
-        for ( Level level : LevelHome.getLevelsList( ) )
-        {
-            if ( _user.isAdmin( ) || _user.hasRights( level.getId( ) ) )
-            {
-                filteredLevels.add( level );
-            }
-        }
+        Collection<Level> filteredLevels = LevelHome.getLevelsList( ).stream( ).filter( level -> _user.isAdmin( ) || _user.hasRights( level.getId( ) ) )
+                .collect( Collectors.toList( ) );
 
         model.put( MARK_USER_LEVELS_LIST, filteredLevels );
         model.put( MARK_LIST_USERS, paginator.getPageItems( ) );

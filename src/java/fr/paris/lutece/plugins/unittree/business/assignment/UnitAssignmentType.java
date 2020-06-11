@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2017, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -39,7 +39,10 @@ package fr.paris.lutece.plugins.unittree.business.assignment;
  */
 public enum UnitAssignmentType
 {
-    CREATION( "create" ), ASSIGN_UP( "assign_up" ), ASSIGN_DOWN( "assign_down" ), TRANSFER( "transfer" );
+    CREATION( "create" ),
+    ASSIGN_UP( "assign_up" ),
+    ASSIGN_DOWN( "assign_down" ),
+    TRANSFER( "transfer" );
 
     private final String _strAssignmentTypeCode;
 

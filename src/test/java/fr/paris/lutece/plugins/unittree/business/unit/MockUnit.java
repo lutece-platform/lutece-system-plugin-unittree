@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2017, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -43,6 +43,7 @@ public class MockUnit
 
         Unit unit = new Unit( );
         unit.setIdUnit( nId );
+        unit.setCode( "code" );
         unit.setIdParent( Unit.ID_ROOT );
         unit.setLabel( String.valueOf( nId ) );
         unit.setDescription( String.valueOf( nId ) );

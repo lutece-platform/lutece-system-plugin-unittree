@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2017, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -59,7 +59,7 @@ public class Unit implements RBACResource
     private String _strLabel;
     @NotNull
     private String _strDescription;
-    private Map<String, IUnitAttribute> _mapAttributes = new HashMap<String, IUnitAttribute>( );
+    private Map<String, IUnitAttribute<?>> _mapAttributes = new HashMap<>( );
 
     /**
      * Get the id unit
@@ -103,7 +103,6 @@ public class Unit implements RBACResource
         _strCode = strCode;
     }
 
-    
     /**
      * Get the label
      * 
@@ -236,11 +235,17 @@ public class Unit implements RBACResource
     public boolean equals( Object obj )
     {
         if ( this == obj )
+        {
             return true;
+        }
         if ( obj == null )
+        {
             return false;
+        }
         if ( getClass( ) != obj.getClass( ) )
+        {
             return false;
+        }
 
         Unit unit = (Unit) obj;
         return _nIdUnit == unit.getIdUnit( );

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2017, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -61,28 +61,18 @@ public class ActionDAO implements IActionDAO
     @Override
     public List<IAction> selectActions( String strActionType, Plugin plugin )
     {
-        List<IAction> listActions = new ArrayList<IAction>( );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ACTIONS, plugin );
-        daoUtil.setString( 1, strActionType );
-        daoUtil.executeQuery( );
-
-        while ( daoUtil.next( ) )
+        List<IAction> listActions = new ArrayList<>( );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ACTIONS, plugin ) )
         {
-            int nIndex = 1;
-            IAction action = _actionFactory.newAction( strActionType );
-            action.setIdAction( daoUtil.getInt( nIndex++ ) );
-            action.setNameKey( daoUtil.getString( nIndex++ ) );
-            action.setDescriptionKey( daoUtil.getString( nIndex++ ) );
-            action.setUrl( daoUtil.getString( nIndex++ ) );
-            action.setIcon( daoUtil.getString( nIndex++ ) );
-            action.setPermission( daoUtil.getString( nIndex++ ) );
-            action.setActionType( daoUtil.getString( nIndex ) );
+            daoUtil.setString( 1, strActionType );
+            daoUtil.executeQuery( );
 
-            listActions.add( action );
+            while ( daoUtil.next( ) )
+            {
+                IAction action = dataToObject( strActionType, daoUtil );
+                listActions.add( action );
+            }
         }
-
-        daoUtil.free( );
-
         return listActions;
     }
 
@@ -92,31 +82,35 @@ public class ActionDAO implements IActionDAO
     @Override
     public List<IAction> selectFilterByPermission( String strActionType, String strPermission, Plugin plugin )
     {
-        int nIndex = 1;
-        List<IAction> listActions = new ArrayList<IAction>( );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_FILTER_BY_PERMISSION, plugin );
-        daoUtil.setString( nIndex++, strActionType );
-        daoUtil.setString( nIndex, strPermission );
-        daoUtil.executeQuery( );
-
-        while ( daoUtil.next( ) )
+        List<IAction> listActions = new ArrayList<>( );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_FILTER_BY_PERMISSION, plugin ) )
         {
-            nIndex = 1;
+            int nIndex = 0;
+            daoUtil.setString( ++nIndex, strActionType );
+            daoUtil.setString( ++nIndex, strPermission );
+            daoUtil.executeQuery( );
 
-            IAction action = _actionFactory.newAction( strActionType );
-            action.setIdAction( daoUtil.getInt( nIndex++ ) );
-            action.setNameKey( daoUtil.getString( nIndex++ ) );
-            action.setDescriptionKey( daoUtil.getString( nIndex++ ) );
-            action.setUrl( daoUtil.getString( nIndex++ ) );
-            action.setIcon( daoUtil.getString( nIndex++ ) );
-            action.setPermission( daoUtil.getString( nIndex++ ) );
-            action.setActionType( daoUtil.getString( nIndex ) );
-
-            listActions.add( action );
+            while ( daoUtil.next( ) )
+            {
+                IAction action = dataToObject( strActionType, daoUtil );
+                listActions.add( action );
+            }
         }
-
-        daoUtil.free( );
-
         return listActions;
+    }
+
+    private IAction dataToObject( String strActionType, DAOUtil daoUtil )
+    {
+        int nIndex = 0;
+        IAction action = _actionFactory.newAction( strActionType );
+        action.setIdAction( daoUtil.getInt( ++nIndex ) );
+        action.setNameKey( daoUtil.getString( ++nIndex ) );
+        action.setDescriptionKey( daoUtil.getString( ++nIndex ) );
+        action.setUrl( daoUtil.getString( ++nIndex ) );
+        action.setIcon( daoUtil.getString( ++nIndex ) );
+        action.setPermission( daoUtil.getString( ++nIndex ) );
+        action.setActionType( daoUtil.getString( ++nIndex ) );
+
+        return action;
     }
 }

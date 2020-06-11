@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2017, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,6 +36,7 @@ package fr.paris.lutece.plugins.unittree.business.action;
 import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.portal.service.util.AppLogService;
 
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.CannotLoadBeanClassException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -44,8 +45,7 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
  *
  * This factory is used for :
  * <ul>
- * <li>
- * creating new instance of {@link IAction} depending of the action type</li>
+ * <li>creating new instance of {@link IAction} depending of the action type</li>
  * </ul>
  *
  */
@@ -63,17 +63,9 @@ public class ActionFactory implements IActionFactory
         {
             action = SpringContextService.getBean( strActionType );
         }
-        catch( BeanDefinitionStoreException e )
+        catch( BeansException e )
         {
-            AppLogService.debug( "ActionFactory ERROR : could not load bean '" + e.getBeanName( ) + "' - CAUSE : " + e.getMessage( ) );
-        }
-        catch( NoSuchBeanDefinitionException e )
-        {
-            AppLogService.debug( "ActionFactory ERROR : could not load bean '" + e.getBeanName( ) + "' - CAUSE : " + e.getMessage( ) );
-        }
-        catch( CannotLoadBeanClassException e )
-        {
-            AppLogService.debug( "ActionFactory ERROR : could not load bean '" + e.getBeanName( ) + "' - CAUSE : " + e.getMessage( ) );
+            logBeanException( e );
         }
 
         // If no action is defined for strActionType, then create a DefaultAction
@@ -83,5 +75,31 @@ public class ActionFactory implements IActionFactory
         }
 
         return action;
+    }
+
+    private void logBeanException( BeansException e )
+    {
+        String beanName = null;
+        String message = e.getMessage( );
+
+        if ( e instanceof BeanDefinitionStoreException )
+        {
+            beanName = ( (BeanDefinitionStoreException) e ).getBeanName( );
+        }
+        else
+            if ( e instanceof NoSuchBeanDefinitionException )
+            {
+                beanName = ( (NoSuchBeanDefinitionException) e ).getBeanName( );
+            }
+            else
+                if ( e instanceof CannotLoadBeanClassException )
+                {
+                    beanName = ( (CannotLoadBeanClassException) e ).getBeanName( );
+                }
+
+        if ( beanName != null )
+        {
+            AppLogService.debug( "ActionFactory ERROR : could not load bean '" + beanName + "' - CAUSE : " + message );
+        }
     }
 }
