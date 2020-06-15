@@ -1,6 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
         <artifactId>lutece-global-pom</artifactId>
@@ -12,7 +10,7 @@
     <groupId>fr.paris.lutece.plugins</groupId>
     <artifactId>plugin-unittree</artifactId>
     <packaging>lutece-plugin</packaging>
-    <version>2.1.6-SNAPSHOT</version>
+    <version>2.1.6</version>
     <name>Lutece unittree plugin</name>
 
     <repositories>
@@ -53,7 +51,7 @@
         <connection>scm:git:https://github.com/lutece-platform/lutece-system-plugin-unittree.git</connection>
         <developerConnection>scm:git:https://github.com/lutece-platform/lutece-system-plugin-unittree.git</developerConnection>
         <url>https://github.com/lutece-platform/lutece-system-plugin-unittree.git</url>
-        <tag>HEAD</tag>
+        <tag>plugin-unittree-2.1.6</tag>
     </scm>
 
 </project>
