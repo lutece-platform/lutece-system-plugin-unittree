@@ -63,6 +63,7 @@ public class UnitAssignmentDAO implements IUnitAssignmentDAO
     private static final String SQL_QUERY_INSERT = "INSERT INTO unittree_unit_assignment ( id, id_resource, resource_type, id_assigned_unit, id_assignor_unit, assignment_date, assignment_type, is_active ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ? ) ";
     private static final String SQL_QUERY_DESACTIVATE = "UPDATE unittree_unit_assignment SET is_active = 0 WHERE id = ? ";
     private static final String SQL_QUERY_DESACTIVATE_BY_RESOURCE = " UPDATE unittree_unit_assignment SET is_active = 0 WHERE id_resource = ? AND resource_type = ? ";
+    private static final String SQL_QUERY_DELETE_BY_RESOURCE = " DELETE FROM unittree_unit_assignment WHERE id_resource = ? AND resource_type = ? ";
 
     /**
      * {@inheritDoc }
@@ -220,4 +221,17 @@ public class UnitAssignmentDAO implements IUnitAssignmentDAO
         }
     }
 
+    @Override
+    public void deleteByResource( int nIdResource, String strResourceType, Plugin plugin )
+    {
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_BY_RESOURCE, plugin ) )
+        {
+            int nIndex = 0;
+            daoUtil.setInt( ++nIndex, nIdResource );
+            daoUtil.setString( ++nIndex, strResourceType );
+
+            daoUtil.executeUpdate( );
+        }
+        
+    }
 }
