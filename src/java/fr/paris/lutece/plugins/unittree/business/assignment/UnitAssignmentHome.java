@@ -134,4 +134,19 @@ public final class UnitAssignmentHome
     {
         _dao.deactivateByResource( nIdResource, strResourceType, _plugin );
     }
+    
+    /**
+     * <p>
+     * Delete the units assignments associated to the specified resource.
+     * </p>
+     * 
+     * @param nIdResource
+     *            the resource id
+     * @param strResourceType
+     *            the resource type
+     */
+    public static void deleteByResource( int nIdResource, String strResourceType )
+    {
+        _dao.deleteByResource( nIdResource, strResourceType, _plugin );
+    }
 }
