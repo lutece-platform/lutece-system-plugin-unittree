@@ -49,8 +49,6 @@ import fr.paris.lutece.plugins.workflowcore.service.task.ITask;
  */
 public interface ITaskFormHandler
 {
-    // Templates
-    String TEMPLATE_AUTOMATIC_TASK_FORM = "admin/plugins/workflow/modules/unittree/unitselection/form/unit_selection_automatic_form.html";
 
     /**
      * Gives the title of the unit selection displayed in the task form.
