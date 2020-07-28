@@ -78,6 +78,8 @@ import javax.xml.transform.stream.StreamSource;
  */
 public class UnitService implements IUnitService
 {
+    public static final String BEAN_UNIT_SERVICE = "unittree.unitService";
+    
     // XML TAGS
     private static final String TAG_UNITS = "units";
     private static final String TAG_UNIT = "unit";

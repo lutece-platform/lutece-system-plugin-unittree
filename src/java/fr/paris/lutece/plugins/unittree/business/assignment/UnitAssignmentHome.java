@@ -49,7 +49,7 @@ public final class UnitAssignmentHome
     private static Plugin _plugin = PluginService.getPlugin( UnitTreePlugin.PLUGIN_NAME );
 
     // Static variable pointed at the DAO instance
-    private static IUnitAssignmentDAO _dao = SpringContextService.getBean( IUnitAssignmentDAO.BEAN_NAME );
+    private static IUnitAssignmentDAO _dao = SpringContextService.getBean( UnitAssignmentDAO.BEAN_NAME );
 
     /**
      * Private constructor
