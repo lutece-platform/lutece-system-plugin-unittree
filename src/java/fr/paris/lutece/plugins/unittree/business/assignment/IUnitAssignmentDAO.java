@@ -42,8 +42,6 @@ import java.util.List;
 
 public interface IUnitAssignmentDAO
 {
-    String BEAN_NAME = "unittree.unitAssignmentDAO";
-
     /**
      * Inserts a new record in the table.
      * 

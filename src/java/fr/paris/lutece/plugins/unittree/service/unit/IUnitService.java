@@ -58,8 +58,6 @@ import javax.xml.transform.Source;
  */
 public interface IUnitService
 {
-    String BEAN_UNIT_SERVICE = "unittree.unitService";
-
     // GET
 
     /**

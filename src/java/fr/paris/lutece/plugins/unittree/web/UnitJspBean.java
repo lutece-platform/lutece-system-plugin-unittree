@@ -57,6 +57,7 @@ import fr.paris.lutece.plugins.unittree.service.unit.IUnitService;
 import fr.paris.lutece.plugins.unittree.service.unit.IUnitUserService;
 import fr.paris.lutece.plugins.unittree.service.unit.UnitAttributeManager;
 import fr.paris.lutece.plugins.unittree.service.unit.UnitResourceIdService;
+import fr.paris.lutece.plugins.unittree.service.unit.UnitService;
 import fr.paris.lutece.plugins.unittree.service.unit.UnitUserAttributeManager;
 import fr.paris.lutece.plugins.unittree.web.action.IUnitPluginAction;
 import fr.paris.lutece.plugins.unittree.web.action.IUnitSearchFields;
@@ -165,7 +166,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
     private static final String JSP_URL_DO_REMOVE_USER = "jsp/admin/plugins/unittree/DoRemoveUser.jsp";
 
     // SERVICES
-    private transient IUnitService _unitService = SpringContextService.getBean( IUnitService.BEAN_UNIT_SERVICE );
+    private transient IUnitService _unitService = SpringContextService.getBean( UnitService.BEAN_UNIT_SERVICE );
     private transient IUnitUserService _unitUserService = SpringContextService.getBean( BEAN_UNIT_USER_SERVICE );
     private transient IUnitSearchFields _unitUserSearchFields = new UnitUserSearchFields( );
 
