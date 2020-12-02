@@ -1,42 +1,29 @@
 <#macro searchAdminUsersForm urlAction displayInDepthOption>
 <#-- BEGIN SEARCH FORM -->
-<div class="box box-solid">
-	<div class="box-body">
-	<form id="unitree-search" class="form-inline" method="post" name="search_users" action="${urlAction!}">
-		<input type="hidden" name="idUnit" value="${unit.idUnit!}">
-		<div class="has-feedback">
-			<label for="email" class="sr-only">#i18n{portal.users.manage_users.search_users.labelEmail} :</label>
-			<input type="text" placeholder="#i18n{portal.users.manage_users.search_users.labelEmail}"id="email" name="search_email" value="${search_admin_user_filter.email!}" maxlength="100" class="form-control">
-			<label for="first_name" class="sr-only">#i18n{portal.users.manage_users.search_users.labelFirstName} :</label>
-			<input type="text" placeholder="#i18n{portal.users.manage_users.search_users.labelFirstName}" id="first_name" name="search_first_name" value="${search_admin_user_filter.firstName!}" maxlength="100" class="form-control visible-desktop">
-			<label for="last_name" class="sr-only">#i18n{portal.users.manage_users.search_users.labelLastName} :</label>
-			<div class="input-group">
-				<input type="text" placeholder="#i18n{portal.users.manage_users.search_users.labelLastName}" id="last_name" name="search_last_name" value="${search_admin_user_filter.lastName!}" maxlength="100" tabindex="2" class="form-control">
-				<span class="input-group-btn">
-					<button class="btn btn-default" type="submit" name="search_is_search" title="#i18n{portal.users.manage_users.search_users.buttonSearch}" value="#i18n{portal.users.manage_users.search_users.buttonSearch}" >
-						<i class="fa fa-search"></i>
-					</button>
-				</span>
-			</div>
+	<@tform id='unitree-search' method='post' name='search_users' action='${urlAction!}'>
+		<@input type='hidden' name='idUnit' value='${unit.idUnit!}' />
+		<@div id='search-form' class='has-feedback'>
+			<@formGroup labelFor='email' labelKey='#i18n{portal.users.manage_users.search_users.labelEmail}'>
+				<@input type='text' name='search_email' id='email' value='${search_admin_user_filter.email!}' maxlength=100 />
+			</@formGroup>
+			<@formGroup labelFor='first_name' labelKey='#i18n{portal.users.manage_users.search_users.labelFirstName}'>
+				<@input type='text' name='search_first_name' id='first_name' value='${search_admin_user_filter.firstName!}' maxlength=100 />
+			</@formGroup>
+			<@formGroup labelFor='last_name' labelKey='#i18n{portal.users.manage_users.search_users.labelLastName}'>
+				<@input type='text' name='search_last_name' id='last_name' value='${search_admin_user_filter.lastName!}' maxlength=100 />
+			</@formGroup>
 			<#if displayInDepthOption>
-				<label class="checkbox-inline">
-					<input type="checkbox" aria-label="..." name="isInDepthSearch" value="1" title="#i18n{unittree.manageUnits.labelInDepthSearch}" id="isInDepthSearch" <#if isInDepthSearch>checked="checked"</#if> >
-					#i18n{unittree.manageUnits.labelInDepthSearch}
-				</label>
+				<@formGroup labelKey='#i18n{unittree.manageUnits.labelInDepthSearch}'>
+					<@checkBox labelFor='isInDepthSearch' id='isInDepthSearch' name='isInDepthSearch' value='1' title='#i18n{unittree.manageUnits.labelInDepthSearch}' id='isInDepthSearch' checked=isInDepthSearch />
+				</@formGroup>
 			</#if>
-    	<button type="button" id="adv" class="btn btn-default pull-right" title="#i18n{portal.util.labelMore}">
-				<i class="fa fa-caret-down"></i>
-			</button>
-		</div>
-		<div id="adv-form" style="margin-top:15px">
-			<div class="form-group">
-				<label class="sr-only" for="access_code" >#i18n{portal.users.manage_users.search_users.labelAccessCode} :</label>
-				<input type="text" id="access_code" name="search_access_code"  placeholder="#i18n{portal.users.manage_users.search_users.labelAccessCode}" value="${search_admin_user_filter.accessCode!}" class="form-control">
-			</div>
+
+			<@formGroup labelFor='access_code' labelKey='#i18n{portal.users.manage_users.search_users.labelAccessCode}'>
+				<@input type='text' id='access_code' name='search_access_code' value='${search_admin_user_filter.accessCode!}' />
+			</@formGroup>
 			<#if (user_levels?has_content)>
-				<div class="form-group">
-					<label for="user_level" class="sr-only">#i18n{portal.users.manage_users.search_users.userLevelLabel} :</label>
-					<select id="user_level" name="search_user_level" class="form-control">
+				<@formGroup labelFor='user_level' labelKey='#i18n{portal.users.manage_users.search_users.userLevelLabel}'>
+					<@select id='user_level' name='search_user_level'>
 						<#if ( search_admin_user_filter.userLevel > -1 ) >
 							<option value="noValue" >#i18n{portal.users.manage_users.search_users.labelAllLevels}</option>
 							<#list user_levels as user_level>
@@ -52,74 +39,64 @@
 								<option value="${user_level.id!}" >${user_level.name!}</option>
 							</#list>
 						</#if>
-						</select>
-					</div>
-				</#if>
-				<div class="form-group">
-					<label for="status" class="sr-only">#i18n{portal.users.manage_users.search_users.labelStatus} :</label>
-					<select id="status" name="search_status" tabindex="5"  class="form-control">
-						<#switch search_admin_user_filter.status>
-							<#case 0 >
-								<option value="noValue">#i18n{portal.users.manage_users.search_users.labelAllStatus}</option>
-								<option value="0" selected="selected">#i18n{portal.users.create_user.statusLabelEnabled}</option>
-								<option value="1">#i18n{portal.users.create_user.statusLabelDisabled}</option>
-								<#break>
-							<#case 1 >
-								<option value="noValue" >#i18n{portal.users.manage_users.search_users.labelAllStatus}</option>
-								<option value="0">#i18n{portal.users.create_user.statusLabelEnabled}</option>
-								<option value="1" selected="selected" >#i18n{portal.users.create_user.statusLabelDisabled}</option>
-								<#break>
-							<#default>
-								<option value="noValue" selected="selected" >#i18n{portal.users.manage_users.search_users.labelAllStatus}</option>
-								<option value="0" >#i18n{portal.users.create_user.statusLabelEnabled}</option>
-								<option value="1" >#i18n{portal.users.create_user.statusLabelDisabled}</option>
+					</@select>
+				</@formGroup>
+			</#if>
+			<@formGroup labelFor='status' labelKey='#i18n{portal.users.manage_users.search_users.labelStatus}'>
+				<@select id='status' name='search_status'>
+					<#switch search_admin_user_filter.status>
+						<#case 0 >
+							<option value="noValue">#i18n{portal.users.manage_users.search_users.labelAllStatus}</option>
+							<option value="0" selected="selected">#i18n{portal.users.create_user.statusLabelEnabled}</option>
+							<option value="1">#i18n{portal.users.create_user.statusLabelDisabled}</option>
 							<#break>
-						</#switch>
-					</select>
-				</div>
-				<#if multi_affection_enabled?? && multi_affection_enabled>
-					<label class="checkbox-inline" for="status">
-						<input type="checkbox" name="filterAffectedUsers" id="filterAffectedUsers" value="true" <#if filterAffectedUsers?? && filterAffectedUsers >checked="checked"</#if> > #i18n{unittree.addUsers.labelMultiAffectedUsers}
-					</label>
-				</#if>
-			</div>
-		</form>
-	</div>
-</div>
+						<#case 1 >
+							<option value="noValue" >#i18n{portal.users.manage_users.search_users.labelAllStatus}</option>
+							<option value="0">#i18n{portal.users.create_user.statusLabelEnabled}</option>
+							<option value="1" selected="selected" >#i18n{portal.users.create_user.statusLabelDisabled}</option>
+							<#break>
+						<#default>
+							<option value="noValue" selected="selected" >#i18n{portal.users.manage_users.search_users.labelAllStatus}</option>
+							<option value="0" >#i18n{portal.users.create_user.statusLabelEnabled}</option>
+							<option value="1" >#i18n{portal.users.create_user.statusLabelDisabled}</option>
+						<#break>
+					</#switch>
+				</@select>
+			</@formGroup>
+			<#if multi_affection_enabled?? && multi_affection_enabled>
+				<@formGroup labelKey='#i18n{unittree.addUsers.labelMultiAffectedUsers}'>
+					<@checkBox name='filterAffectedUsers' id='filterAffectedUsers' value='true' checked=filterAffectedUsers??&&filterAffectedUsers />
+				</@formGroup>
+			</#if>
+			<@formGroup>
+				<@button type='submit' name='search_is_search' title='#i18n{portal.users.manage_users.search_users.buttonSearch}' value='#i18n{portal.users.manage_users.search_users.buttonSearch}' buttonIcon='search' />
+			</@formGroup>
+		</@div>
+	</@tform>
+
 <#-- END SEARCH FORM -->
-<script>
-$( function(){
-	$("#adv-form").toggle();
-	$("#adv").on("click", function(e){
-		$(".box-tools").css("background-color","#fff").css("z-index","99");
-		$("#adv-form").slideToggle();
-		$("#adv > i").toggleClass("fa-caret-up");
-	});
-});
-</script>
 </#macro>
 
 <#macro showPagination urlAction=''>
 	<#-- BEGIN PAGINATOR FORM -->
-	<form method="post" name="search_users" action="${urlAction!}">
+	<@tform method='post' name='search_users' action='${urlAction!}'>
 		<@paginationAdmin paginator=paginator combo=1 form=0 />
-		<input type="hidden" name="session" value="session"/>
-		<input type="hidden" name="idUnit" value="${unit.idUnit!}" />
-		<input type="hidden" name="search_user_level" value="${search_admin_user_filter.userLevel!}"/>
-		<input type="hidden" name="search_access_code" value="${search_admin_user_filter.accessCode!}"/>
-		<input type="hidden" name="search_last_name" value="${search_admin_user_filter.lastName!}"/>
-		<input type="hidden" name="search_first_name" value="${search_admin_user_filter.firstName!}"/>
-		<input type="hidden" name="search_email" value="${search_admin_user_filter.email!}"/>
-		<input type="hidden" name="search_status" value="${search_admin_user_filter.status!}"/>
-	</form>
+		<@input type='hidden' name='session' value='session' />
+		<@input type='hidden' name='idUnit' value='${unit.idUnit!}' />
+		<@input type='hidden' name='search_user_level' value='${search_admin_user_filter.userLevel!}' />
+		<@input type='hidden' name='search_access_code' value='${search_admin_user_filter.accessCode!}' />
+		<@input type='hidden' name='search_last_name' value='${search_admin_user_filter.lastName!}' />
+		<@input type='hidden' name='search_first_name' value='${search_admin_user_filter.firstName!}' />
+		<@input type='hidden' name='search_email' value='${search_admin_user_filter.email!}' />
+		<@input type='hidden' name='search_status' value='${search_admin_user_filter.status!}' />
+	</@tform>
 	<#-- END PAGINATOR FORM -->
 </#macro>
 
 <#-- unit TREE display  -->
 <#macro displaySubUnits treeUnit >
 	<li id="node-${treeUnit.unitNode.idUnit}">${treeUnit.unitNode.code}
-<a title="${treeUnit.unitNode.label}" href="jsp/admin/plugins/unittree/ManageUnits.jsp?idUnit=${treeUnit.unitNode.idUnit}"><i class="fa fa-folder"> </i> 
- ${treeUnit.unitNode.label} (${treeUnit.unitNode.code})</a>
+		<@link title='${treeUnit.unitNode.label}' href='jsp/admin/plugins/unittree/ManageUnits.jsp?idUnit=${treeUnit.unitNode.idUnit}'><@icon style='folder' /> ${treeUnit.unitNode.label} (${treeUnit.unitNode.code})</@link>
 		<#if treeUnit.subUnits?? >
 		<ul>
 		<#list treeUnit.subUnits as subTreeUnit >

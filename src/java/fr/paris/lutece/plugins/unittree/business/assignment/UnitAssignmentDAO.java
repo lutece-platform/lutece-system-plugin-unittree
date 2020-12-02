@@ -47,6 +47,9 @@ import java.util.List;
 
 public class UnitAssignmentDAO implements IUnitAssignmentDAO
 {
+    
+    public static final String BEAN_NAME = "unittree.unitAssignmentDAO";
+    
     private static final String SQL_QUERY_SELECTALL = "SELECT id, unittree_unit_assignment.id_resource, unittree_unit_assignment.resource_type, id_assignor_unit, id_assigned_unit, assignment_date, assignment_type, is_active,"
             + " u_assignor.id_parent as id_parent_assignor_unit, u_assignor.label as label_assignor_unit, u_assignor.description as description_assignor_unit,"
             + " u_assigned.id_parent as id_parent_assigned_unit, u_assigned.label as label_assigned_unit, u_assigned.description as description_assigned_unit"
@@ -60,6 +63,7 @@ public class UnitAssignmentDAO implements IUnitAssignmentDAO
     private static final String SQL_QUERY_INSERT = "INSERT INTO unittree_unit_assignment ( id, id_resource, resource_type, id_assigned_unit, id_assignor_unit, assignment_date, assignment_type, is_active ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ? ) ";
     private static final String SQL_QUERY_DESACTIVATE = "UPDATE unittree_unit_assignment SET is_active = 0 WHERE id = ? ";
     private static final String SQL_QUERY_DESACTIVATE_BY_RESOURCE = " UPDATE unittree_unit_assignment SET is_active = 0 WHERE id_resource = ? AND resource_type = ? ";
+    private static final String SQL_QUERY_DELETE_BY_RESOURCE = " DELETE FROM unittree_unit_assignment WHERE id_resource = ? AND resource_type = ? ";
 
     /**
      * {@inheritDoc }
@@ -217,4 +221,17 @@ public class UnitAssignmentDAO implements IUnitAssignmentDAO
         }
     }
 
+    @Override
+    public void deleteByResource( int nIdResource, String strResourceType, Plugin plugin )
+    {
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_BY_RESOURCE, plugin ) )
+        {
+            int nIndex = 0;
+            daoUtil.setInt( ++nIndex, nIdResource );
+            daoUtil.setString( ++nIndex, strResourceType );
+
+            daoUtil.executeUpdate( );
+        }
+        
+    }
 }

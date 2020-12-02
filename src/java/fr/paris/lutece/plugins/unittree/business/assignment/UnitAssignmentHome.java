@@ -49,7 +49,7 @@ public final class UnitAssignmentHome
     private static Plugin _plugin = PluginService.getPlugin( UnitTreePlugin.PLUGIN_NAME );
 
     // Static variable pointed at the DAO instance
-    private static IUnitAssignmentDAO _dao = SpringContextService.getBean( IUnitAssignmentDAO.BEAN_NAME );
+    private static IUnitAssignmentDAO _dao = SpringContextService.getBean( UnitAssignmentDAO.BEAN_NAME );
 
     /**
      * Private constructor
@@ -133,5 +133,20 @@ public final class UnitAssignmentHome
     public static void deactivateByResource( int nIdResource, String strResourceType )
     {
         _dao.deactivateByResource( nIdResource, strResourceType, _plugin );
+    }
+    
+    /**
+     * <p>
+     * Delete the units assignments associated to the specified resource.
+     * </p>
+     * 
+     * @param nIdResource
+     *            the resource id
+     * @param strResourceType
+     *            the resource type
+     */
+    public static void deleteByResource( int nIdResource, String strResourceType )
+    {
+        _dao.deleteByResource( nIdResource, strResourceType, _plugin );
     }
 }

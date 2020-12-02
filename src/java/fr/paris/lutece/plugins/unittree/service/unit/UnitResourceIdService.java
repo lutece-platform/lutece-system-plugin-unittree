@@ -33,6 +33,10 @@
  */
 package fr.paris.lutece.plugins.unittree.service.unit;
 
+import java.util.Locale;
+
+import org.apache.commons.lang.StringUtils;
+
 import fr.paris.lutece.plugins.unittree.business.unit.Unit;
 import fr.paris.lutece.plugins.unittree.service.UnitTreePlugin;
 import fr.paris.lutece.portal.service.rbac.Permission;
@@ -41,10 +45,6 @@ import fr.paris.lutece.portal.service.rbac.ResourceType;
 import fr.paris.lutece.portal.service.rbac.ResourceTypeManager;
 import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.util.ReferenceList;
-
-import org.apache.commons.lang.StringUtils;
-
-import java.util.Locale;
 
 /**
  *
@@ -154,7 +154,7 @@ public class UnitResourceIdService extends ResourceIdService
      */
     public ReferenceList getResourceIdList( Locale locale )
     {
-        IUnitService unitService = SpringContextService.getBean( IUnitService.BEAN_UNIT_SERVICE );
+        IUnitService unitService = SpringContextService.getBean( UnitService.BEAN_UNIT_SERVICE );
         ReferenceList listResources = new ReferenceList( );
 
         for ( Unit unit : unitService.getAllUnits( false ) )
@@ -178,7 +178,7 @@ public class UnitResourceIdService extends ResourceIdService
     {
         if ( StringUtils.isNotBlank( strId ) && StringUtils.isNumeric( strId ) )
         {
-            IUnitService unitService = SpringContextService.getBean( IUnitService.BEAN_UNIT_SERVICE );
+            IUnitService unitService = SpringContextService.getBean( UnitService.BEAN_UNIT_SERVICE );
             int nIdUnit = Integer.parseInt( strId );
             Unit unit = unitService.getUnit( nIdUnit, false );
 

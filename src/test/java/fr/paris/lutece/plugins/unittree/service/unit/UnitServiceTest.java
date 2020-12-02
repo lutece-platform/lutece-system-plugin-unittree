@@ -55,7 +55,7 @@ public class UnitServiceTest extends LuteceTestCase
 
         _unitService = new UnitService( );
     }
-    
+
     public void testAllSubUnitsOfNotExistingUnit( )
     {
         Unit unit = MockUnit.create( );
@@ -176,7 +176,7 @@ public class UnitServiceTest extends LuteceTestCase
         UnitHome.remove( unitChild1.getIdUnit( ) );
         UnitHome.remove( unitChild2.getIdUnit( ) );
         UnitHome.remove( unitParent.getIdUnit( ) );
-        
+
     }
 
     public void testAllSubUnitsOfUnitInTheMiddleOfComplexUnitTree( )

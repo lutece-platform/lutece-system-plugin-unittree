@@ -42,8 +42,6 @@ import java.util.List;
 
 public interface IUnitAssignmentDAO
 {
-    String BEAN_NAME = "unittree.unitAssignmentDAO";
-
     /**
      * Inserts a new record in the table.
      * 
@@ -112,5 +110,17 @@ public interface IUnitAssignmentDAO
      *            The plugin
      */
     void deactivateByResource( int nIdResource, String strResourceType, Plugin plugin );
+    
+    /**
+     * Deletes the unit assignments associated to the specified resource
+     * 
+     * @param nIdResource
+     *            The resource id
+     * @param strResourceType
+     *            The resource type
+     * @param plugin
+     *            The plugin
+     */
+    void deleteByResource( int nIdResource, String strResourceType, Plugin plugin );
 
 }

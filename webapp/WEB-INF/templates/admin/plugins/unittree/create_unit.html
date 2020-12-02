@@ -1,55 +1,29 @@
-<div class="row">
-  <div class="col-xs-12 col-sm-12">
-    <div class="box box-solid">
-      <div class="box-header with-border">
-        <h3 class="box-title">#i18n{unittree.createUnit.pageTitle}</h3>
-      </div>
-      <div class="box-body">
-        <form class="form-horizontal" method="post" action="jsp/admin/plugins/unittree/DoCreateUnit.jsp">
-          <input type="hidden" name="idParent" value="${parentUnit.idUnit!}">
-          <div class="form-group">
-            <label class="col-xs-12 col-sm-2 control-label" for="idParent">#i18n{unittree.createUnit.labelParentUnit} </label>
-              <div class="col-xs-12 col-sm-9">
-                <p class="form-control-static">${parentUnit.label!}</p>
-              </div>
-          </div>
-          <div class="form-group">
-            <label class="col-xs-12 col-sm-2 control-label" for="idParent">#i18n{unittree.createUnit.labelCode} *</label>
-          	<div class="col-xs-12 col-sm-9">
-              <input type="text" class="form-control" value="" name="code">
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-xs-12 col-sm-2 control-label" for="idParent">#i18n{unittree.createUnit.labelLabel} *</label>
-          	<div class="col-xs-12 col-sm-9">
-              <input type="text" class="form-control" value="" name="label">
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-xs-12 col-sm-2 control-label" for="label">#i18n{unittree.modifyUnit.labelDescription} *</label>
-          	<div class="col-xs-12 col-sm-9">
-              <input type="text" class="form-control" value="" name="description">
-            </div>
-          </div>
-          <#if listUnitAttributes?? && listUnitAttributes?has_content>
-            <#list listUnitAttributes as unitAttribute>
-              <#if unitAttribute.template?has_content && unitAttribute.displayedInUnitForm>
-                <#include unitAttribute.template />
-              </#if>
-            </#list>
-          </#if>
-          <div class="form-group">
-            <div class="col-xs-12 col-sm-offset-2 col-sm-9">
-              <button type="submit" name="save" class="btn btn-primary" value="#i18n{portal.util.labelCreate}" >
-                <i class="fa fa-check"></i> #i18n{portal.util.labelCreate}
-              </button>
-              <button type="submit" name="cancel" class="btn btn-default" value="#i18n{portal.util.labelCancel}" >
-                <i class="fa fa-remove"></i> #i18n{portal.util.labelCancel}
-              </button>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
+<@row> 
+	<@columns>
+		<@box>
+			<@boxHeader title='#i18n{unittree.createUnit.pageTitle}' />
+			<@boxBody>
+				<@tform method='post' action='jsp/admin/plugins/unittree/DoCreateUnit.jsp'>
+					<@input type='hidden' name='idParent' value='${parentUnit.idUnit!}' />
+					<@formGroup labelFor='idParent' labelKey='#i18n{unittree.createUnit.labelParentUnit}'>
+						<@staticText>${parentUnit.label!}</@staticText>
+					</@formGroup>
+					<@formGroup labelFor='idParent' labelKey='#i18n{unittree.createUnit.labelCode}' mandatory=true>						<@input type='text' name='code' value='' />					</@formGroup>
+					<@formGroup labelFor='idParent' labelKey='#i18n{unittree.createUnit.labelLabel}' mandatory=true>						<@input type='text' name='label' value='' />					</@formGroup>
+					<@formGroup labelFor='label' labelKey='#i18n{unittree.modifyUnit.labelDescription}' mandatory=true>						<@input type='text' name='description' value='' />					</@formGroup>
+					<#if listUnitAttributes?? && listUnitAttributes?has_content>
+						<#list listUnitAttributes as unitAttribute>
+							<#if unitAttribute.template?has_content && unitAttribute.displayedInUnitForm>
+								<#include unitAttribute.template />
+							</#if>
+						</#list>
+					</#if>
+					<@formGroup>
+						<@button type='submit' name='save' value='#i18n{portal.util.labelCreate}' title='#i18n{portal.util.labelCreate}' buttonIcon='check' />
+						<@button type='submit' name='cancel' value='#i18n{portal.util.labelCancel}' title='#i18n{portal.util.labelCancel}' buttonIcon='times' cancel=true />
+					</@formGroup>
+				</@tform> 
+			</@boxBody>
+		</@box>
+	</@columns>
+</@row>
