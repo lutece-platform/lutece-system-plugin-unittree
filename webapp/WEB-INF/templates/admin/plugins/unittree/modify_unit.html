@@ -1,64 +1,38 @@
-<div class="row">
-  <div class="col-xs-12 col-sm-12">
-      <div class="box box-solid">
-        <div class="box-header with-border">
-          <h3 class="box-title">#i18n{unittree.modifyUnit.pageTitle}</h3>
-        </div>
-        <div class="box-body">
-          <form class="form-horizontal" method="post" action="jsp/admin/plugins/unittree/DoModifyUnit.jsp">
-         	<input type="hidden" name="idUnit" value="${unit.idUnit!}">
-         	<#if parentUnit??>
-          	<div class="form-group">
-          		<label class="col-xs-12 col-sm-2 control-label" for="idParent">#i18n{unittree.createUnit.labelParentUnit}</label>
-          		<div class="col-xs-12 col-sm-9">
-          			<p class="form-control-static">${parentUnit.label!}</p>
-          		</div>
-          	</div>
-          	</#if>
-         	<div class="form-group">
-         		<label class="col-xs-12 col-sm-2 control-label" for="code">#i18n{unittree.modifyUnit.labelCode} * :</label>
-        		<div class="col-xs-12 col-sm-9">
-          		<input type="text" class="form-control" value="${unit.code!}" name="code" id="code">
-          		</div>
-            </div>
-         	<div class="form-group">
-         		<label class="col-xs-12 col-sm-2 control-label" for="label">#i18n{unittree.modifyUnit.labelLabel} * :</label>
-        		<div class="col-xs-12 col-sm-9">
-          		<input type="text" class="form-control" value="${unit.label!}" name="label" id="label">
-          		</div>
-         	</div>
-         	<div class="form-group">
-         		<label class="col-xs-12 col-sm-2 control-label" for="description">#i18n{unittree.modifyUnit.labelDescription} * : </label>
-        		<div class="col-xs-12 col-sm-9">
-          		<input type="text" class="form-control" value="${unit.description!}" name="description" id="description">
-          		</div>
-         	</div>
-         	<#if listUnitAttributes?? && listUnitAttributes?has_content>
-      			<#list listUnitAttributes as unitAttribute>
-      				<#if unitAttribute.template?has_content && unitAttribute.displayedInUnitForm>
-      					<#include unitAttribute.template />
-      				</#if>
-      			</#list>
-      		</#if>
-       		<div class="form-group">
-              <div class="col-xs-12 col-sm-offset-2 col-sm-9">
-        			<button type="submit" name="save" class="btn btn-primary" value="#i18n{portal.util.labelModify}" >
-        				<i class="fa fa-check"></i> #i18n{portal.util.labelModify}
-        			</button>
-         			<button type="submit" name="cancel" class="btn btn-default" value="#i18n{portal.util.labelCancel}" >
-         				<i class="fa fa-remove"></i> #i18n{portal.util.labelCancel}
-         			</button>
-       		  </div>
-       		</div>
-        </form>
-        <#if listUnitAttributes?? && listUnitAttributes?has_content>
-        	<#list listUnitAttributes as unitAttribute>
-        		<#if unitAttribute.template?has_content && !unitAttribute.displayedInUnitForm>
-        			<#include unitAttribute.template />
-        		</#if>
-        	</#list>
-        </#if>
-      </div>
-    </div>
-  </div>
-</div>
+<@row> 
+	<@columns>
+		<@box>
+			<@boxHeader title='#i18n{unittree.modifyUnit.pageTitle}' />
+			<@boxBody>
+				<@tform method='post' action='jsp/admin/plugins/unittree/DoModifyUnit.jsp'>
+					<@input type='hidden' name='idUnit' value='${unit.idUnit!}' />
+					<#if parentUnit??>
+					<@formGroup labelFor='idParent' labelKey='#i18n{unittree.createUnit.labelParentUnit}'>
+						<@staticText>${parentUnit.label!}</@staticText>
+					</@formGroup>
+					</#if>
+					<@formGroup labelFor='code' labelKey='#i18n{unittree.modifyUnit.labelCode}' mandatory=true>						<@input type='text' name='code' id='code' value='${unit.code!}' />					</@formGroup>
+					<@formGroup labelFor='label' labelKey='#i18n{unittree.modifyUnit.labelLabel}' mandatory=true>						<@input type='text' name='label' id='label' value='${unit.label!}' />					</@formGroup>
+					<@formGroup labelFor='description' labelKey='#i18n{unittree.modifyUnit.labelDescription}' mandatory=true>						<@input type='text' name='description' id='description' value='${unit.description!}' />					</@formGroup>
+					<#if listUnitAttributes?? && listUnitAttributes?has_content>
+						<#list listUnitAttributes as unitAttribute>
+							<#if unitAttribute.template?has_content && unitAttribute.displayedInUnitForm>
+								<#include unitAttribute.template />
+							</#if>
+						</#list>
+					</#if>
+					<@formGroup>
+						<@button type='submit' name='save' value='#i18n{portal.util.labelModify}' title='#i18n{portal.util.labelModify}' buttonIcon='check' />
+						<@button type='submit' name='cancel' value='#i18n{portal.util.labelCancel}' title='#i18n{portal.util.labelCancel}' buttonIcon='times' cancel=true />
+					</@formGroup>
+				</@tform>
+				<#if listUnitAttributes?? && listUnitAttributes?has_content>
+					<#list listUnitAttributes as unitAttribute>
+						<#if unitAttribute.template?has_content && !unitAttribute.displayedInUnitForm>
+							<#include unitAttribute.template />
+						</#if>
+					</#list>
+				</#if>
+			</@boxBody>
+		</@box>
+	</@columns>
+</@row>

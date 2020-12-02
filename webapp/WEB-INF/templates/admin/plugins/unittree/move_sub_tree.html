@@ -1,57 +1,40 @@
-<div class="row">
-  <div class="col-xs-12 col-sm-12">
-    <div class="box box-solid">
-      <div class="box-header with-border">
-        <h3 class="box-title">#i18n{unittree.moveSubTree.pageTitle} : <strong>${unitToMove.label!}</strong></h3>
-			</div>
-			<div class="box-body">
-				<form method="post" action="jsp/admin/plugins/unittree/DoMoveSubTree.jsp">
-  			<div class="form-group">
-    			<label class="col-xs-12 col-sm-2 control-label" for=""></label>
-					<div class="col-xs-12 col-sm-9">
-						<p class="form-control-static">
-		    		<#if unit??>
-		   				<#assign idParent = unit.idParent>
-								<a href="jsp/admin/plugins/unittree/MoveSubTree.jsp?idUnit=${unitToMove.idUnit!}&amp;idUnitParent=${idParent}" title="#i18n{unittree.moveUser.labelMoveUp}">
-									<i class="fa fa-folder-o"></i> #i18n{unittree.moveUser.labelMoveUp}
-								</a>
-		   			<#else>
-		   				<#assign idParent = -1>
-		   			</#if>
-					</p>
-					</div>
-				</div>
-				<div class="form-group">
-		    	<label class="col-xs-12 col-sm-2 control-label" for=""></label>
-					<div class="col-xs-12 col-sm-9">
+<@row> 
+	<@columns>
+		<@box>
+			<@boxHeader title='#i18n{unittree.moveSubTree.pageTitle} : <strong>${unitToMove.label!}</strong>' />
+			<@boxBody>
+				<@tform method='post' action='jsp/admin/plugins/unittree/DoMoveSubTree.jsp'>
+					<@formGroup>
+						<@staticText>
+							<#if unit??>
+								<#assign idParent = unit.idParent>
+								<@aButton href='jsp/admin/plugins/unittree/MoveSubTree.jsp?idUnit=${unitToMove.idUnit!}&amp;idUnitParent=${idParent}' title='#i18n{unittree.moveUser.labelMoveUp}' buttonIcon='folder' />
+							<#else>
+								<#assign idParent = -1>
+							</#if>
+						</@staticText>
+					</@formGroup>
+					<@formGroup labelFor='' labelKey=''>
 						<#if listSubUnits?? && listSubUnits?has_content>
 			   				<#list listSubUnits as subUnit>
-								<div class="radio">
-									<label>
-			   						<input type="radio" name="idUnitParent" value="${subUnit.idUnit!}">
-			   						<a href="jsp/admin/plugins/unittree/MoveSubTree.jsp?idUnit=${unitToMove.idUnit!}&amp;idUnitParent=${subUnit.idUnit!}" title="#i18n{unittree.moveUser.labelAccessTo}" >
-			   							<i class="fa fa-folder-open" ></i> ${subUnit.label!}
-			   						</a>
-									</label>
-								</div>
-			   				</#list>
+								<#assign radioLabel>
+									<@link href='jsp/admin/plugins/unittree/MoveSubTree.jsp?idUnit=${unitToMove.idUnit!}&amp;idUnitParent=${subUnit.idUnit!}' title='#i18n{unittree.moveUser.labelAccessTo}'><@icon style='folder-open' /> ${subUnit.label!}</@link>
+								</#assign>
+								<@radioButton labelFor='idUnitParent' labelKey=radioLabel name='idUnitParent' value='${subUnit.idUnit!}' params='style="display:inline-block;"'/>
+							</#list>
 			   			<#else>
-			   				#i18n{unittree.moveSubTree.labelNoSuUnit}
+			   				<@alert color='info'>#i18n{unittree.moveSubTree.labelNoSuUnit}</@alert>
 		   				</#if>
-   				</div>
-   			</div>
-    		<div class="form-group">
-					<div class="col-xs-12 col-sm-offset-3 col-sm-9">
-	    			<input type="hidden" name="idUnit" value="${unitToMove.idUnit!}">
-	   				<button type="submit" name="move" class="btn btn-primary btn-sm" value="#i18n{unittree.moveUser.btnMove}" >
-	   					<i class="fa fa-check"></i> #i18n{unittree.moveUser.btnMove}
-	   				</button>
-	    			<button type="submit" name="cancel" class="btn btn-default btn-sm" value="#i18n{portal.util.labelCancel}" >
-	    				<i class="fa fa-remove"></i> #i18n{portal.util.labelCancel}
-	    			</button>
-    			</div>
-    		</div>
-			</form>
-		</div>
-	</div>
-</div>
+					</@formGroup>
+					<@formGroup>
+						<#if listSubUnits?? && listSubUnits?has_content>
+						<@input type='hidden' name='idUnit' value='${unitToMove.idUnit!}' />
+						<@button type='submit' name='move' value='#i18n{unittree.moveUser.btnMove}' buttonIcon='check' title='#i18n{unittree.moveUser.btnMove}' />
+						</#if>
+						<@button type='submit' name='cancel' value='#i18n{portal.util.labelCancel}' buttonIcon='times' title='#i18n{portal.util.labelCancel}' cancel=true />
+					</@formGroup>
+				</@tform>
+			</@boxBody>
+		</@box>
+	</@columns>
+</@row>
