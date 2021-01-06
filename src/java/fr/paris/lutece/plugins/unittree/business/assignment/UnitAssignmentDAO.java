@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2020, City of Paris
+ * Copyright (c) 2002-2021, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -47,9 +47,9 @@ import java.util.List;
 
 public class UnitAssignmentDAO implements IUnitAssignmentDAO
 {
-    
+
     public static final String BEAN_NAME = "unittree.unitAssignmentDAO";
-    
+
     private static final String SQL_QUERY_SELECTALL = "SELECT id, unittree_unit_assignment.id_resource, unittree_unit_assignment.resource_type, id_assignor_unit, id_assigned_unit, assignment_date, assignment_type, is_active,"
             + " u_assignor.id_parent as id_parent_assignor_unit, u_assignor.label as label_assignor_unit, u_assignor.description as description_assignor_unit,"
             + " u_assigned.id_parent as id_parent_assigned_unit, u_assigned.label as label_assigned_unit, u_assigned.description as description_assigned_unit"
@@ -232,6 +232,6 @@ public class UnitAssignmentDAO implements IUnitAssignmentDAO
 
             daoUtil.executeUpdate( );
         }
-        
+
     }
 }

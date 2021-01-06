@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2020, City of Paris
+ * Copyright (c) 2002-2021, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -110,7 +110,7 @@ public interface IUnitAssignmentDAO
      *            The plugin
      */
     void deactivateByResource( int nIdResource, String strResourceType, Plugin plugin );
-    
+
     /**
      * Deletes the unit assignments associated to the specified resource
      * 
