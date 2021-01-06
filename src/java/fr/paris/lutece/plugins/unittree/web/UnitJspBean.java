@@ -101,7 +101,6 @@ public class UnitJspBean extends PluginAdminPageJspBean
     private static final String PROPERTY_CREATE_UNIT_PAGE_TITLE = "unittree.createUnit.pageTitle";
     private static final String PROPERTY_MODIFY_UNIT_PAGE_TITLE = "unittree.modifyUnit.pageTitle";
     private static final String PROPERTY_ADD_USERS_PAGE_TITLE = "unittree.addUsers.pageTitle";
-    private static final String PROPERTY_MODIFY_USER_PAGE_TITLE = "unittree.modifyUser.pageTitle";
     private static final String PROPERTY_MOVE_USER_PAGE_TITLE = "unittree.moveUser.pageTitle";
     private static final String PROPERTY_MOVE_UNIT_PAGE_TITLE = "unittree.moveSubTree.pageTitle";
 
@@ -126,7 +125,6 @@ public class UnitJspBean extends PluginAdminPageJspBean
     private static final String MARK_LIST_UNIT_USER_PLUGIN_ACTIONS = "listUnitUserPluginActions";
     private static final String MARK_UNIT = "unit";
     private static final String MARK_UNIT_TO_MOVE = "unitToMove";
-    private static final String MARK_UNITS = "units";
     private static final String MARK_UNIT_PARENT = "unitParent";
     private static final String MARK_USER = "user";
     private static final String MARK_LIST_UNIT_ATTRIBUTES = "listUnitAttributes";
@@ -153,7 +151,6 @@ public class UnitJspBean extends PluginAdminPageJspBean
     private static final String TEMPLATE_CREATE_UNIT = "/admin/plugins/unittree/create_unit.html";
     private static final String TEMPLATE_MODIFY_UNIT = "/admin/plugins/unittree/modify_unit.html";
     private static final String TEMPLATE_ADD_USERS = "/admin/plugins/unittree/add_users.html";
-    private static final String TEMPLATE_MODIFY_USER = "/admin/plugins/unittree/modify_user.html";
     private static final String TEMPLATE_MOVE_USER = "/admin/plugins/unittree/move_user.html";
     private static final String TEMPLATE_MOVE_SUB_UNIT = "admin/plugins/unittree/move_sub_tree.html";
 
@@ -431,68 +428,6 @@ public class UnitJspBean extends PluginAdminPageJspBean
         UnitUserAttributeManager.fillModel( request, getUser( ), model, MARK_LIST_UNIT_USER_ATTRIBUTES );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_ADD_USERS, getLocale( ), model );
-
-        return getAdminPage( template.getHtml( ) );
-    }
-
-    /**
-     * Get modify the user
-     * 
-     * @param request
-     *            the HTTP request
-     * @return the HTML code
-     * @throws AccessDeniedException
-     *             exception if the user does not have the permission
-     */
-    public String getModifyUser( HttpServletRequest request ) throws AccessDeniedException
-    {
-        setPageTitleProperty( PROPERTY_MODIFY_USER_PAGE_TITLE );
-
-        List<Unit> listUnits = null;
-        AdminUser user = null;
-        String strIdUnit = request.getParameter( PARAMETER_ID_UNIT );
-        String strIdUser = request.getParameter( PARAMETER_ID_USER );
-
-        if ( StringUtils.isNotBlank( strIdUnit ) && StringUtils.isNumeric( strIdUnit ) && StringUtils.isNotBlank( strIdUser )
-                && StringUtils.isNumeric( strIdUser ) )
-        {
-            int nIdUser = Integer.parseInt( strIdUser );
-            user = _unitUserService.getUser( nIdUser );
-            listUnits = _unitService.getUnitsByIdUser( nIdUser, false );
-        }
-
-        if ( ( listUnits == null ) || ( user == null ) )
-        {
-            throw new AppException( );
-        }
-
-        boolean bPermission = false;
-
-        for ( Unit unit : listUnits )
-        {
-            bPermission = _unitService.isAuthorized( unit, UnitResourceIdService.PERMISSION_MODIFY_USER, getUser( ),
-                    UnittreeRBACRecursiveType.PARENT_RECURSIVE );
-
-            if ( bPermission )
-            {
-                break;
-            }
-        }
-
-        // Check permissions
-        if ( !bPermission )
-        {
-            String strErrorMessage = I18nService.getLocalizedString( MESSAGE_ACCESS_DENIED, getLocale( ) );
-            throw new AccessDeniedException( strErrorMessage );
-        }
-
-        Map<String, Object> model = new HashMap<>( );
-        model.put( MARK_UNITS, listUnits );
-        model.put( MARK_USER, user );
-        model.put( MARK_UNIT, strIdUnit );
-        UnitUserAttributeManager.fillModel( request, getUser( ), model, MARK_LIST_UNIT_USER_ATTRIBUTES );
-
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MODIFY_USER, getLocale( ), model );
 
         return getAdminPage( template.getHtml( ) );
     }
@@ -881,46 +816,6 @@ public class UnitJspBean extends PluginAdminPageJspBean
                 _unitUserService.doProcessAddUser( nIdUser, getUser( ), request );
                 _unitUserService.addUserToUnit( nIdUnit, nIdUser );
             }
-        }
-
-        UrlItem url = new UrlItem( JSP_MANAGE_UNITS );
-        url.addParameter( PARAMETER_ID_UNIT, nIdUnit );
-
-        return url.getUrl( );
-    }
-
-    /**
-     * Do modify user
-     * 
-     * @param request
-     *            the HTTP request
-     * @return the JSP return
-     */
-    public String doModifyUser( HttpServletRequest request )
-    {
-        String strIdUnit = request.getParameter( PARAMETER_ID_UNIT );
-        String strIdUser = request.getParameter( PARAMETER_ID_USER );
-
-        if ( StringUtils.isBlank( strIdUnit ) || !StringUtils.isNumeric( strIdUnit ) || StringUtils.isBlank( strIdUser )
-                || !StringUtils.isNumeric( strIdUser ) )
-        {
-            return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
-        }
-
-        // Check permissions
-        if ( !_unitService.isAuthorized( strIdUnit, UnitResourceIdService.PERMISSION_MODIFY_USER, getUser( ), UnittreeRBACRecursiveType.PARENT_RECURSIVE ) )
-        {
-            return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP );
-        }
-
-        int nIdUnit = Integer.parseInt( strIdUnit );
-        int nIdUser = Integer.parseInt( strIdUser );
-        Unit unit = _unitService.getUnit( nIdUnit, false );
-        AdminUser user = _unitUserService.getUser( nIdUser );
-
-        if ( ( unit != null ) && ( user != null ) )
-        {
-            _unitUserService.doProcessModifyUser( nIdUser, getUser( ), request );
         }
 
         UrlItem url = new UrlItem( JSP_MANAGE_UNITS );
