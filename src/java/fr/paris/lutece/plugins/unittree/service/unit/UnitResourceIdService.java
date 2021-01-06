@@ -62,7 +62,6 @@ public class UnitResourceIdService extends ResourceIdService
     /** Permission for deleting a space */
     public static final String PERMISSION_DELETE = "DELETE";
     public static final String PERMISSION_ADD_USER = "ADD_USER";
-    public static final String PERMISSION_MODIFY_USER = "MODIFY_USER";
     public static final String PERMISSION_MOVE_USER = "MOVE_USER";
     public static final String PERMISSION_MOVE_UNIT = "MOVE_UNIT";
     public static final String PERMISSION_REMOVE_USER = "REMOVE_USER";
@@ -72,7 +71,6 @@ public class UnitResourceIdService extends ResourceIdService
     private static final String PROPERTY_LABEL_MODIFY = "unittree.unit.permission.label.modify";
     private static final String PROPERTY_LABEL_DELETE = "unittree.unit.permission.label.delete";
     private static final String PROPERTY_LABEL_ADD_USER = "unittree.unit.permission.label.addUser";
-    private static final String PROPERTY_LABEL_MODIFY_USER = "unittree.unit.permission.label.modifyUser";
     private static final String PROPERTY_LABEL_MOVE_USER = "unittree.unit.permission.label.moveUser";
     private static final String PROPERTY_LABEL_REMOVE_USER = "unittree.unit.permission.label.removeUser";
     private static final String PROPERTY_LABEL_MOVE_UNIT = "unittree.unit.action.moveSubTree.name";
@@ -115,11 +113,6 @@ public class UnitResourceIdService extends ResourceIdService
         p = new Permission( );
         p.setPermissionKey( PERMISSION_ADD_USER );
         p.setPermissionTitleKey( PROPERTY_LABEL_ADD_USER );
-        rt.registerPermission( p );
-
-        p = new Permission( );
-        p.setPermissionKey( PERMISSION_MODIFY_USER );
-        p.setPermissionTitleKey( PROPERTY_LABEL_MODIFY_USER );
         rt.registerPermission( p );
 
         p = new Permission( );
