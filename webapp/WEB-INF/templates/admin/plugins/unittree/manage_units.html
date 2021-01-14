@@ -1,6 +1,6 @@
 <#include "unittree_commons.html" />
 <@row> 
-	<@columns md=4>
+	<@columns xs=12 xl=4>
 		<@box>
 			<@boxHeader title='#i18n{unittree.manageUnits.labelUnits}'>
 				<#if listUnitActions?? && listUnitActions?has_content>
@@ -16,7 +16,6 @@
 				<@button type='button' style='card-control collapse' buttonTargetId='#tree' buttonIcon='minus' size='sm' />
 			</@boxHeader>
 			<@boxBody>
-
 				<div class="jstree-default" id="tree">
 					<ul>
 						 <@displaySubUnits treeUnit=unitTree />
@@ -25,7 +24,7 @@
 			</@boxBody>
 		</@box>
 	</@columns>
-	<@columns md=8>
+	<@columns xs=12 xl=8>
 		<@box>
 			<@boxHeader title='#i18n{unittree.manageUnits.labelListUsers}'>
 				<@tform method='post' action='jsp/admin/plugins/unittree/ManageUnits.jsp'>
@@ -47,29 +46,29 @@
 					<@input type='hidden' name='idUnit' value='${unit.idUnit!}' />
 					<#assign additionnalAttribute="&session=session&idUnit=" + unit.idUnit! + sort_search_attribute!>
 					<@table>
-						<tr>
+						<@tr>
 							<#if adminAvatar>
-							<th>&nbsp;</th>
+							<@th>&nbsp;</@th>
 							</#if>
-							<th>
+							<@th>
 								#i18n{unittree.manageUnits.labelFirstName}
 								<@sort jsp_url="jsp/admin/plugins/unittree/ManageUnits.jsp" attribute="firstName${additionnalAttribute!}" />
-							</th>
-							<th>
+							</@th>
+							<@th>
 								#i18n{unittree.manageUnits.labelLastName}
 								<@sort jsp_url="jsp/admin/plugins/unittree/ManageUnits.jsp" attribute="lastName${additionnalAttribute!}" />
-							</th>
-							<th>
+							</@th>
+							<@th>
 								#i18n{unittree.manageUnits.labelAccessCode}
 								<@sort jsp_url="jsp/admin/plugins/unittree/ManageUnits.jsp" attribute="accessCode${additionnalAttribute!}" />
-							</th>
-							<th>
+							</@th>
+							<@th>
 								#i18n{unittree.manageUnits.labelEmail}
 								<@sort jsp_url="jsp/admin/plugins/unittree/ManageUnits.jsp" attribute="email${additionnalAttribute!}" />
-							</th>
-							<th>#i18n{unittree.manageUnits.labelAssociatedUnit}</th>
-							<th>#i18n{unittree.manageUnits.labelActions}</th>
-						</tr>
+							</@th>
+							<@th>#i18n{unittree.manageUnits.labelAssociatedUnit}</@th>
+							<@th>#i18n{unittree.manageUnits.labelActions}</@th>
+						</@tr>
 					<#if listUsers?? && listUsers?has_content>
 					<#list listUsers as user>
 						<#if mapIdUserUnit[ "" + user.userId]??>
@@ -77,20 +76,20 @@
 						<#else>
 							<#assign userUnit=unit>
 						</#if>
-						<tr>
+						<@tr>
 							<#if adminAvatar>
-							<td>
+							<@td>
 								<img class="direct-chat-img" src="servlet/plugins/adminavatar/avatar?id_user=${user.userId}" alt="Avatar" title="Avatar">
-							</td>
+							</@td>
 							</#if>
-							<td>${user.firstName!}</td>
-							<td>${user.lastName!}</td>
-							<td>${user.accessCode!}</td>
-							<td>${user.email!}</td>
-							<td>
+							<@td>${user.firstName!}</@td>
+							<@td>${user.lastName!}</@td>
+							<@td>${user.accessCode!}</@td>
+							<@td>${user.email!}</@td>
+							<@td>
 								<@aButton href='jsp/admin/plugins/unittree/ManageUnits.jsp?idUnit=${userUnit.idUnit!}' buttonIcon='folder' title='${userUnit.label!}' size='sm' color='info' />
-							</td>
-							<td>
+							</@td>
+							<@td>
 								<#if listUnitUserActions?? && listUnitUserActions?has_content>
 								<#list listUnitUserActions as unitUserAction>
 								<#if unitUserAction.nameKey?? && unitUserAction.nameKey == 'unittree.user.action.removeUser.name'>
@@ -101,8 +100,8 @@
 								<@aButton href='${unitUserAction.url!}?idUnit=${userUnit.idUnit!}&amp;idUser=${user.userId!}' title='${unitUserAction.name!}' hideTitle=['all'] buttonIcon='${unitUserAction.icon!}' color=aButtonColor size='sm' />
 								</#list>
 								</#if>
-							</td>
-						</tr>
+							</@td>
+						</@tr>
 					</#list>
 					</#if>
 					</@table>
