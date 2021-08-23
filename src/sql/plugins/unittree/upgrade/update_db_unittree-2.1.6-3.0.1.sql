@@ -5,4 +5,4 @@ UPDATE unittree_action SET icon_url='sort' WHERE id_action=5;
 UPDATE unittree_action SET icon_url='user-times' WHERE id_action=6;
 UPDATE unittree_action SET icon_url='sort' WHERE id_action=10;
 
-DELETE FROM unittree_action WHERE id = 4;
+DELETE FROM unittree_action WHERE id_action = 4;
