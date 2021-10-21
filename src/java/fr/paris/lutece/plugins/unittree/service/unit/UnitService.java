@@ -49,7 +49,7 @@ import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.util.ReferenceList;
 import fr.paris.lutece.util.xml.XmlUtil;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import org.springframework.transaction.annotation.Transactional;
 

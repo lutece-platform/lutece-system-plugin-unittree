@@ -44,7 +44,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import fr.paris.lutece.plugins.unittree.business.action.UnitAction;
 import fr.paris.lutece.plugins.unittree.business.action.UnitUserAction;

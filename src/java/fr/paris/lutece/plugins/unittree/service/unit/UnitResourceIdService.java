@@ -35,7 +35,7 @@ package fr.paris.lutece.plugins.unittree.service.unit;
 
 import java.util.Locale;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import fr.paris.lutece.plugins.unittree.business.unit.Unit;
 import fr.paris.lutece.plugins.unittree.service.UnitTreePlugin;
