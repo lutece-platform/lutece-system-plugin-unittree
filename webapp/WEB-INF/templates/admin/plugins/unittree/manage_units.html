@@ -27,7 +27,7 @@
 	<@columns xs=12 xl=8>
 		<@box>
 			<@boxHeader title='#i18n{unittree.manageUnits.labelListUsers}'>
-				<@tform method='post' action='jsp/admin/plugins/unittree/ManageUnits.jsp'>
+				<@tform type='inline' method='post' action='jsp/admin/plugins/unittree/ManageUnits.jsp'>
 					<@input type='hidden' name='idUnit' value='${unit.idUnit!}' />
 					<#if listUnitUserPluginActions?? && listUnitUserPluginActions?has_content>
 						<#list listUnitUserPluginActions as unitUserPluginAction>
@@ -113,33 +113,23 @@
 		</@box>
 	</@columns>
 </@row>
-
-  <#-- JS for tree display -->
-    <script src="js/jquery/plugins/ui/jstree/jquery.cookie.js" type="text/javascript"></script>
-    <script src="js/jquery/plugins/ui/jstree/jquery.jstree.js" type="text/javascript"></script>
-    <script src="js/jquery/plugins/ui/jstree/jquery.hotkeys.js" type="text/javascript"></script>
-    <script type="text/javascript">
-      $(function($) {
-        // Set idunit
-        var idunit = ${unit.idUnit!};
-
-        // Set the cookie of jstree
-        $.cookie("jstree_select", "#node-" + idunit);
-        $("#tree").jstree({
-          "ui": {
-            "select_limit": 1,
-          },
-          "themes": {
-            "theme": "classic",
-            "icons": false
-          },
-          "cookies": {
-            "save_opened": false,
-          },
-          "core": {
-            "initially_open": ["node-0"]
-          },
-          "plugins": ["themes", "html_data", "cookies", "ui"]
-        });
-      });
-    </script>
+<link rel="stylesheet" href="js/admin/lib/jstree/themes/proton/style.min.css" >
+<script src="js/admin/lib/jstree/jstree.min.js"></script>
+<script>
+let selectedTree=jsTreeId=localStorage.getItem('jsTreeSelectedId');
+	$('#tree').jstree({
+		'core': {
+			'multiple' : false,
+            'themes': {
+                'name': 'proton',
+                'responsive': true
+            }
+        },
+	 	'plugins' : [  'search' , 'wholerow' ,'changed'  ]
+	}).on('click', function( e ){
+		window.location.replace( e.target.getAttributeNode('href').value );
+	}).on("changed.jstree", function (e, data) {
+		localStorage.setItem( 'jsTreeSelectedId', data.changed.selected );
+    });
+	$('#tree').jstree( 'select_node', jsTreeId );
+</script>
