@@ -3,7 +3,7 @@
     <name>unittree</name>
     <class>fr.paris.lutece.plugins.unittree.service.UnitTreePlugin
     </class>
-    <version>3.1.1</version>
+    <version>3.1.2-SNAPSHOT</version>
     <documentation/>
     <installation/>
     <changes/>
