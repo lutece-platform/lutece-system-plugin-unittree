@@ -133,6 +133,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
     private static final String MARK_MULTI_AFFECTATION_ENABLED = "multi_affection_enabled";
     private static final String MARK_FILTER_AFFECTED_USERS = "filterAffectedUsers";
     private static final String MARK_ADMIN_AVATAR = "adminAvatar";
+    private static final String MARK_MAP_ID_USER_UNITS = "mapIdUserUnits";
 
     // PARAMETERS
     private static final String PARAMETER_CANCEL = "cancel";
@@ -231,12 +232,20 @@ public class UnitJspBean extends PluginAdminPageJspBean
         List<AdminUser> listUsers = _unitUserService.getUsers( unit.getIdUnit( ), mapIdUserUnit, _unitUserSearchFields.isInDepthSearch( ) );
         String strBaseUrl = AppPathService.getBaseUrl( request ) + JSP_URL_MANAGE_UNITS;
         _unitUserSearchFields.fillModelForUserSearchForm( listUsers, strBaseUrl, request, model, unit );
+        
+        boolean bMultiAffectationEnabled = _unitUserService.isMultiAffectationEnabled( );
+        if ( bMultiAffectationEnabled && CollectionUtils.isNotEmpty( listUsers ) )
+        {
+        	Map<String, List<Unit>> mapIdUserUnits = getUnitsByIdUser( listUsers );
+        	model.put( MARK_MAP_ID_USER_UNITS, mapIdUserUnits );
+        }
 
         model.put( MARK_UNIT_TREE, _fullUnitTree );
         model.put( MARK_UNIT, unit );
         model.put( MARK_LIST_SUB_UNITS, _unitService.getSubUnits( unit.getIdUnit( ), false ) );
         model.put( MARK_MAP_ID_USER_UNIT, mapIdUserUnit );
         model.put( MARK_ADMIN_AVATAR, _bAdminAvatar );
+        model.put( MARK_MULTI_AFFECTATION_ENABLED, bMultiAffectationEnabled );
 
         // Add actions in the model
         model.put( MARK_LIST_UNIT_ACTIONS,
@@ -1109,5 +1118,27 @@ public class UnitJspBean extends PluginAdminPageJspBean
     {
         _fullUnitTree = new TreeUnit( _unitService.getRootUnit( false ) );
         _unitService.populateTreeUnit( _fullUnitTree, AdminUserService.getAdminUser( request ), false );
+    }
+    
+    /**
+     * Get the units by id user
+     * 
+     * @return The units by id user
+     */
+    private Map<String, List<Unit>> getUnitsByIdUser( List<AdminUser> listUsers )
+    {
+    	Map<String, List<Unit>> mapIdUserUnits = new HashMap<>( );
+
+    	for ( AdminUser user : listUsers )
+    	{
+    		List<Unit> listUnits = _unitService.getUnitsByIdUser( user.getUserId( ), false );
+    		
+    		if ( CollectionUtils.isNotEmpty( listUnits ) )
+    		{
+    			mapIdUserUnits.put( String.valueOf( user.getUserId( ) ), listUnits );
+    		}
+    	}
+
+        return mapIdUserUnits;
     }
 }
