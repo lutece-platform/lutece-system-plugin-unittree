@@ -1,4 +1,8 @@
 <#include "unittree_commons.html" />
+<#assign associatedUnitLabelKey="unittree.manageUnits.labelAssociatedUnit">
+<#if multi_affection_enabled?? && multi_affection_enabled>
+<#assign associatedUnitLabelKey="unittree.manageUnits.labelAssociatedUnits">
+</#if>
 <@row> 
 	<@columns xs=12 xl=4>
 		<@box>
@@ -66,7 +70,7 @@
 								#i18n{unittree.manageUnits.labelEmail}
 								<@sort jsp_url="jsp/admin/plugins/unittree/ManageUnits.jsp" attribute="email${additionnalAttribute!}" />
 							</@th>
-							<@th>#i18n{unittree.manageUnits.labelAssociatedUnit}</@th>
+							<@th>#i18n{${associatedUnitLabelKey}}</@th>
 							<@th>#i18n{unittree.manageUnits.labelActions}</@th>
 						</@tr>
 					<#if listUsers?? && listUsers?has_content>
@@ -87,7 +91,14 @@
 							<@td>${user.accessCode!}</@td>
 							<@td>${user.email!}</@td>
 							<@td>
-								<@aButton href='jsp/admin/plugins/unittree/ManageUnits.jsp?idUnit=${userUnit.idUnit!}' buttonIcon='folder' title='${userUnit.label!}' size='sm' color='info' />
+                                <#if mapIdUserUnits?? && mapIdUserUnits?has_content>
+                                    <#assign listUserUnits=mapIdUserUnits[user.userId?string]>
+                                    <#list listUserUnits as aUnit>
+                                        <@aButton href='jsp/admin/plugins/unittree/ManageUnits.jsp?idUnit=${aUnit.idUnit!}' buttonIcon='folder' title='${aUnit.label!}' size='sm' color='info' />
+                                    </#list>
+                                <#else>
+                                    <@aButton href='jsp/admin/plugins/unittree/ManageUnits.jsp?idUnit=${userUnit.idUnit!}' buttonIcon='folder' title='${userUnit.label!}' size='sm' color='info' />
+                                </#if>
 							</@td>
 							<@td>
 								<#if listUnitUserActions?? && listUnitUserActions?has_content>
