@@ -64,6 +64,13 @@ public class UnitAssignmentDAO implements IUnitAssignmentDAO
     private static final String SQL_QUERY_DESACTIVATE = "UPDATE unittree_unit_assignment SET is_active = 0 WHERE id = ? ";
     private static final String SQL_QUERY_DESACTIVATE_BY_RESOURCE = " UPDATE unittree_unit_assignment SET is_active = 0 WHERE id_resource = ? AND resource_type = ? ";
     private static final String SQL_QUERY_DELETE_BY_RESOURCE = " DELETE FROM unittree_unit_assignment WHERE id_resource = ? AND resource_type = ? ";
+    private static final String SQL_QUERY_SELECT_IDRESOURCE = "SELECT id_resource FROM unittree_unit_assignment WHERE 1=1 ";
+
+    private static final String CONSTANT_AND_ACTIVE = " AND is_active = ?";
+    private static final String CONSTANT_AND_RESOURCETYPE = " AND resource_type = ?";
+    private static final String CONSTANT_AND_ASSIGNEDUNIT = " AND id_assigned_unit IN (?";
+    private static final String SQL_CLOSE_PARENTHESIS = " ) ";
+    private static final String SQL_ADITIONAL_PARAMETER = ",?";
 
     /**
      * {@inheritDoc }
@@ -172,6 +179,118 @@ public class UnitAssignmentDAO implements IUnitAssignmentDAO
         }
         return listUnitAssignments;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Integer> selectIdResourceByFilter(UnitAssignmentFilter filter , Plugin plugin )
+    {
+        List<Integer> listResourceId = new ArrayList<>( );
+
+        String filterSQL = filterBuildSql( filter );
+
+        if( filterSQL != null )
+        {
+            String sSQL = SQL_QUERY_SELECT_IDRESOURCE +
+                    filterSQL;
+
+            try ( DAOUtil daoUtil = new DAOUtil(sSQL, plugin ) )
+            {
+                if ( filterInsertData( filter , daoUtil ) == -1 )
+                {
+                    return listResourceId;
+                }
+
+                daoUtil.executeQuery( );
+
+                while ( daoUtil.next( ) )
+                {
+                    listResourceId.add( daoUtil.getInt( "id_resource" ) );
+                }
+            }
+        }
+
+        return listResourceId;
+    }
+
+    /**
+     * Create condition sql for where filter
+     *
+     * @param filter the filter
+     * @return sql filter, null if the request can t give data
+     */
+    private String filterBuildSql(UnitAssignmentFilter filter )
+    {
+        StringBuilder sbSQL = new StringBuilder();
+
+        if ( filter.getActive() != -1 )
+        {
+            sbSQL.append( CONSTANT_AND_ACTIVE );
+        }
+
+        if ( filter.getResourceType() != null )
+        {
+            sbSQL.append( CONSTANT_AND_RESOURCETYPE );
+        }
+
+        if ( filter.getIdAssignedUnit() != null )
+        {
+            if( filter.getIdAssignedUnit().isEmpty() )
+            {
+                return null;
+            }
+            else
+            {
+                sbSQL.append( CONSTANT_AND_ASSIGNEDUNIT );
+                for ( int i = 1; i < filter.getIdAssignedUnit().size(); i++ )
+                {
+                    sbSQL.append( SQL_ADITIONAL_PARAMETER );
+                }
+                sbSQL.append(SQL_CLOSE_PARENTHESIS);
+            }
+        }
+
+        return sbSQL.toString();
+    }
+
+    /**
+     * insert filter data in DAOUtil, on the same order of filterBuildSql
+     *
+     * @param filter the filter
+     * @param daoUtil the daoUtil
+     * @return index of inserted data
+     */
+    private int filterInsertData(UnitAssignmentFilter filter , DAOUtil daoUtil )
+    {
+        int nIndex = 0;
+
+        if ( filter.getActive() != -1 )
+        {
+            daoUtil.setInt( ++nIndex , filter.getActive() );
+        }
+
+        if ( filter.getResourceType() != null )
+        {
+            daoUtil.setString( ++nIndex , filter.getResourceType() );
+        }
+
+        if ( filter.getIdAssignedUnit() != null )
+        {
+            if( filter.getIdAssignedUnit().isEmpty() )
+            {
+                return -1;
+            }
+            else
+            {
+                for ( Integer integer : filter.getIdAssignedUnit() ) {
+                    daoUtil.setInt(++nIndex, integer);
+                }
+            }
+        }
+        return nIndex;
+    }
+
 
     /**
      * Creates a {@code UnitAssignment} object from the data of the specified {@code DAOUtil}

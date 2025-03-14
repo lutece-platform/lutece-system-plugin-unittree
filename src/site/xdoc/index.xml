@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+    <properties>
+        <title>Plugin System Unittree</title>
+    </properties>
+    <head>
+        <meta name="keywords" content="unittree,unit,tree"/>
+    </head>
+    <body>
+        <section name="Plugin System Unittree">
+
+            <subsection name="Introduction">
+                Manage users by organizational entity
+                <ul>
+                    <li>Create, modify, duplicate, prioritize, move, and delete organizational entities</li>
+                    <li>Search for user accounts in the organizational entity tree</li>
+                    <li>Assign and remove user accounts from organizational entities</li>
+                </ul>
+            </subsection>
+            <!--            <subsection name="Configuration">-->
+            <!--                <p></p>-->
+            <!--            </subsection>-->
+            <subsection name="Usage">
+                <p>To access the organizational entity management page in a Lutece application, you need to go to the 'Organizational Entity Management' submenu from the Back Office. When the main screen of the page appears, by selecting an entity, it is possible to:</p>
+                <ul>
+                    <li>Add/create an entity</li>
+                    <li>Modify the selected entity</li>
+                    <li>Delete the selected entity</li>
+                    <li>Change the location of the selected entity in the organizational entity hierarchy</li>
+                    <li>View users assigned to the selected entity</li>
+                    <li>Search user accounts by filters</li>
+                    <li>Assign new users</li>
+                    <li>For each row of a user assigned to the selected entity, it is possible to:
+                        <ul>
+                            <li>Move the user (change their assigned entity)</li>
+                            <li>Remove the user (unassign them from the selected entity)</li>
+                        </ul>
+                    </li>
+                </ul>
+
+            </subsection>
+        </section>
+    </body>
+</document>
