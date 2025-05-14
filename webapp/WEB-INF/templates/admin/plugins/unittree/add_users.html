@@ -1,74 +1,68 @@
-<@row> 
-	<@columns>
-		<@box>
-			<@boxHeader title='#i18n{unittree.manageUnits.labelListUsers} &agrave; ajouter &agrave; l\'entit&eacute; <strong>${unit.label!}</strong>'>
-				<@button type='button' title='#i18n{portal.users.manage_users.search_users.buttonSearch}' hideTitle=['xs','sm'] buttonIcon='plus' style='card-control collapse' buttonTargetId='#search-form' size='sm' />
-			</@boxHeader>
-			<@boxBody>
-				<@searchAdminUsersForm urlAction="jsp/admin/plugins/unittree/AddUsers.jsp" displayInDepthOption=false />
-				<@tform method='post' action='jsp/admin/plugins/unittree/DoAddUsers.jsp'>
-					<#assign additionnalAttribute = "&session=session&idUnit=" + unit.idUnit! + sort_search_attribute! />
-					<@input type='hidden' name='idUnit' value='${unit.idUnit!}' />
-					<div class="mailbox-controls">
-						<!-- Check all button -->
-						<@button type='button' class='checkbox-toggle' buttonIcon='square' />
-						<@btnGroup>
-						  <@button type='submit' name='addUsers' value='#i18n{unittree.addUsers.btnAdd}' title='#i18n{unittree.addUsers.btnAdd}' buttonIcon='plus' />
-						</@btnGroup>
-					</div>
-					<@table class='mailbox-messages'>
-						<#-- LIST NON-ASSIGNED USERS -->
-						<tr>
-							<th>&nbsp;</th>
-							<#if adminAvatar>
-							<th>&nbsp;</th>
-							</#if>
-							<th>
-								#i18n{unittree.addUsers.labelFirstName}
-								<@sort jsp_url="jsp/admin/plugins/unittree/AddUsers.jsp" attribute="firstName${additionnalAttribute!}" />
-							</th>
-							<th>
-								#i18n{unittree.addUsers.labelLastName}
-								<@sort jsp_url="jsp/admin/plugins/unittree/AddUsers.jsp" attribute="lastName${additionnalAttribute!}" />
-							</th>
-							<th>
-								#i18n{unittree.addUsers.labelAccessCode}
-								<@sort jsp_url="jsp/admin/plugins/unittree/AddUsers.jsp" attribute="accessCode${additionnalAttribute!}" />
-							</th>
-						</tr>
-						<#if listUsers?? && listUsers?has_content>
-						<#list listUsers as user>
-						<tr>
-							<td><input type="checkbox" name="idUsers" value="${user.userId!}"></td>
-							<#if adminAvatar>
-							<td>
-								<img class="direct-chat-img" src="servlet/plugins/adminavatar/avatar?id_user=${user.userId}" alt="Avatar" title="Avatar">
-							</td>
-							</#if>
-							<td>${user.firstName!}</td>
-							<td>${user.lastName!}</td>
-							<td>${user.accessCode!}</td>
-						</tr>
-						</#list>
-						</#if>
-					</@table>
-					<#if listUnitUserAttributes?? && listUnitUserAttributes?has_content>
-					<@fieldSet legend='#i18n{unittree.addUsers.labelValueToAffectToUsers}'>
-						<#list listUnitUserAttributes as unitUserAttribute>
-						  <#if unitUserAttribute.template?has_content>
-							<#include unitUserAttribute.template />
-						  </#if>
-						</#list>
-					</@fieldSet>
+<@pageContainer>
+    <@pageColumn>
+        <@pageHeader title='#i18n{unittree.manageUnits.labelListUsers} &agrave; ajouter &agrave; l\'entit&eacute; <strong>${unit.label!}</strong>' responsiveHeader=true>
+				<@button type='button' title='#i18n{portal.users.manage_users.search_users.buttonSearch}' hideTitle=['xs','sm'] buttonIcon='search' style='card-control collapse' buttonTargetId='#search-form' size='' />
+		</@pageHeader>
+		<@searchAdminUsersForm urlAction="jsp/admin/plugins/unittree/AddUsers.jsp" displayInDepthOption=false />
+		<@tform method='post' action='jsp/admin/plugins/unittree/DoAddUsers.jsp'>
+			<#assign additionnalAttribute = "&session=session&idUnit=" + unit.idUnit! + sort_search_attribute! />
+			<@input type='hidden' name='idUnit' value='${unit.idUnit!}' />
+			<div class="mailbox-controls mb-4">
+				<!-- Check all button -->
+				<@button type='button' class='checkbox-toggle' buttonIcon='square' />
+				<@btnGroup>
+					<@button type='submit' name='addUsers' value='#i18n{unittree.addUsers.btnAdd}' title='#i18n{unittree.addUsers.btnAdd}' buttonIcon='plus' />
+				</@btnGroup>
+			</div>
+			<@table class='mailbox-messages'>
+				<#-- LIST NON-ASSIGNED USERS -->
+				<tr>
+					<th>&nbsp;</th>
+					<#if adminAvatar>
+					<th>&nbsp;</th>
 					</#if>
-				</@tform>
-			</@boxBody>
-			<@boxFooter>
-				<@showPagination />
-			</@boxFooter>
-		</@box>
-	</@columns>
-</@row>
+					<th>
+						#i18n{unittree.addUsers.labelFirstName}
+						<@sort jsp_url="jsp/admin/plugins/unittree/AddUsers.jsp" attribute="firstName${additionnalAttribute!}" />
+					</th>
+					<th>
+						#i18n{unittree.addUsers.labelLastName}
+						<@sort jsp_url="jsp/admin/plugins/unittree/AddUsers.jsp" attribute="lastName${additionnalAttribute!}" />
+					</th>
+					<th>
+						#i18n{unittree.addUsers.labelAccessCode}
+						<@sort jsp_url="jsp/admin/plugins/unittree/AddUsers.jsp" attribute="accessCode${additionnalAttribute!}" />
+					</th>
+				</tr>
+				<#if listUsers?? && listUsers?has_content>
+				<#list listUsers as user>
+				<tr>
+					<td><input type="checkbox" name="idUsers" value="${user.userId!}"></td>
+					<#if adminAvatar>
+					<td>
+						<img class="direct-chat-img" src="servlet/plugins/adminavatar/avatar?id_user=${user.userId}" alt="Avatar" title="Avatar">
+					</td>
+					</#if>
+					<td>${user.firstName!}</td>
+					<td>${user.lastName!}</td>
+					<td>${user.accessCode!}</td>
+				</tr>
+				</#list>
+				</#if>
+			</@table>
+			<#if listUnitUserAttributes?? && listUnitUserAttributes?has_content>
+			<@fieldSet legend='#i18n{unittree.addUsers.labelValueToAffectToUsers}'>
+				<#list listUnitUserAttributes as unitUserAttribute>
+					<#if unitUserAttribute.template?has_content>
+					<#include unitUserAttribute.template />
+					</#if>
+				</#list>
+			</@fieldSet>
+			</#if>
+		</@tform>
+		<@showPagination />
+    </@pageColumn>
+</@pageContainer>
 
 <#-- JS for tree display -->
 <script src="js/jquery/plugins/ui/jstree/jquery.cookie.js" type="text/javascript"></script>
