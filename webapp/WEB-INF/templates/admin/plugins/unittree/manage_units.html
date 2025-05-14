@@ -3,127 +3,132 @@
 <#if multi_affection_enabled?? && multi_affection_enabled>
 <#assign associatedUnitLabelKey="unittree.manageUnits.labelAssociatedUnits">
 </#if>
-<@row> 
-	<@columns xs=12 xl=4>
-		<@box>
-			<@boxHeader title='#i18n{unittree.manageUnits.labelUnits}'>
-				<#if listUnitActions?? && listUnitActions?has_content>
-					<#list listUnitActions as unitAction>
-						<#if unitAction.nameKey?? && unitAction.nameKey == 'unittree.unit.action.deleteUnit.name'>
-							<#assign aButtonColor = 'danger' />
-						<#else>
-							<#assign aButtonColor = 'primary' />
-						</#if>
-						<@aButton href='${unitAction.url!}?idUnit=${unit.idUnit!}' title='${unitAction.name!}' hideTitle=['all'] buttonIcon='${unitAction.icon!}' color=aButtonColor! size='sm' />
-					</#list>
-				</#if>
-				<@button type='button' style='card-control collapse' buttonTargetId='#tree' buttonIcon='minus' size='sm' />
-			</@boxHeader>
-			<@boxBody>
-				<div class="jstree-default" id="tree">
-					<ul>
-						 <@displaySubUnits treeUnit=unitTree />
-					</ul>
-				</div>
-			</@boxBody>
-		</@box>
-	</@columns>
-	<@columns xs=12 xl=8>
-		<@box>
-			<@boxHeader title='#i18n{unittree.manageUnits.labelListUsers}'>
-				<@tform type='inline' method='post' action='jsp/admin/plugins/unittree/ManageUnits.jsp'>
-					<@input type='hidden' name='idUnit' value='${unit.idUnit!}' />
-					<#if listUnitUserPluginActions?? && listUnitUserPluginActions?has_content>
-						<#list listUnitUserPluginActions as unitUserPluginAction>
-							<#if unitUserPluginAction.buttonTemplate?has_content>
-								<#include unitUserPluginAction.buttonTemplate />
-							</#if>
-						</#list>
-					</#if>
-				</@tform>
-				<@button type='button' style='card-control collapse' buttonTargetId='#search-form' title='#i18n{portal.users.manage_users.search_users.buttonSearch}' hideTitle=['xs','sm'] size='sm' buttonIcon='plus' />
-			</@boxHeader>
-			<@boxBody>
-				<@searchAdminUsersForm urlAction="jsp/admin/plugins/unittree/ManageUnits.jsp" displayInDepthOption=true />
-				<#-- LIST ASSIGNED USERS -->
-				<@tform method='post' action='jsp/admin/plugins/unittree/ManageUnits.jsp'>
-					<@input type='hidden' name='idUnit' value='${unit.idUnit!}' />
-					<#assign additionnalAttribute="&session=session&idUnit=" + unit.idUnit! + sort_search_attribute!>
-					<@table>
-						<@tr>
-							<#if adminAvatar>
-							<@th>&nbsp;</@th>
-							</#if>
-							<@th>
-								#i18n{unittree.manageUnits.labelFirstName}
-								<@sort jsp_url="jsp/admin/plugins/unittree/ManageUnits.jsp" attribute="firstName${additionnalAttribute!}" />
-							</@th>
-							<@th>
-								#i18n{unittree.manageUnits.labelLastName}
-								<@sort jsp_url="jsp/admin/plugins/unittree/ManageUnits.jsp" attribute="lastName${additionnalAttribute!}" />
-							</@th>
-							<@th>
-								#i18n{unittree.manageUnits.labelAccessCode}
-								<@sort jsp_url="jsp/admin/plugins/unittree/ManageUnits.jsp" attribute="accessCode${additionnalAttribute!}" />
-							</@th>
-							<@th>
-								#i18n{unittree.manageUnits.labelEmail}
-								<@sort jsp_url="jsp/admin/plugins/unittree/ManageUnits.jsp" attribute="email${additionnalAttribute!}" />
-							</@th>
-							<@th>#i18n{${associatedUnitLabelKey}}</@th>
-							<@th>#i18n{unittree.manageUnits.labelActions}</@th>
-						</@tr>
-					<#if listUsers?? && listUsers?has_content>
-					<#list listUsers as user>
-						<#if mapIdUserUnit[ "" + user.userId]??>
-							<#assign userUnit=mapIdUserUnit[ "" + user.userId]>
-						<#else>
-							<#assign userUnit=unit>
-						</#if>
-						<@tr>
-							<#if adminAvatar>
-							<@td>
-								<img class="direct-chat-img" src="servlet/plugins/adminavatar/avatar?id_user=${user.userId}" alt="Avatar" title="Avatar">
-							</@td>
-							</#if>
-							<@td>${user.firstName!}</@td>
-							<@td>${user.lastName!}</@td>
-							<@td>${user.accessCode!}</@td>
-							<@td>${user.email!}</@td>
-							<@td>
-                                <#if mapIdUserUnits?? && mapIdUserUnits?has_content>
-                                    <#assign listUserUnits=mapIdUserUnits[user.userId?string]>
-                                    <#list listUserUnits as aUnit>
-                                        <@aButton href='jsp/admin/plugins/unittree/ManageUnits.jsp?idUnit=${aUnit.idUnit!}' buttonIcon='folder' title='${aUnit.label!}' size='sm' color='info' />
-                                    </#list>
-                                <#else>
-                                    <@aButton href='jsp/admin/plugins/unittree/ManageUnits.jsp?idUnit=${userUnit.idUnit!}' buttonIcon='folder' title='${userUnit.label!}' size='sm' color='info' />
-                                </#if>
-							</@td>
-							<@td>
-								<#if listUnitUserActions?? && listUnitUserActions?has_content>
-								<#list listUnitUserActions as unitUserAction>
-								<#if unitUserAction.nameKey?? && unitUserAction.nameKey == 'unittree.user.action.removeUser.name'>
-									<#assign aButtonColor='danger' />
+<@pageContainer>
+    <@pageColumn>
+        <@pageHeader title='#i18n{unittree.manageUnits.pageTitle}' />
+		<@row> 
+			<@columns xs=12 xl=4>
+				<@box>
+					<@boxHeader title='#i18n{unittree.manageUnits.labelUnits}'>
+						<#if listUnitActions?? && listUnitActions?has_content>
+							<#list listUnitActions as unitAction>
+								<#if unitAction.nameKey?? && unitAction.nameKey == 'unittree.unit.action.deleteUnit.name'>
+									<#assign aButtonColor = 'danger' />
 								<#else>
-									<#assign aButtonColor='primary' />
+									<#assign aButtonColor = 'primary' />
 								</#if>
-								<@aButton href='${unitUserAction.url!}?idUnit=${userUnit.idUnit!}&amp;idUser=${user.userId!}' title='${unitUserAction.name!}' hideTitle=['all'] buttonIcon='${unitUserAction.icon!}' color=aButtonColor size='sm' />
+								<@aButton href='${unitAction.url!}?idUnit=${unit.idUnit!}' title='${unitAction.name!}' hideTitle=['all'] buttonIcon='${unitAction.icon!}' color=aButtonColor! size='sm' />
+							</#list>
+						</#if>
+						<@button type='button' style='card-control collapse' buttonTargetId='#tree' buttonIcon='minus' size='sm' />
+					</@boxHeader>
+					<@boxBody>
+						<div class="jstree-default" id="tree">
+							<ul>
+								 <@displaySubUnits treeUnit=unitTree />
+							</ul>
+						</div>
+					</@boxBody>
+				</@box>
+			</@columns>
+			<@columns xs=12 xl=8>
+				<@box>
+					<@boxHeader title='#i18n{unittree.manageUnits.labelListUsers}'>
+						<@tform type='inline' method='post' action='jsp/admin/plugins/unittree/ManageUnits.jsp'>
+							<@input type='hidden' name='idUnit' value='${unit.idUnit!}' />
+							<#if listUnitUserPluginActions?? && listUnitUserPluginActions?has_content>
+								<#list listUnitUserPluginActions as unitUserPluginAction>
+									<#if unitUserPluginAction.buttonTemplate?has_content>
+										<#include unitUserPluginAction.buttonTemplate />
+									</#if>
 								</#list>
+							</#if>
+						</@tform>
+						<@button type='button' style='card-control collapse' buttonTargetId='#search-form' title='#i18n{portal.users.manage_users.search_users.buttonSearch}' hideTitle=['xs','sm'] size='sm' buttonIcon='search' />
+					</@boxHeader>
+					<@boxBody>
+						<@searchAdminUsersForm urlAction="jsp/admin/plugins/unittree/ManageUnits.jsp" displayInDepthOption=true />
+						<#-- LIST ASSIGNED USERS -->
+						<@tform method='post' action='jsp/admin/plugins/unittree/ManageUnits.jsp'>
+							<@input type='hidden' name='idUnit' value='${unit.idUnit!}' />
+							<#assign additionnalAttribute="&session=session&idUnit=" + unit.idUnit! + sort_search_attribute!>
+							<@table>
+								<@tr>
+									<#if adminAvatar>
+									<@th>&nbsp;</@th>
+									</#if>
+									<@th>
+										#i18n{unittree.manageUnits.labelFirstName}
+										<@sort jsp_url="jsp/admin/plugins/unittree/ManageUnits.jsp" attribute="firstName${additionnalAttribute!}" />
+									</@th>
+									<@th>
+										#i18n{unittree.manageUnits.labelLastName}
+										<@sort jsp_url="jsp/admin/plugins/unittree/ManageUnits.jsp" attribute="lastName${additionnalAttribute!}" />
+									</@th>
+									<@th>
+										#i18n{unittree.manageUnits.labelAccessCode}
+										<@sort jsp_url="jsp/admin/plugins/unittree/ManageUnits.jsp" attribute="accessCode${additionnalAttribute!}" />
+									</@th>
+									<@th>
+										#i18n{unittree.manageUnits.labelEmail}
+										<@sort jsp_url="jsp/admin/plugins/unittree/ManageUnits.jsp" attribute="email${additionnalAttribute!}" />
+									</@th>
+									<@th>#i18n{${associatedUnitLabelKey}}</@th>
+									<@th>#i18n{unittree.manageUnits.labelActions}</@th>
+								</@tr>
+							<#if listUsers?? && listUsers?has_content>
+							<#list listUsers as user>
+								<#if mapIdUserUnit[ "" + user.userId]??>
+									<#assign userUnit=mapIdUserUnit[ "" + user.userId]>
+								<#else>
+									<#assign userUnit=unit>
 								</#if>
-							</@td>
-						</@tr>
-					</#list>
-					</#if>
-					</@table>
-				</@tform>
-			</@boxBody>
-			<@boxFooter>
-				<@showPagination urlAction="jsp/admin/plugins/unittree/ManageUnits.jsp"/>
-			</@boxFooter>
-		</@box>
-	</@columns>
-</@row>
+								<@tr>
+									<#if adminAvatar>
+									<@td>
+										<img class="direct-chat-img" src="servlet/plugins/adminavatar/avatar?id_user=${user.userId}" alt="Avatar" title="Avatar">
+									</@td>
+									</#if>
+									<@td>${user.firstName!}</@td>
+									<@td>${user.lastName!}</@td>
+									<@td>${user.accessCode!}</@td>
+									<@td>${user.email!}</@td>
+									<@td>
+										<#if mapIdUserUnits?? && mapIdUserUnits?has_content>
+											<#assign listUserUnits=mapIdUserUnits[user.userId?string]>
+											<#list listUserUnits as aUnit>
+												<@aButton href='jsp/admin/plugins/unittree/ManageUnits.jsp?idUnit=${aUnit.idUnit!}' buttonIcon='folder' title='${aUnit.label!}' size='sm' color='info' />
+											</#list>
+										<#else>
+											<@aButton href='jsp/admin/plugins/unittree/ManageUnits.jsp?idUnit=${userUnit.idUnit!}' buttonIcon='folder' title='${userUnit.label!}' size='sm' color='info' />
+										</#if>
+									</@td>
+									<@td>
+										<#if listUnitUserActions?? && listUnitUserActions?has_content>
+										<#list listUnitUserActions as unitUserAction>
+										<#if unitUserAction.nameKey?? && unitUserAction.nameKey == 'unittree.user.action.removeUser.name'>
+											<#assign aButtonColor='danger' />
+										<#else>
+											<#assign aButtonColor='primary' />
+										</#if>
+										<@aButton href='${unitUserAction.url!}?idUnit=${userUnit.idUnit!}&amp;idUser=${user.userId!}' title='${unitUserAction.name!}' hideTitle=['all'] buttonIcon='${unitUserAction.icon!}' color=aButtonColor size='sm' />
+										</#list>
+										</#if>
+									</@td>
+								</@tr>
+							</#list>
+							</#if>
+							</@table>
+						</@tform>
+					</@boxBody>
+					<@boxFooter>
+						<@showPagination urlAction="jsp/admin/plugins/unittree/ManageUnits.jsp"/>
+					</@boxFooter>
+				</@box>
+			</@columns>
+		</@row>
+    </@pageColumn>
+</@pageContainer>
 <link rel="stylesheet" href="js/admin/lib/jstree/themes/proton/style.min.css" >
 <script src="js/admin/lib/jstree/jstree.min.js"></script>
 <script>
