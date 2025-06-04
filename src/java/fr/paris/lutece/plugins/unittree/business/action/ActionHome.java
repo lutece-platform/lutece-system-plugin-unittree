@@ -36,7 +36,7 @@ package fr.paris.lutece.plugins.unittree.business.action;
 import fr.paris.lutece.plugins.unittree.service.UnitTreePlugin;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
+import jakarta.enterprise.inject.spi.CDI;
 
 import java.util.List;
 
@@ -47,9 +47,8 @@ import java.util.List;
  */
 public final class ActionHome
 {
-    private static final String BEAN_ACTION_DAO = "unittree.actionDAO";
     private static Plugin _plugin = PluginService.getPlugin( UnitTreePlugin.PLUGIN_NAME );
-    private static IActionDAO _dao = SpringContextService.getBean( BEAN_ACTION_DAO );
+    private static IActionDAO _dao = CDI.current( ).select( IActionDAO.class ).get( );
 
     /**
      * Private constructor - this class need not be instantiated

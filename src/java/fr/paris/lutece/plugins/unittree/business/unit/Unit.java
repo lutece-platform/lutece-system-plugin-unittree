@@ -38,7 +38,7 @@ import fr.paris.lutece.portal.service.rbac.RBACResource;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 /**
  *

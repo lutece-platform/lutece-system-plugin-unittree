@@ -2,20 +2,27 @@
 <%@page import="fr.paris.lutece.portal.service.message.AdminMessageService"%>
 <%@page import="fr.paris.lutece.portal.web.constants.Messages"%>
 <%@page import="fr.paris.lutece.portal.service.message.AdminMessage"%>
-<%@page import="fr.paris.lutece.portal.service.util.AppException"%>
+<%@page import="fr.paris.lutece.plugins.unittree.web.UnitJspBean"%>
+<%@page import="jakarta.el.ELException" %>
 
-<jsp:useBean id="unit" scope="session" class="fr.paris.lutece.plugins.unittree.web.UnitJspBean" />
-
-<% unit.init( request, unit.RIGHT_MANAGE_UNITS ); %>
+${ unitJspBean.init( pageContext.request, UnitJspBean.RIGHT_MANAGE_UNITS ) }
 <% 
-	String strHtml = "";
 	try
 	{
-		strHtml = unit.getMoveSubTree( request );
+%>
+		${ pageContext.setAttribute( 'strHtml', unitJspBean.getMoveSubTree( pageContext.request ) ) }
+<%
 	}
-	catch( AccessDeniedException ex )
-	{
-		response.sendRedirect( AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP ) );
+	catch( ELException el )
+	{		
+		if ( AccessDeniedException.class.getCanonicalName(  ).equals( el.getCause( ).getClass( ).getCanonicalName( ) ) )
+        {
+			response.sendRedirect( AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP ) );
+        }
+        else
+        {
+    		throw el;
+        }
 	}
 %>
 
@@ -23,6 +30,6 @@
 
 <jsp:include page="../../AdminHeader.jsp" />
 
-<%= strHtml %>
+${ pageContext.getAttribute( 'strHtml' ) }
 
 <%@ include file="../../AdminFooter.jsp" %>

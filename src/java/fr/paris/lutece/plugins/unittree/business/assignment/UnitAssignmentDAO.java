@@ -36,6 +36,7 @@ package fr.paris.lutece.plugins.unittree.business.assignment;
 import fr.paris.lutece.plugins.unittree.business.unit.Unit;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.util.sql.DAOUtil;
+import jakarta.enterprise.context.ApplicationScoped;
 
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -44,7 +45,7 @@ import java.util.List;
 /**
  * This class provides Data Access methods for UnitAssignment objects
  */
-
+@ApplicationScoped
 public class UnitAssignmentDAO implements IUnitAssignmentDAO
 {
 
