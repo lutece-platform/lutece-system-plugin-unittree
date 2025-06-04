@@ -36,12 +36,12 @@ package fr.paris.lutece.plugins.unittree.service.unit;
 import fr.paris.lutece.plugins.unittree.business.unit.Unit;
 import fr.paris.lutece.portal.business.user.AdminUser;
 
-import org.springframework.transaction.annotation.Transactional;
+import jakarta.transaction.Transactional;
 
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -162,7 +162,7 @@ public interface IUnitUserService
      *            the id user
      * @return true if the user is added to the unit, false otherwise
      */
-    @Transactional( "unittree.transactionManager" )
+    @Transactional
     boolean addUserToUnit( int nIdUnit, int nIdUser );
 
     /**
@@ -173,7 +173,7 @@ public interface IUnitUserService
      * @param nIdUnit
      *            The id of the unit
      */
-    @Transactional( "unittree.transactionManager" )
+    @Transactional
     void removeUserFromUnit( int nIdUser, int nIdUnit );
 
     /**
@@ -182,7 +182,7 @@ public interface IUnitUserService
      * @param nIdUnit
      *            the id unit
      */
-    @Transactional( "unittree.transactionManager" )
+    @Transactional
     void removeUsersFromUnit( int nIdUnit );
 
     /**

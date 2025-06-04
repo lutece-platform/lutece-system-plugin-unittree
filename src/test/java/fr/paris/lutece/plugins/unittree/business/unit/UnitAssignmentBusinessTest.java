@@ -37,6 +37,8 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.junit.jupiter.api.Test;
+
 import fr.paris.lutece.plugins.unittree.business.assignment.UnitAssignment;
 import fr.paris.lutece.plugins.unittree.business.assignment.UnitAssignmentHome;
 import fr.paris.lutece.plugins.unittree.business.assignment.UnitAssignmentType;
@@ -44,6 +46,7 @@ import fr.paris.lutece.test.LuteceTestCase;
 
 public class UnitAssignmentBusinessTest extends LuteceTestCase
 {
+	@Test
     public void testCRUD( )
     {
         UnitAssignment assignment = new UnitAssignment( );
@@ -60,7 +63,7 @@ public class UnitAssignmentBusinessTest extends LuteceTestCase
         assertEquals( 1, list.size( ) );
         assertEquals( assignment.getIdAssignedUnit( ), list.get( 0 ).getIdAssignedUnit( ) );
         assertEquals( assignment.getAssignmentType( ), list.get( 0 ).getAssignmentType( ) );
-        assertEquals( assignment.getAssignmentDate( ), list.get( 0 ).getAssignmentDate( ) );
+        assertEquals( assignment.getAssignmentDate( ).getTime(), list.get( 0 ).getAssignmentDate( ).getTime() );
         assertTrue( list.get( 0 ).isActive( ) );
 
         UnitAssignmentHome.deactivate( assignment );

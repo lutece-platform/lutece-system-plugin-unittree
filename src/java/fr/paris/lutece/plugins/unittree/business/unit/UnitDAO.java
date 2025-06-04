@@ -35,6 +35,7 @@ package fr.paris.lutece.plugins.unittree.business.unit;
 
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.util.sql.DAOUtil;
+import jakarta.enterprise.context.ApplicationScoped;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +45,7 @@ import java.util.List;
  * UnitDAO
  *
  */
+@ApplicationScoped
 public class UnitDAO implements IUnitDAO
 {
     private static final String SQL_WHERE = " WHERE ";

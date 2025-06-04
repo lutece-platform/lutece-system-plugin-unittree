@@ -33,11 +33,16 @@
  */
 package fr.paris.lutece.plugins.unittree.business.action;
 
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Named;
+
 /**
  *
  * This class represents the action usable on an unit
  *
  */
+@Dependent
+@Named( UnitAction.ACTION_TYPE )
 public class UnitAction extends AbstractAction
 {
     public static final String ACTION_TYPE = "unittree.unitAction";

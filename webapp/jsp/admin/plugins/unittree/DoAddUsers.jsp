@@ -1,6 +1,5 @@
 <%@ page errorPage="../../ErrorPage.jsp" %>
+<%@page import="fr.paris.lutece.plugins.unittree.web.UnitJspBean"%>
 
-<jsp:useBean id="unit" scope="session" class="fr.paris.lutece.plugins.unittree.web.UnitJspBean" />
-
-<% unit.init( request, unit.RIGHT_MANAGE_UNITS ); %>
-<% response.sendRedirect( unit.doAddUsers( request ) ); %>
+${ unitJspBean.init( pageContext.request, UnitJspBean.RIGHT_MANAGE_UNITS ) }
+${ pageContext.response.sendRedirect( unitJspBean.doAddUsers( pageContext.request ) ) }
