@@ -42,12 +42,12 @@ import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.util.ReferenceList;
 import java.util.Collection;
 
-import org.springframework.transaction.annotation.Transactional;
+import jakarta.transaction.Transactional;
 
 import java.util.List;
 import java.util.Locale;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import javax.xml.transform.Source;
 
@@ -287,7 +287,7 @@ public interface IUnitService
      * @throws UnitErrorException
      *             exception if there is an application error
      */
-    @Transactional( "unittree.transactionManager" )
+    @Transactional
     int createUnit( Unit unit, HttpServletRequest request ) throws UnitErrorException;
 
     /**
@@ -300,7 +300,7 @@ public interface IUnitService
      * @throws UnitErrorException
      *             exception if there is an application error
      */
-    @Transactional( "unittree.transactionManager" )
+    @Transactional
     void updateUnit( Unit unit, HttpServletRequest request ) throws UnitErrorException;
 
     /**
@@ -311,7 +311,7 @@ public interface IUnitService
      * @param request
      *            the HTTP request
      */
-    @Transactional( "unittree.transactionManager" )
+    @Transactional
     void removeUnit( int nIdUnit, HttpServletRequest request );
 
     /**
@@ -323,7 +323,7 @@ public interface IUnitService
      *            The new parent of the unit
      * @return True if the sub tree was successfully move, false if the new parent is a child of the unit.
      */
-    @Transactional( "unittree.transactionManager" )
+    @Transactional
     boolean moveSubTree( Unit unitToMove, Unit newUnitParent );
 
     /**

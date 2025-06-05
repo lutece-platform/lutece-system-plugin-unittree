@@ -43,8 +43,8 @@ import fr.paris.lutece.portal.service.rbac.Permission;
 import fr.paris.lutece.portal.service.rbac.ResourceIdService;
 import fr.paris.lutece.portal.service.rbac.ResourceType;
 import fr.paris.lutece.portal.service.rbac.ResourceTypeManager;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.util.ReferenceList;
+import jakarta.enterprise.inject.spi.CDI;
 
 /**
  *
@@ -147,7 +147,7 @@ public class UnitResourceIdService extends ResourceIdService
      */
     public ReferenceList getResourceIdList( Locale locale )
     {
-        IUnitService unitService = SpringContextService.getBean( UnitService.BEAN_UNIT_SERVICE );
+        IUnitService unitService = CDI.current( ).select( IUnitService.class ).get( );
         ReferenceList listResources = new ReferenceList( );
 
         for ( Unit unit : unitService.getAllUnits( false ) )
@@ -171,7 +171,7 @@ public class UnitResourceIdService extends ResourceIdService
     {
         if ( StringUtils.isNotBlank( strId ) && StringUtils.isNumeric( strId ) )
         {
-            IUnitService unitService = SpringContextService.getBean( UnitService.BEAN_UNIT_SERVICE );
+            IUnitService unitService = CDI.current( ).select( IUnitService.class ).get( );
             int nIdUnit = Integer.parseInt( strId );
             Unit unit = unitService.getUnit( nIdUnit, false );
 

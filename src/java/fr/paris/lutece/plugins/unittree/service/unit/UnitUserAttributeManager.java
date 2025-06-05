@@ -35,12 +35,12 @@ package fr.paris.lutece.plugins.unittree.service.unit;
 
 import fr.paris.lutece.plugins.unittree.web.unit.IUnitUserAttributeComponent;
 import fr.paris.lutece.portal.business.user.AdminUser;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
 
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.enterprise.inject.spi.CDI;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -63,7 +63,7 @@ public final class UnitUserAttributeManager
      */
     public static List<IUnitUserAttributeComponent> getListUnitUserAttributeComponents( )
     {
-        return SpringContextService.getBeansOfType( IUnitUserAttributeComponent.class );
+        return CDI.current( ).select( IUnitUserAttributeComponent.class ).stream( ).toList( );
     }
 
     /**
@@ -73,7 +73,7 @@ public final class UnitUserAttributeManager
      */
     public static List<IUnitUserAttributeService> getListUnitUserAttributeService( )
     {
-        return SpringContextService.getBeansOfType( IUnitUserAttributeService.class );
+        return CDI.current( ).select( IUnitUserAttributeService.class ).stream( ).toList( );
     }
 
     /**

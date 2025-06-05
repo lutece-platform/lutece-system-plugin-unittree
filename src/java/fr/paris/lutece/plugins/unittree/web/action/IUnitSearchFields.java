@@ -40,7 +40,7 @@ import fr.paris.lutece.portal.service.admin.AccessDeniedException;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  *

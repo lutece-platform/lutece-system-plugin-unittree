@@ -38,6 +38,7 @@ import fr.paris.lutece.plugins.unittree.business.action.IAction;
 import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.service.rbac.RBACResource;
+import jakarta.enterprise.context.ApplicationScoped;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -49,6 +50,7 @@ import java.util.Locale;
  * ActionService
  *
  */
+@ApplicationScoped
 public class ActionService implements IActionService
 {
     /**

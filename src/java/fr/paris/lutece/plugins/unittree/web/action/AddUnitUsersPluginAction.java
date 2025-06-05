@@ -33,6 +33,10 @@
  */
 package fr.paris.lutece.plugins.unittree.web.action;
 
+import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
+
 import fr.paris.lutece.plugins.unittree.business.unit.Unit;
 import fr.paris.lutece.plugins.unittree.service.rbac.UnittreeRBACRecursiveType;
 import fr.paris.lutece.plugins.unittree.service.unit.IUnitService;
@@ -44,24 +48,24 @@ import fr.paris.lutece.portal.web.pluginaction.AbstractPluginAction;
 import fr.paris.lutece.portal.web.pluginaction.DefaultPluginActionResult;
 import fr.paris.lutece.portal.web.pluginaction.IPluginActionResult;
 import fr.paris.lutece.util.url.UrlItem;
-
-import org.apache.commons.lang3.StringUtils;
-
-import java.util.Map;
-
-import javax.inject.Inject;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  *
  * AddUnitUsersPluginAction
  *
  */
+@ApplicationScoped
+@Named( AddUnitUsersPluginAction.ACTION_TYPE )
 public class AddUnitUsersPluginAction extends AbstractPluginAction<IUnitSearchFields> implements IUnitPluginAction
 {
-    private static final String ACTION_NAME = "Add users to the unit";
+	public static final String ACTION_TYPE = "unittree.addUnitUserPluginAction";
+	
+	private static final String ACTION_NAME = "Add users to the unit";
 
     // PARAMETERS
     private static final String PARAMETER_ADD_USER = "addUsers";

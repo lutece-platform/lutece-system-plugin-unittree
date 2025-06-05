@@ -35,7 +35,7 @@ package fr.paris.lutece.plugins.unittree.web.unit;
 
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  *
