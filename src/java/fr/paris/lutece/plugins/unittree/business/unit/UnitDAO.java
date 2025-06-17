@@ -38,7 +38,9 @@ import fr.paris.lutece.util.sql.DAOUtil;
 import jakarta.enterprise.context.ApplicationScoped;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -72,7 +74,17 @@ public class UnitDAO implements IUnitDAO
             + " FROM unittree_unit WHERE id_unit NOT IN(SELECT id_parent FROM unittree_unit) ";
     private static final String SQL_QUERY_SELECT_DIRECT_CHILDREN = "SELECT id_unit, id_parent, code, label, description "
             + " FROM unittree_unit WHERE id_parent = ?";
-
+    private static final String SQL_QUERY_SELECT_ALL_CHILDREN = "WITH RECURSIVE unittree (id_unit) AS ("
+                                                            + "       SELECT id_unit"
+                                                            + "       FROM unittree_unit "
+                                                            + "       WHERE id_unit = ?"
+                                                            + "          UNION ALL "
+                                                            + "       SELECT t.id_unit"
+                                                            + "       FROM unittree_unit t"
+                                                            + "       JOIN unittree"
+                                                            + "       ON t.id_parent = unittree.id_unit"
+                                                            + "  ) SELECT id_unit FROM unittree WHERE id_unit != ?";
+    
     // Table unittree_unit_user
     private static final String SQL_QUERY_ADD_USER_TO_UNIT = " INSERT INTO unittree_unit_user ( id_unit, id_user ) VALUES ( ?, ? ) ";
     private static final String SQL_QUERY_SELECT_IDS_USER = " SELECT id_user FROM unittree_unit_user WHERE id_unit = ? ";
@@ -243,6 +255,27 @@ public class UnitDAO implements IUnitDAO
         return listUnits;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public Set<Integer> getAllSubUnitsId( int nIdUnit, Plugin plugin )
+    {
+        Set<Integer> idsSet = new HashSet<Integer>( );
+    	try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ALL_CHILDREN, plugin ) )
+        {
+            daoUtil.setInt( 1, nIdUnit );
+            daoUtil.setInt( 2, nIdUnit );
+            daoUtil.executeQuery( );
+            
+            while ( daoUtil.next( ) )
+            {
+                idsSet.add( daoUtil.getInt( 1 ) );
+            }
+        }
+    	 
+    	return idsSet;
+    }
+    
     /**
      * {@inheritDoc}
      */
