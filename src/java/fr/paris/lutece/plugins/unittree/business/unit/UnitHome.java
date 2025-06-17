@@ -195,14 +195,7 @@ public final class UnitHome
      */
     public static Set<Integer> getAllSubUnitsId( int nIdUnit )
     {
-        Set<Integer> setResult = new HashSet<>( );
-        List<Unit> listUnits = _dao.getSubUnits( nIdUnit, _plugin );
-        for ( Unit unit : listUnits )
-        {
-            setResult.add( unit.getIdUnit( ) );
-            setResult.addAll( getAllSubUnitsId( unit.getIdUnit( ) ) );
-        }
-        return setResult;
+    	return _dao.getAllSubUnitsId( nIdUnit, _plugin );
     }
 
     /**
