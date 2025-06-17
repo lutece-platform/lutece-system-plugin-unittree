@@ -36,6 +36,7 @@ package fr.paris.lutece.plugins.unittree.business.unit;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -158,6 +159,17 @@ public interface IUnitDAO
      */
     List<Unit> getSubUnits( int nIdUnit, Plugin plugin );
 
+    /**
+     * Retrieve Set of all children units id
+     * 
+     * @param nIdUnit
+     *            the id unit
+     * @param plugin
+     *            the plugin
+     * @return Set of all children unit id
+     */
+    Set<Integer> getAllSubUnitsId( int nIdUnit, Plugin plugin );
+    
     /**
      * Remove a unit
      * 
