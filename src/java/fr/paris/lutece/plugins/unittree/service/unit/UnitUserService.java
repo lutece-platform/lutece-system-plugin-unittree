@@ -43,21 +43,23 @@ import fr.paris.lutece.util.ReferenceItem;
 import fr.paris.lutece.util.ReferenceList;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.springframework.transaction.annotation.Transactional;
+import jakarta.transaction.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  *
  * UnitUserService
  *
  */
+@ApplicationScoped
 public class UnitUserService implements IUnitUserService
 {
     private static final String PROPERTY_MULTI_AFFECTATION_ENABLED = "unittree.users.enableMultiAffectation";
@@ -186,7 +188,7 @@ public class UnitUserService implements IUnitUserService
      * {@inheritDoc}
      */
     @Override
-    @Transactional( "unittree.transactionManager" )
+    @Transactional
     public boolean addUserToUnit( int nIdUnit, int nIdUser )
     {
         if ( !isUserInUnit( nIdUser, nIdUnit ) )
@@ -220,7 +222,7 @@ public class UnitUserService implements IUnitUserService
      * {@inheritDoc}
      */
     @Override
-    @Transactional( "unittree.transactionManager" )
+    @Transactional
     public void removeUserFromUnit( int nIdUser, int nIdUnit )
     {
         UnitHome.removeUserFromUnit( nIdUser, nIdUnit );
@@ -230,7 +232,7 @@ public class UnitUserService implements IUnitUserService
      * {@inheritDoc}
      */
     @Override
-    @Transactional( "unittree.transactionManager" )
+    @Transactional
     public void removeUsersFromUnit( int nIdUnit )
     {
         UnitHome.removeUsersFromUnit( nIdUnit );

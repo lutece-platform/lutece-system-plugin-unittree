@@ -38,7 +38,7 @@ import java.util.List;
 import fr.paris.lutece.plugins.unittree.service.UnitTreePlugin;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
+import jakarta.enterprise.inject.spi.CDI;
 
 /**
  * This class provides instances management methods (create, find, ...) for UnitAssignment objects
@@ -49,7 +49,7 @@ public final class UnitAssignmentHome
     private static Plugin _plugin = PluginService.getPlugin( UnitTreePlugin.PLUGIN_NAME );
 
     // Static variable pointed at the DAO instance
-    private static IUnitAssignmentDAO _dao = SpringContextService.getBean( UnitAssignmentDAO.BEAN_NAME );
+    private static IUnitAssignmentDAO _dao = CDI.current( ).select( IUnitAssignmentDAO.class ).get( );
 
     /**
      * Private constructor

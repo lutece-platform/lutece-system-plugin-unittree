@@ -33,7 +33,24 @@
  */
 package fr.paris.lutece.plugins.unittree.service.unit;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+
+import org.apache.commons.lang3.StringUtils;
+
 import fr.paris.lutece.api.user.User;
+import fr.paris.lutece.plugins.resource.loader.ResourceNotFoundException;
 import fr.paris.lutece.plugins.unittree.business.action.IAction;
 import fr.paris.lutece.plugins.unittree.business.unit.TreeUnit;
 import fr.paris.lutece.plugins.unittree.business.unit.Unit;
@@ -45,40 +62,24 @@ import fr.paris.lutece.plugins.unittree.service.rbac.UnittreeRBACRecursiveType;
 import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.service.rbac.RBACService;
+import fr.paris.lutece.portal.service.util.AppException;
+import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.util.ReferenceList;
 import fr.paris.lutece.util.xml.XmlUtil;
-
-import org.apache.commons.lang3.StringUtils;
-
-import org.springframework.transaction.annotation.Transactional;
-
-import java.io.FileInputStream;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
-import javax.inject.Inject;
-
-import javax.servlet.http.HttpServletRequest;
-
-import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 
 /**
  *
  * UnitService
  *
  */
+@ApplicationScoped
 public class UnitService implements IUnitService
 {
-    public static final String BEAN_UNIT_SERVICE = "unittree.unitService";
 
     // XML TAGS
     private static final String TAG_UNITS = "units";
@@ -432,9 +433,15 @@ public class UnitService implements IUnitService
     @Override
     public Source getTreeXsl( )
     {
-        FileInputStream fis = AppPathService.getResourceAsStream( PATH_XSL, FILE_TREE_XSL );
-
-        return new StreamSource( fis );
+        try ( InputStream is = AppPathService.getResourceStream( PATH_XSL, FILE_TREE_XSL ) )
+        {
+        	return new StreamSource( is );
+        }
+        catch( ResourceNotFoundException|IOException e )
+        {       	
+        	AppLogService.error( "Unable to find the following file : {}{}", PATH_XSL, FILE_TREE_XSL );
+        	throw new AppException( e.getMessage( ), e );
+        }       
     }
 
     /**
@@ -574,7 +581,7 @@ public class UnitService implements IUnitService
      * {@inheritDoc}
      */
     @Override
-    @Transactional( "unittree.transactionManager" )
+    @Transactional
     public int createUnit( Unit unit, HttpServletRequest request ) throws UnitErrorException
     {
         if ( unit != null )
@@ -592,7 +599,7 @@ public class UnitService implements IUnitService
      * {@inheritDoc}
      */
     @Override
-    @Transactional( "unittree.transactionManager" )
+    @Transactional
     public void removeUnit( int nIdUnit, HttpServletRequest request )
     {
         if ( ( nIdUnit != Unit.ID_ROOT ) && !hasSubUnits( nIdUnit ) )
@@ -610,7 +617,7 @@ public class UnitService implements IUnitService
      * {@inheritDoc}
      */
     @Override
-    @Transactional( "unittree.transactionManager" )
+    @Transactional
     public void updateUnit( Unit unit, HttpServletRequest request ) throws UnitErrorException
     {
         if ( unit != null )
@@ -626,7 +633,7 @@ public class UnitService implements IUnitService
      * {@inheritDoc}
      */
     @Override
-    @Transactional( "unittree.transactionManager" )
+    @Transactional
     public boolean moveSubTree( Unit unitToMove, Unit newUnitParent )
     {
         if ( ( unitToMove != null ) && ( newUnitParent != null ) && ( unitToMove.getIdUnit( ) != newUnitParent.getIdUnit( ) )

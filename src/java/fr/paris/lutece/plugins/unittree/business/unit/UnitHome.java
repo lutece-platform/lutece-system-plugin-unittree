@@ -36,7 +36,7 @@ package fr.paris.lutece.plugins.unittree.business.unit;
 import fr.paris.lutece.plugins.unittree.service.UnitTreePlugin;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
+import jakarta.enterprise.inject.spi.CDI;
 
 import java.util.HashSet;
 import java.util.List;
@@ -49,9 +49,8 @@ import java.util.Set;
  */
 public final class UnitHome
 {
-    private static final String BEAN_UNIT_DAO = "unittree.unitDAO";
     private static Plugin _plugin = PluginService.getPlugin( UnitTreePlugin.PLUGIN_NAME );
-    private static IUnitDAO _dao = SpringContextService.getBean( BEAN_UNIT_DAO );
+    private static IUnitDAO _dao = CDI.current( ).select( IUnitDAO.class ).get( );
 
     /**
      * Private constructor

@@ -39,10 +39,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.ConstraintViolation;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -57,7 +53,6 @@ import fr.paris.lutece.plugins.unittree.service.unit.IUnitService;
 import fr.paris.lutece.plugins.unittree.service.unit.IUnitUserService;
 import fr.paris.lutece.plugins.unittree.service.unit.UnitAttributeManager;
 import fr.paris.lutece.plugins.unittree.service.unit.UnitResourceIdService;
-import fr.paris.lutece.plugins.unittree.service.unit.UnitService;
 import fr.paris.lutece.plugins.unittree.service.unit.UnitUserAttributeManager;
 import fr.paris.lutece.plugins.unittree.web.action.IUnitPluginAction;
 import fr.paris.lutece.plugins.unittree.web.action.IUnitSearchFields;
@@ -69,7 +64,6 @@ import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.service.message.AdminMessage;
 import fr.paris.lutece.portal.service.message.AdminMessageService;
 import fr.paris.lutece.portal.service.plugin.PluginService;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
 import fr.paris.lutece.portal.service.util.AppException;
 import fr.paris.lutece.portal.service.util.AppLogService;
@@ -82,19 +76,25 @@ import fr.paris.lutece.portal.web.pluginaction.PluginActionManager;
 import fr.paris.lutece.util.beanvalidation.BeanValidationUtil;
 import fr.paris.lutece.util.html.HtmlTemplate;
 import fr.paris.lutece.util.url.UrlItem;
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.enterprise.inject.spi.CDI;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.ConstraintViolation;
 
 /**
  *
  * UnitJspBean
  *
  */
+@SessionScoped
+@Named
 public class UnitJspBean extends PluginAdminPageJspBean
 {
     public static final String RIGHT_MANAGE_UNITS = "UNITS_MANAGEMENT";
     private static final long serialVersionUID = 5997434357453313400L;
-
-    // BEAN
-    private static final String BEAN_UNIT_USER_SERVICE = "unittree.unitUserService";
 
     // PROPERTIES
     private static final String PROPERTY_MANAGE_UNITS_PAGE_TITLE = "unittree.manageUnits.pageTitle";
@@ -115,6 +115,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
     private static final String MESSAGE_ACCESS_DENIED = "unittree.message.accessDenied";
     private static final String MESSAGE_SUB_TREE_MOVED = "unittree.moveSubTree.subTreeMoved";
     private static final String MESSAGE_CANT_MOVE_SUB_TREE_TO_CHILD = "unittree.moveSubTree.cantMoveSubTreeToChild";
+    private static final String MESSAGE_NO_PARENT_ENTITY_SELECTED= "unittree.moveSubTree.NoParentEntitySelected";
 
     // MARKS
     private static final String MARK_UNIT_TREE = "unitTree";
@@ -164,8 +165,12 @@ public class UnitJspBean extends PluginAdminPageJspBean
     private static final String JSP_URL_DO_REMOVE_USER = "jsp/admin/plugins/unittree/DoRemoveUser.jsp";
 
     // SERVICES
-    private transient IUnitService _unitService = SpringContextService.getBean( UnitService.BEAN_UNIT_SERVICE );
-    private transient IUnitUserService _unitUserService = SpringContextService.getBean( BEAN_UNIT_USER_SERVICE );
+    @Inject
+    private IUnitService _unitService;
+    
+    @Inject
+    private IUnitUserService _unitUserService;
+    
     private transient IUnitSearchFields _unitUserSearchFields = new UnitUserSearchFields( );
 
     // INSTANCE VARS
@@ -192,7 +197,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
 
         if ( action != null )
         {
-            AppLogService.debug( "Processing unittree action " + action.getName( ) );
+            AppLogService.debug( "Processing unittree action {}", action.getName( ) );
 
             return action.process( request, response, getUser( ), _unitUserSearchFields );
         }
@@ -366,19 +371,19 @@ public class UnitJspBean extends PluginAdminPageJspBean
 
         if ( StringUtils.isBlank( strIdUnit ) || !StringUtils.isNumeric( strIdUnit ) )
         {
-            return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
+            return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, JSP_URL_MANAGE_UNITS, AdminMessage.TYPE_STOP );
         }
 
         // Check permissions
         if ( !_unitService.isAuthorized( strIdUnit, UnitResourceIdService.PERMISSION_DELETE, getUser( ), UnittreeRBACRecursiveType.PARENT_RECURSIVE ) )
         {
-            return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP );
+            return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, JSP_URL_MANAGE_UNITS, AdminMessage.TYPE_STOP );
         }
 
         UrlItem url = new UrlItem( JSP_URL_DO_REMOVE_UNIT );
         url.addParameter( PARAMETER_ID_UNIT, strIdUnit );
 
-        return AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_REMOVE_UNIT, url.getUrl( ), AdminMessage.TYPE_CONFIRMATION );
+        return AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_REMOVE_UNIT, null, null, url.getUrl( ), null, AdminMessage.TYPE_CONFIRMATION, null, JSP_URL_MANAGE_UNITS );
     }
 
     /**
@@ -540,20 +545,20 @@ public class UnitJspBean extends PluginAdminPageJspBean
         if ( StringUtils.isBlank( strIdUnit ) || !StringUtils.isNumeric( strIdUnit ) || StringUtils.isBlank( strIdUser )
                 || !StringUtils.isNumeric( strIdUser ) )
         {
-            return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
+            return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, JSP_URL_MANAGE_UNITS, AdminMessage.TYPE_STOP );
         }
 
         // Check permissions
         if ( !_unitService.isAuthorized( strIdUnit, UnitResourceIdService.PERMISSION_REMOVE_USER, getUser( ), UnittreeRBACRecursiveType.PARENT_RECURSIVE ) )
         {
-            return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP );
+        	return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, JSP_URL_MANAGE_UNITS, AdminMessage.TYPE_STOP );
         }
 
         UrlItem url = new UrlItem( JSP_URL_DO_REMOVE_USER );
         url.addParameter( PARAMETER_ID_UNIT, strIdUnit );
         url.addParameter( PARAMETER_ID_USER, strIdUser );
-
-        return AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_REMOVE_USER, url.getUrl( ), AdminMessage.TYPE_CONFIRMATION );
+        
+        return AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_REMOVE_USER, null, null, url.getUrl( ), null, AdminMessage.TYPE_CONFIRMATION, null, JSP_URL_MANAGE_UNITS );
     }
 
     // DO
@@ -617,7 +622,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
         catch( Exception ex )
         {
             // Something wrong happened... a database check might be needed
-            AppLogService.error( ex.getMessage( ) + " when creating an unit ", ex );
+            AppLogService.error( "{} when creating an unit ", ex.getMessage( ), ex );
             // Revert
             _unitService.removeUnit( unit.getIdUnit( ), request );
 
@@ -698,7 +703,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
         catch( Exception ex )
         {
             // Something wrong happened... a database check might be needed
-            AppLogService.error( ex.getMessage( ) + " when modifying an unit ", ex );
+            AppLogService.error( "{} when modifying an unit ", ex.getMessage( ), ex );
 
             return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_GENERIC_MESSAGE, AdminMessage.TYPE_ERROR );
         }
@@ -722,13 +727,13 @@ public class UnitJspBean extends PluginAdminPageJspBean
 
         if ( StringUtils.isBlank( strIdUnit ) || !StringUtils.isNumeric( strIdUnit ) )
         {
-            return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
+            return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, JSP_URL_MANAGE_UNITS, AdminMessage.TYPE_STOP );
         }
 
         // Check permissions
         if ( !_unitService.isAuthorized( strIdUnit, UnitResourceIdService.PERMISSION_DELETE, getUser( ), UnittreeRBACRecursiveType.PARENT_RECURSIVE ) )
         {
-            return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP );
+            return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, JSP_URL_MANAGE_UNITS, AdminMessage.TYPE_STOP );
         }
 
         int nIdUnit = Integer.parseInt( strIdUnit );
@@ -739,7 +744,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
         {
             if ( _unitService.hasSubUnits( nIdUnit ) )
             {
-                return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_UNIT_HAS_SUB_UNITS, AdminMessage.TYPE_STOP );
+                return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_UNIT_HAS_SUB_UNITS, JSP_URL_MANAGE_UNITS, AdminMessage.TYPE_STOP );
             }
 
             nIdParent = unit.getIdParent( );
@@ -747,7 +752,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
             try
             {
                 // Notify registered listener
-                List<IUnitRemovalListener> listRemovalListener = SpringContextService.getBeansOfType( IUnitRemovalListener.class );
+                List<IUnitRemovalListener> listRemovalListener = CDI.current( ).select( IUnitRemovalListener.class ).stream( ).toList( );
                 for ( IUnitRemovalListener removalLister : listRemovalListener )
                 {
                     try
@@ -756,7 +761,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
                     }
                     catch( UnitErrorException e )
                     {
-                        return AdminMessageService.getMessageUrl( request, e.getI18nErrorMessage( ), AdminMessage.TYPE_STOP );
+                        return AdminMessageService.getMessageUrl( request, e.getI18nErrorMessage( ), JSP_URL_MANAGE_UNITS, AdminMessage.TYPE_STOP );
                     }
                 }
                 _unitService.removeUnit( nIdUnit, request );
@@ -764,9 +769,9 @@ public class UnitJspBean extends PluginAdminPageJspBean
             catch( Exception ex )
             {
                 // Something wrong happened... a database check might be needed
-                AppLogService.error( ex.getMessage( ) + " when deleting an unit ", ex );
+                AppLogService.error( "{} when deleting an unit ", ex.getMessage( ), ex );
 
-                return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_GENERIC_MESSAGE, AdminMessage.TYPE_ERROR );
+                return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_GENERIC_MESSAGE, JSP_URL_MANAGE_UNITS, AdminMessage.TYPE_ERROR );
             }
         }
 
@@ -799,14 +804,18 @@ public class UnitJspBean extends PluginAdminPageJspBean
 
         if ( !_unitService.isAuthorized( strIdUnit, UnitResourceIdService.PERMISSION_ADD_USER, getUser( ), UnittreeRBACRecursiveType.PARENT_RECURSIVE ) )
         {
-            return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP );
+        	UrlItem url = new UrlItem( JSP_URL_ADD_USERS );
+        	url.addParameter( PARAMETER_ID_UNIT, strIdUnit ); 
+            return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, url.getUrl( ), AdminMessage.TYPE_STOP );
         }
 
         String [ ] listIdUsers = request.getParameterValues( PARAMETER_ID_USERS );
 
         if ( ( listIdUsers == null ) || ( listIdUsers.length == 0 ) || StringUtils.isBlank( strIdUnit ) || !StringUtils.isNumeric( strIdUnit ) )
         {
-            return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
+        	UrlItem url = new UrlItem( JSP_URL_ADD_USERS );
+        	url.addParameter( PARAMETER_ID_UNIT, strIdUnit );
+            return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, url.getUrl( ), AdminMessage.TYPE_STOP );
         }
 
         int nIdUnit = Integer.parseInt( strIdUnit );
@@ -819,7 +828,9 @@ public class UnitJspBean extends PluginAdminPageJspBean
 
                 if ( _unitUserService.isUserInUnit( nIdUser, nIdUnit ) )
                 {
-                    return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_USER_ALREADY_IN_UNIT, AdminMessage.TYPE_STOP );
+                	UrlItem url = new UrlItem( JSP_URL_ADD_USERS );
+                	url.addParameter( PARAMETER_ID_UNIT, strIdUnit );
+                    return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_USER_ALREADY_IN_UNIT, url.getUrl( ), AdminMessage.TYPE_STOP );
                 }
 
                 _unitUserService.doProcessAddUser( nIdUser, getUser( ), request );
@@ -918,7 +929,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
             catch( Exception ex )
             {
                 // Something wrong happened... a database check might be needed
-                AppLogService.error( ex.getMessage( ) + " when deleting an unit ", ex );
+                AppLogService.error( "{} when moving a user ", ex.getMessage( ), ex );
 
                 return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_GENERIC_MESSAGE, AdminMessage.TYPE_ERROR );
             }
@@ -945,13 +956,13 @@ public class UnitJspBean extends PluginAdminPageJspBean
         if ( StringUtils.isBlank( strIdUnit ) || !StringUtils.isNumeric( strIdUnit ) || StringUtils.isBlank( strIdUser )
                 || !StringUtils.isNumeric( strIdUser ) )
         {
-            return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
+        	return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, JSP_URL_MANAGE_UNITS, AdminMessage.TYPE_STOP );
         }
 
         // Check permissions
         if ( !_unitService.isAuthorized( strIdUnit, UnitResourceIdService.PERMISSION_REMOVE_USER, getUser( ), UnittreeRBACRecursiveType.PARENT_RECURSIVE ) )
         {
-            return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP );
+            return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, JSP_URL_MANAGE_UNITS, AdminMessage.TYPE_STOP );
         }
 
         int nIdUnit = Integer.parseInt( strIdUnit );
@@ -969,9 +980,9 @@ public class UnitJspBean extends PluginAdminPageJspBean
             catch( Exception ex )
             {
                 // Something wrong happened... a database check might be needed
-                AppLogService.error( ex.getMessage( ) + " when deleting an unit ", ex );
+                AppLogService.error( "{} when deleting a user ", ex.getMessage( ), ex );
 
-                return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_GENERIC_MESSAGE, AdminMessage.TYPE_ERROR );
+                return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_GENERIC_MESSAGE, JSP_URL_MANAGE_UNITS, AdminMessage.TYPE_ERROR );
             }
         }
 
@@ -1077,6 +1088,14 @@ public class UnitJspBean extends PluginAdminPageJspBean
         }
 
         String strIdUnitParent = request.getParameter( PARAMETER_ID_UNIT_PARENT );
+        
+        if ( StringUtils.isBlank( strIdUnitParent ) )
+        {
+        	UrlItem urlItem = new UrlItem( JSP_URL_MANAGE_UNITS );
+        	urlItem.addParameter( PARAMETER_ID_UNIT, strIdUnitToMove );
+        	
+            return AdminMessageService.getMessageUrl( request, MESSAGE_NO_PARENT_ENTITY_SELECTED, urlItem.getUrl( ), AdminMessage.TYPE_INFO );
+        }
 
         int nIdUnitToMove = Integer.parseInt( strIdUnitToMove );
         int nIdUnitParent = Integer.parseInt( strIdUnitParent );

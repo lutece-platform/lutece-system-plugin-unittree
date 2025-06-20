@@ -33,13 +33,10 @@
  */
 package fr.paris.lutece.plugins.unittree.business.action;
 
-import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.portal.service.util.AppLogService;
-
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanDefinitionStoreException;
-import org.springframework.beans.factory.CannotLoadBeanClassException;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.literal.NamedLiteral;
+import jakarta.enterprise.inject.spi.CDI;
 
 /**
  *
@@ -49,6 +46,7 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
  * </ul>
  *
  */
+@ApplicationScoped
 public class ActionFactory implements IActionFactory
 {
     /**
@@ -61,11 +59,11 @@ public class ActionFactory implements IActionFactory
 
         try
         {
-            action = SpringContextService.getBean( strActionType );
+            action = CDI.current( ).select( IAction.class ).select( NamedLiteral.of( strActionType ) ).get( );
         }
-        catch( BeansException e )
+        catch( Exception e )
         {
-            logBeanException( e );
+        	AppLogService.debug( "ActionFactory ERROR : could not load {} action - CAUSE : {}", strActionType, e.getMessage( ) );
         }
 
         // If no action is defined for strActionType, then create a DefaultAction
@@ -75,31 +73,5 @@ public class ActionFactory implements IActionFactory
         }
 
         return action;
-    }
-
-    private void logBeanException( BeansException e )
-    {
-        String beanName = null;
-        String message = e.getMessage( );
-
-        if ( e instanceof BeanDefinitionStoreException )
-        {
-            beanName = ( (BeanDefinitionStoreException) e ).getBeanName( );
-        }
-        else
-            if ( e instanceof NoSuchBeanDefinitionException )
-            {
-                beanName = ( (NoSuchBeanDefinitionException) e ).getBeanName( );
-            }
-            else
-                if ( e instanceof CannotLoadBeanClassException )
-                {
-                    beanName = ( (CannotLoadBeanClassException) e ).getBeanName( );
-                }
-
-        if ( beanName != null )
-        {
-            AppLogService.debug( "ActionFactory ERROR : could not load bean '" + beanName + "' - CAUSE : " + message );
-        }
     }
 }
