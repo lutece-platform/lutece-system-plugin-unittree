@@ -61,7 +61,7 @@ public class UnitAssignmentDAO implements IUnitAssignmentDAO
             + " WHERE id_resource = ? AND resource_type = ? ORDER BY assignment_date ASC, id ASC";
     private static final String SQL_QUERY_SELECT_BY_UNIT = SQL_QUERY_SELECTALL
             + " WHERE id_assigned_unit = ? ORDER BY resource_type ASC, id_resource ASC, assignment_date ASC, id ASC";
-    private static final String SQL_QUERY_INSERT = "INSERT INTO unittree_unit_assignment ( id, id_resource, resource_type, id_assigned_unit, id_assignor_unit, assignment_date, assignment_type, is_active ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ? ) ";
+    private static final String SQL_QUERY_INSERT = "INSERT INTO unittree_unit_assignment ( id, id_resource, resource_type, id_assigned_unit, id_assignor_unit, assignment_type, is_active ) VALUES ( ?, ?, ?, ?, ?, ?, ? ) ";
     private static final String SQL_QUERY_DESACTIVATE = "UPDATE unittree_unit_assignment SET is_active = 0 WHERE id = ? ";
     private static final String SQL_QUERY_DESACTIVATE_BY_RESOURCE = " UPDATE unittree_unit_assignment SET is_active = 0 WHERE id_resource = ? AND resource_type = ? ";
     private static final String SQL_QUERY_DELETE_BY_RESOURCE = " DELETE FROM unittree_unit_assignment WHERE id_resource = ? AND resource_type = ? ";
@@ -87,7 +87,6 @@ public class UnitAssignmentDAO implements IUnitAssignmentDAO
             daoUtil.setString( ++nIndex, unitAssignment.getResourceType( ) );
             daoUtil.setInt( ++nIndex, unitAssignment.getAssignedUnit( ).getIdUnit( ) );
             daoUtil.setInt( ++nIndex, unitAssignment.getAssignorUnit( ).getIdUnit( ) );
-            daoUtil.setTimestamp( ++nIndex, unitAssignment.getAssignmentDate( ) );
             daoUtil.setString( ++nIndex, unitAssignment.getAssignmentType( ).getAssignmentTypeCode( ) );
             daoUtil.setBoolean( ++nIndex, unitAssignment.isActive( ) );
 
