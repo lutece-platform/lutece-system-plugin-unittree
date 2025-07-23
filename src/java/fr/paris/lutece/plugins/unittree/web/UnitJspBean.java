@@ -105,6 +105,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
     private static final String PROPERTY_MOVE_UNIT_PAGE_TITLE = "unittree.moveSubTree.pageTitle";
 
     // MESSAGES
+    private static final String MESSAGE_ERROR_NO_UNIT_SELECTED = "unittree.message.error.noUnitSelected";
     private static final String MESSAGE_ERROR_GENERIC_MESSAGE = "unittree.message.error.genericMessage";
     private static final String MESSAGE_ERROR_UNIT_NOT_FOUND = "unittree.message.error.unitNotFound";
     private static final String MESSAGE_ERROR_UNIT_HAS_SUB_UNITS = "unittree.message.error.unitHasSubUnits";
@@ -1077,6 +1078,10 @@ public class UnitJspBean extends PluginAdminPageJspBean
         }
 
         String strIdUnitParent = request.getParameter( PARAMETER_ID_UNIT_PARENT );
+        if ( StringUtils.isBlank( strIdUnitParent ) )
+        {
+            return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_NO_UNIT_SELECTED, AdminMessage.TYPE_ERROR );
+        }
 
         int nIdUnitToMove = Integer.parseInt( strIdUnitToMove );
         int nIdUnitParent = Integer.parseInt( strIdUnitParent );

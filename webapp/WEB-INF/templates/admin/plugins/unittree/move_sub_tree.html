@@ -15,10 +15,12 @@
 			<@formGroup labelFor='' labelKey=''>
 				<#if listSubUnits?? && listSubUnits?has_content>
 					<#list listSubUnits as subUnit>
-						<#assign radioLabel>
-							<@link href='jsp/admin/plugins/unittree/MoveSubTree.jsp?idUnit=${unitToMove.idUnit!}&amp;idUnitParent=${subUnit.idUnit!}' title='#i18n{unittree.moveUser.labelAccessTo}'><@icon style='folder-open' /> ${subUnit.label!}</@link>
-						</#assign>
-						<@radioButton labelFor='idUnitParent' labelKey=radioLabel name='idUnitParent' value='${subUnit.idUnit!}' params='style="display:inline-block;"'/>
+						<@div>
+							<#assign radioLabel>
+								<@link href='jsp/admin/plugins/unittree/MoveSubTree.jsp?idUnit=${unitToMove.idUnit!}&amp;idUnitParent=${subUnit.idUnit!}' title='#i18n{unittree.moveUser.labelAccessTo}'><@icon style='folder-open' /> ${subUnit.label!}</@link>
+							</#assign>
+							<@radioButton labelFor='idUnitParent' labelKey=radioLabel name='idUnitParent' value='${subUnit.idUnit!}' params='style="display:inline-block;"'/>
+						</@div>
 					</#list>
 				<#else>
 					<@alert color='info'>#i18n{unittree.moveSubTree.labelNoSuUnit}</@alert>
