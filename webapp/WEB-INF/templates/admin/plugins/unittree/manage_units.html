@@ -132,12 +132,9 @@
 <link rel="stylesheet" href="js/admin/lib/jstree/themes/proton/style.min.css" >
 <script src="js/admin/lib/jstree/jstree.min.js"></script>
 <script>
-var selectedTree=localStorage.getItem('unitTreeSelectedId');
 
-if( selectedTree === null ){ 
-	selectedTree = 'node-${unit.idUnit!}'
-	localStorage.setItem( 'unitTreeSelectedId', selectedTree );
-}
+var selectedTree = 'node-${unit.idUnit!}'
+localStorage.setItem( 'unitTreeSelectedId', selectedTree );
 
 $('#tree').jstree({
 'core': {
@@ -157,4 +154,8 @@ $('#tree').jstree({
 });
 
 $('#tree').jstree( 'select_node', selectedTree );
+<#if selectedNodeOpen?? && selectedNodeOpen>
+$('#tree').jstree( 'open_node', selectedTree );
+</#if>
+
 </script>
