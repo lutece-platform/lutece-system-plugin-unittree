@@ -105,6 +105,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
     private static final String PROPERTY_MOVE_UNIT_PAGE_TITLE = "unittree.moveSubTree.pageTitle";
 
     // MESSAGES
+    private static final String MESSAGE_ERROR_NO_UNIT_SELECTED = "unittree.message.error.noUnitSelected";
     private static final String MESSAGE_ERROR_GENERIC_MESSAGE = "unittree.message.error.genericMessage";
     private static final String MESSAGE_ERROR_UNIT_NOT_FOUND = "unittree.message.error.unitNotFound";
     private static final String MESSAGE_ERROR_UNIT_HAS_SUB_UNITS = "unittree.message.error.unitHasSubUnits";
@@ -115,7 +116,6 @@ public class UnitJspBean extends PluginAdminPageJspBean
     private static final String MESSAGE_ACCESS_DENIED = "unittree.message.accessDenied";
     private static final String MESSAGE_SUB_TREE_MOVED = "unittree.moveSubTree.subTreeMoved";
     private static final String MESSAGE_CANT_MOVE_SUB_TREE_TO_CHILD = "unittree.moveSubTree.cantMoveSubTreeToChild";
-    private static final String MESSAGE_NO_PARENT_ENTITY_SELECTED= "unittree.moveSubTree.NoParentEntitySelected";
 
     // MARKS
     private static final String MARK_UNIT_TREE = "unitTree";
@@ -1088,13 +1088,9 @@ public class UnitJspBean extends PluginAdminPageJspBean
         }
 
         String strIdUnitParent = request.getParameter( PARAMETER_ID_UNIT_PARENT );
-        
         if ( StringUtils.isBlank( strIdUnitParent ) )
         {
-        	UrlItem urlItem = new UrlItem( JSP_URL_MANAGE_UNITS );
-        	urlItem.addParameter( PARAMETER_ID_UNIT, strIdUnitToMove );
-        	
-            return AdminMessageService.getMessageUrl( request, MESSAGE_NO_PARENT_ENTITY_SELECTED, urlItem.getUrl( ), AdminMessage.TYPE_INFO );
+            return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_NO_UNIT_SELECTED, AdminMessage.TYPE_ERROR );
         }
 
         int nIdUnitToMove = Integer.parseInt( strIdUnitToMove );
