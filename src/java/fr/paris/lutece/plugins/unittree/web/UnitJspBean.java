@@ -111,6 +111,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
     private static final String MESSAGE_ERROR_UNIT_HAS_SUB_UNITS = "unittree.message.error.unitHasSubUnits";
     private static final String MESSAGE_ERROR_USER_ALREADY_IN_UNIT = "unittree.message.error.userAlreadyInUnit";
     private static final String MESSAGE_ERROR_NO_SUB_UNITS = "unittree.message.error.noSubUnits";
+    private static final String MESSAGE_DUPLICATE_CODE = "unittree.message.error.duplicateCode";
     private static final String MESSAGE_CONFIRM_REMOVE_UNIT = "unittree.message.removeUnit";
     private static final String MESSAGE_CONFIRM_REMOVE_USER = "unittree.message.removeUser";
     private static final String MESSAGE_ACCESS_DENIED = "unittree.message.accessDenied";
@@ -611,6 +612,12 @@ public class UnitJspBean extends PluginAdminPageJspBean
             return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
         }
 
+        Unit sameCodeUnit = _unitService.getUnitByCode( unit.getCode(), false );
+        if ( sameCodeUnit != null )
+        {
+            return AdminMessageService.getMessageUrl( request, MESSAGE_DUPLICATE_CODE, AdminMessage.TYPE_STOP );
+        }
+
         try
         {
             _unitService.createUnit( unit, request );
@@ -690,6 +697,12 @@ public class UnitJspBean extends PluginAdminPageJspBean
         if ( CollectionUtils.isNotEmpty( constraintViolations ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
+        }
+
+        Unit sameCodeUnit = _unitService.getUnitByCode( unit.getCode(), false );
+        if ( sameCodeUnit !=null && sameCodeUnit.getIdUnit() != unit.getIdUnit() )
+        {
+            return AdminMessageService.getMessageUrl( request, MESSAGE_DUPLICATE_CODE, AdminMessage.TYPE_STOP );
         }
 
         try
