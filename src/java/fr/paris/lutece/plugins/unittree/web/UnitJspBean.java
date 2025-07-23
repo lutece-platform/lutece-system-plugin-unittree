@@ -134,6 +134,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
     private static final String MARK_FILTER_AFFECTED_USERS = "filterAffectedUsers";
     private static final String MARK_ADMIN_AVATAR = "adminAvatar";
     private static final String MARK_MAP_ID_USER_UNITS = "mapIdUserUnits";
+    private static final String MARK_SELECTED_NODE_OPEN = "selectedNodeOpen";
 
     // PARAMETERS
     private static final String PARAMETER_CANCEL = "cancel";
@@ -146,6 +147,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
     private static final String PARAMETER_ID_SELECTED_UNIT = "idSelectedUnit";
     private static final String PARAMETER_FILTER_AFFECTED_USERS = "filterAffectedUsers";
     private static final String PARAMETER_ID_UNIT_PARENT = "idUnitParent";
+    private static final String PARAMETER_OPENNODE = "openNode";
 
     // TEMPLATES
     private static final String TEMPLATE_MANAGE_UNITS = "/admin/plugins/unittree/manage_units.html";
@@ -162,6 +164,8 @@ public class UnitJspBean extends PluginAdminPageJspBean
     private static final String JSP_URL_DO_REMOVE_UNIT = "jsp/admin/plugins/unittree/DoRemoveUnit.jsp";
     private static final String JSP_URL_ADD_USERS = "jsp/admin/plugins/unittree/AddUsers.jsp";
     private static final String JSP_URL_DO_REMOVE_USER = "jsp/admin/plugins/unittree/DoRemoveUser.jsp";
+
+    private static final String OPENNODE_ENABLED = "1";
 
     // SERVICES
     private transient IUnitService _unitService = SpringContextService.getBean( UnitService.BEAN_UNIT_SERVICE );
@@ -246,6 +250,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
         model.put( MARK_MAP_ID_USER_UNIT, mapIdUserUnit );
         model.put( MARK_ADMIN_AVATAR, _bAdminAvatar );
         model.put( MARK_MULTI_AFFECTATION_ENABLED, bMultiAffectationEnabled );
+        model.put( MARK_SELECTED_NODE_OPEN, OPENNODE_ENABLED.equals( request.getParameter(PARAMETER_OPENNODE) ) );
 
         // Add actions in the model
         model.put( MARK_LIST_UNIT_ACTIONS,
@@ -626,6 +631,8 @@ public class UnitJspBean extends PluginAdminPageJspBean
 
         initTreeUnit( request );
         UrlItem url = new UrlItem( JSP_MANAGE_UNITS );
+        url.addParameter( PARAMETER_ID_UNIT, strIdParent );
+        url.addParameter( PARAMETER_OPENNODE, OPENNODE_ENABLED );
 
         return url.getUrl( );
     }
@@ -705,6 +712,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
 
         initTreeUnit( request );
         UrlItem url = new UrlItem( JSP_MANAGE_UNITS );
+        url.addParameter( PARAMETER_ID_UNIT, strIdUnit );
 
         return url.getUrl( );
     }
@@ -773,6 +781,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
         initTreeUnit( request );
         UrlItem url = new UrlItem( JSP_MANAGE_UNITS );
         url.addParameter( PARAMETER_ID_UNIT, nIdParent );
+        url.addParameter(PARAMETER_OPENNODE, OPENNODE_ENABLED );
 
         return url.getUrl( );
     }
