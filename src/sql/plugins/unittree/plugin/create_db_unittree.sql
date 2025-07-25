@@ -1,3 +1,6 @@
+--liquibase formatted sql
+--changeset unittree:create_db_unittree.sql
+--preconditions onFail:MARK_RAN onError:WARN
 DROP TABLE IF EXISTS unittree_unit CASCADE;
 DROP TABLE IF EXISTS unittree_unit_user CASCADE;
 DROP TABLE IF EXISTS unittree_action;
