@@ -1,3 +1,6 @@
+--liquibase formatted sql
+--changeset unittree:update_db_unittree-1.0.1-1.0.2.sql
+--preconditions onFail:MARK_RAN onError:WARN
 --
 -- UNITTREE-
 --
