@@ -1,3 +1,6 @@
+--liquibase formatted sql
+--changeset unittree:init_db_unittree.sql
+--preconditions onFail:MARK_RAN onError:WARN
 
 --
 -- Dumping data for table unittree_unit

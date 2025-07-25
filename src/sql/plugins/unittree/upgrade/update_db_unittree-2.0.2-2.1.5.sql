@@ -1,3 +1,6 @@
+--liquibase formatted sql
+--changeset unittree:update_db_unittree-2.0.2-2.1.5.sql
+--preconditions onFail:MARK_RAN onError:WARN
 DROP TABLE IF EXISTS unittree_unit_assignment;
 
 CREATE TABLE unittree_unit_assignment (
