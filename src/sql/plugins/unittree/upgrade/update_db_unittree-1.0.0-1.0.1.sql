@@ -1,3 +1,6 @@
+--liquibase formatted sql
+--changeset unittree:update_db_unittree-1.0.0-1.0.1.sql
+--preconditions onFail:MARK_RAN onError:WARN
 --
 -- UNITTREE-2 : Init the database with samples
 --
