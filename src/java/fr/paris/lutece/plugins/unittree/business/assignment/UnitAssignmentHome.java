@@ -131,6 +131,18 @@ public final class UnitAssignmentHome
         return _dao.selectIdResourceByFilter( filter, _plugin );
     }
 
+
+    /**
+     * Finds unit assignments from filter.
+     *
+     * @param filter the filter
+     * @return the list of unit assignments
+     */
+    public static List<UnitAssignment> getListByFilter( UnitAssignmentFilter filter )
+    {
+        return _dao.getListByFilter( filter, _plugin );
+    }
+
     /**
      * <p>
      * Deactivate the units assignments associated to the specified resource.

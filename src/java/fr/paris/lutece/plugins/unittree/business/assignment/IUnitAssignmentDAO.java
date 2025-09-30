@@ -109,6 +109,15 @@ public interface IUnitAssignmentDAO
     List<Integer> selectIdResourceByFilter(UnitAssignmentFilter filter , Plugin plugin );
 
     /**
+     * Loads the unit assignments from filter.
+     *
+     * @param filter the filter
+     * @param plugin the plugin
+     * @return the list of unit assignments
+     */
+    List<UnitAssignment> getListByFilter(UnitAssignmentFilter filter , Plugin plugin );
+
+    /**
      * Deactivate the unit assignments associated to the specified resource
      * 
      * @param nIdResource
