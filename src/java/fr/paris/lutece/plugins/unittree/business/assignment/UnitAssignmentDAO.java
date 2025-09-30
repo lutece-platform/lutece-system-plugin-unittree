@@ -67,9 +67,12 @@ public class UnitAssignmentDAO implements IUnitAssignmentDAO
     private static final String SQL_QUERY_DELETE_BY_RESOURCE = " DELETE FROM unittree_unit_assignment WHERE id_resource = ? AND resource_type = ? ";
     private static final String SQL_QUERY_SELECT_IDRESOURCE = "SELECT id_resource FROM unittree_unit_assignment WHERE 1=1 ";
 
+    private static final String SQL_QUERY_SELECT_BY_FILTER = SQL_QUERY_SELECTALL + " WHERE 1=1 ";
+
     private static final String CONSTANT_AND_ACTIVE = " AND is_active = ?";
     private static final String CONSTANT_AND_RESOURCETYPE = " AND resource_type = ?";
     private static final String CONSTANT_AND_ASSIGNEDUNIT = " AND id_assigned_unit IN (?";
+    private static final String CONSTANT_AND_RESOURCEID = " AND id_resource IN (?";
     private static final String SQL_CLOSE_PARENTHESIS = " ) ";
     private static final String SQL_ADITIONAL_PARAMETER = ",?";
 
@@ -215,6 +218,40 @@ public class UnitAssignmentDAO implements IUnitAssignmentDAO
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<UnitAssignment> getListByFilter(UnitAssignmentFilter filter , Plugin plugin )
+    {
+        List<UnitAssignment> listUnitAssignments = new ArrayList<>( );
+
+        String filterSQL = filterBuildSql( filter );
+
+        if( filterSQL != null )
+        {
+            String sSQL = SQL_QUERY_SELECT_BY_FILTER +
+                    filterSQL;
+
+            try ( DAOUtil daoUtil = new DAOUtil(sSQL, plugin ) )
+            {
+                if ( filterInsertData( filter , daoUtil ) == -1 )
+                {
+                    return listUnitAssignments;
+                }
+
+                daoUtil.executeQuery( );
+
+                while ( daoUtil.next( ) )
+                {
+                    listUnitAssignments.add( dataToUnitAssignment( daoUtil ) );
+                }
+            }
+        }
+
+        return listUnitAssignments;
+    }
+
+    /**
      * Create condition sql for where filter
      *
      * @param filter the filter
@@ -222,6 +259,13 @@ public class UnitAssignmentDAO implements IUnitAssignmentDAO
      */
     private String filterBuildSql(UnitAssignmentFilter filter )
     {
+
+        if( (filter.getIdAssignedUnit() != null && filter.getIdAssignedUnit().isEmpty()) ||
+                (filter.getIdResource() != null && filter.getIdResource().isEmpty()) )
+        {
+            return null;
+        }
+
         StringBuilder sbSQL = new StringBuilder();
 
         if ( filter.getActive() != -1 )
@@ -236,19 +280,22 @@ public class UnitAssignmentDAO implements IUnitAssignmentDAO
 
         if ( filter.getIdAssignedUnit() != null )
         {
-            if( filter.getIdAssignedUnit().isEmpty() )
+            sbSQL.append( CONSTANT_AND_ASSIGNEDUNIT );
+            for ( int i = 1; i < filter.getIdAssignedUnit().size(); i++ )
             {
-                return null;
+                sbSQL.append( SQL_ADITIONAL_PARAMETER );
             }
-            else
+            sbSQL.append(SQL_CLOSE_PARENTHESIS);
+        }
+
+        if ( filter.getIdResource() != null )
+        {
+            sbSQL.append( CONSTANT_AND_RESOURCEID );
+            for ( int i = 1; i < filter.getIdResource().size(); i++ )
             {
-                sbSQL.append( CONSTANT_AND_ASSIGNEDUNIT );
-                for ( int i = 1; i < filter.getIdAssignedUnit().size(); i++ )
-                {
-                    sbSQL.append( SQL_ADITIONAL_PARAMETER );
-                }
-                sbSQL.append(SQL_CLOSE_PARENTHESIS);
+                sbSQL.append( SQL_ADITIONAL_PARAMETER );
             }
+            sbSQL.append(SQL_CLOSE_PARENTHESIS);
         }
 
         return sbSQL.toString();
@@ -259,10 +306,16 @@ public class UnitAssignmentDAO implements IUnitAssignmentDAO
      *
      * @param filter the filter
      * @param daoUtil the daoUtil
-     * @return index of inserted data
+     * @return index of inserted data -1 if the request can t give data
      */
     private int filterInsertData(UnitAssignmentFilter filter , DAOUtil daoUtil )
     {
+        if( (filter.getIdAssignedUnit() != null && filter.getIdAssignedUnit().isEmpty()) ||
+                (filter.getIdResource() != null && filter.getIdResource().isEmpty()) )
+        {
+            return -1;
+        }
+
         int nIndex = 0;
 
         if ( filter.getActive() != -1 )
@@ -277,17 +330,18 @@ public class UnitAssignmentDAO implements IUnitAssignmentDAO
 
         if ( filter.getIdAssignedUnit() != null )
         {
-            if( filter.getIdAssignedUnit().isEmpty() )
-            {
-                return -1;
-            }
-            else
-            {
-                for ( Integer integer : filter.getIdAssignedUnit() ) {
-                    daoUtil.setInt(++nIndex, integer);
-                }
+            for ( Integer integer : filter.getIdAssignedUnit() ) {
+                daoUtil.setInt(++nIndex, integer);
             }
         }
+
+        if ( filter.getIdResource() != null )
+        {
+            for ( Integer integer : filter.getIdResource() ) {
+                daoUtil.setInt(++nIndex, integer);
+            }
+        }
+
         return nIndex;
     }
 

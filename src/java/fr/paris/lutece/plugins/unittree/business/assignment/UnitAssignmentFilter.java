@@ -42,6 +42,7 @@ public class UnitAssignmentFilter
 {
     private String _strResourceType;
     private List<Integer> _listIdAssignedUnit;
+    private List<Integer> _listIdResource;
     private int _nActive;
 
     /**
@@ -51,6 +52,7 @@ public class UnitAssignmentFilter
     {
         _strResourceType = null;
         _listIdAssignedUnit = null;
+        _listIdResource = null;
         _nActive = -1;
     }
 
@@ -90,6 +92,25 @@ public class UnitAssignmentFilter
      */
     public void setIdAssignedUnit(List<Integer> listIdAssignedUnit) {
         this._listIdAssignedUnit = listIdAssignedUnit;
+    }
+
+    /**
+     * Get the idResource
+     *
+     * @return the idResource
+     */
+    public List<Integer> getIdResource() {
+        return _listIdResource;
+    }
+
+    /**
+     * Set the idResource
+     *
+     * @param listIdResource
+     *            the idResource
+     */
+    public void setIdResource(List<Integer> listIdResource) {
+        this._listIdResource = listIdResource;
     }
 
     /**
