@@ -1,6 +1,6 @@
---liquibase formatted sql
---changeset unittree:update_db_unittree-2.1.6-3.0.1.sql
---preconditions onFail:MARK_RAN onError:WARN
+-- liquibase formatted sql
+-- changeset unittree:update_db_unittree-2.1.6-3.0.1.sql
+-- preconditions onFail:MARK_RAN onError:WARN
 UPDATE unittree_action SET icon_url='plus' WHERE id_action=1;
 UPDATE unittree_action SET icon_url='edit' WHERE id_action=2;
 UPDATE unittree_action SET icon_url='trash' WHERE id_action=3;

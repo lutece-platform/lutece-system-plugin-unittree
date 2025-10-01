@@ -1,6 +1,6 @@
---liquibase formatted sql
---changeset unittree:update_db_unittree-2.0.0-2.0.2.sql
---preconditions onFail:MARK_RAN onError:WARN
+-- liquibase formatted sql
+-- changeset unittree:update_db_unittree-2.0.0-2.0.2.sql
+-- preconditions onFail:MARK_RAN onError:WARN
 TRUNCATE `unittree_action`;
 INSERT INTO `unittree_action` VALUES (1, 'unittree.unit.action.createUnit.name', 'unittree.unit.action.createUnit.description', 'jsp/admin/plugins/unittree/CreateUnit.jsp', 'fa fa-plus fa-fw', 'CREATE', 'unittree.unitAction');
 INSERT INTO `unittree_action` VALUES (2, 'unittree.unit.action.modifyUnit.name', 'unittree.unit.action.modifyUnit.description', 'jsp/admin/plugins/unittree/ModifyUnit.jsp', 'fa fa-pencil fa-fw', 'MODIFY', 'unittree.unitAction');
