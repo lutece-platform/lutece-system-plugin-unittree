@@ -33,6 +33,7 @@
  */
 package fr.paris.lutece.plugins.unittree.business.unit;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +42,7 @@ import java.util.List;
  * UnitFilter
  *
  */
-public class TreeUnit
+public class TreeUnit implements Serializable
 {
     private Unit _unitNode;
     private List<TreeUnit> _subUnits;
