@@ -35,6 +35,7 @@ package fr.paris.lutece.plugins.unittree.business.unit;
 
 import fr.paris.lutece.portal.service.rbac.RBACResource;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,7 +46,7 @@ import jakarta.validation.constraints.NotNull;
  * Unit
  *
  */
-public class Unit implements RBACResource
+public class Unit implements RBACResource, Serializable
 {
     public static final String RESOURCE_TYPE = "UNIT_TYPE";
     public static final int ID_ROOT = 0;
