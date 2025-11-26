@@ -35,6 +35,7 @@ package fr.paris.lutece.plugins.unittree.business.unit;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import fr.paris.lutece.plugins.unittree.business.assignment.UnitAssignment;
@@ -52,7 +53,7 @@ public class UnitAssignmentBusinessTest extends LuteceTestCase
         assignment.setResourceType( "type" );
         assignment.setActive( true );
         assignment.setAssignmentType( UnitAssignmentType.CREATION );
-        assignment.setAssignmentDate( Timestamp.valueOf( LocalDateTime.now( ) ) );
+        assignment.setAssignmentDate( Timestamp.valueOf( LocalDateTime.now( ).truncatedTo( ChronoUnit.SECONDS ) ) );
 
         UnitAssignmentHome.create( assignment );
 
