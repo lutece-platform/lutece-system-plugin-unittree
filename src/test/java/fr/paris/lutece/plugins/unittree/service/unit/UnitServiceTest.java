@@ -52,6 +52,7 @@ public class UnitServiceTest extends LuteceTestCase
     public void testAllSubUnitsOfNotExistingUnit( )
     {
         Unit unit = MockUnit.create( );
+        unit.setIdUnit( 9999 );
 
         List<Unit> listSubUnits = _unitService.getAllSubUnits( unit, false );
 
@@ -66,6 +67,7 @@ public class UnitServiceTest extends LuteceTestCase
         List<Unit> listSubUnits = _unitService.getAllSubUnits( unit, false );
 
         assertEquals( 0, listSubUnits.size( ) );
+        UnitHome.remove( unit.getIdUnit( ) );
     }
 
     private Unit insertUnitInDatabase( )
@@ -95,7 +97,7 @@ public class UnitServiceTest extends LuteceTestCase
 
     private void assertThatSubUnitListsAreEqual( List<Unit> listUnits1, Unit... listUnits2 )
     {
-    	assertEquals( listUnits1.size( ), listUnits2.length );
+        assertEquals( listUnits2.length, listUnits1.size( ) );
 
         List<Integer> listUnitIds = new ArrayList<>( );
 
@@ -106,7 +108,7 @@ public class UnitServiceTest extends LuteceTestCase
 
         for ( Unit unit : listUnits1 )
         {
-        	assertEquals( true, listUnitIds.contains( unit.getIdUnit( ) ) );
+            assertTrue( listUnitIds.contains( unit.getIdUnit( ) ) );
         }
     }
 

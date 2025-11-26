@@ -45,15 +45,6 @@ import java.util.Set;
 public interface IUnitDAO
 {
     /**
-     * Get new primary key
-     * 
-     * @param plugin
-     *            the plugin
-     * @return a new primary key
-     */
-    int newPrimaryKey( Plugin plugin );
-
-    /**
      * Load the unit
      * 
      * @param nIdUnit
