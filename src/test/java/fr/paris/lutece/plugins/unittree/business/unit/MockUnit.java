@@ -33,20 +33,15 @@
  */
 package fr.paris.lutece.plugins.unittree.business.unit;
 
-import fr.paris.lutece.plugins.unittree.util.IdGenerator;
-
 public class MockUnit
 {
     public static Unit create( )
     {
-        int nId = IdGenerator.generateId( );
-
         Unit unit = new Unit( );
-        unit.setIdUnit( nId );
         unit.setCode( "code" );
         unit.setIdParent( Unit.ID_ROOT );
-        unit.setLabel( String.valueOf( nId ) );
-        unit.setDescription( String.valueOf( nId ) );
+        unit.setLabel( "label" );
+        unit.setDescription( "description" );
 
         return unit;
     }
