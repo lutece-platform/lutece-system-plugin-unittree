@@ -14,7 +14,7 @@ SET FOREIGN_KEY_CHECKS = 1;
 -- Table structure for table form_action
 --
 CREATE TABLE unittree_unit (
-	id_unit INT DEFAULT 0 NOT NULL,
+	id_unit INT AUTO_INCREMENT,
 	id_parent INT DEFAULT 0 NOT NULL,
 	code VARCHAR(255) DEFAULT '' NOT NULL,
 	label VARCHAR(255) DEFAULT '' NOT NULL,
