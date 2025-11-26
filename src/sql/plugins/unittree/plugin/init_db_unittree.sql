@@ -2,6 +2,10 @@
 -- changeset unittree:init_db_unittree.sql
 -- preconditions onFail:MARK_RAN onError:WARN
 
+-- This command is necessary in MariaDB/MySQL because the primary key id_unit is auto-incremented and the first value generated would be 1. 
+-- It allows to create the first row of the table with a primary key value equal to 0.
+-- 
+SET SESSION sql_mode='NO_AUTO_VALUE_ON_ZERO';
 --
 -- Dumping data for table unittree_unit
 --

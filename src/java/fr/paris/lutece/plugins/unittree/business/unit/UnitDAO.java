@@ -37,6 +37,7 @@ import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.util.sql.DAOUtil;
 import jakarta.enterprise.context.ApplicationScoped;
 
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -59,8 +60,7 @@ public class UnitDAO implements IUnitDAO
     private static final String SQL_FILTER_DESCRIPTION = " description = ? ";
 
     // Table unittree_unit
-    private static final String SQL_QUERY_NEW_PK = " SELECT max( id_unit ) FROM unittree_unit ";
-    private static final String SQL_QUERY_INSERT = " INSERT INTO unittree_unit ( id_unit, id_parent, code, label, description ) VALUES ( ?, ?, ?, ?, ?) ";
+    private static final String SQL_QUERY_INSERT = " INSERT INTO unittree_unit ( id_parent, code, label, description ) VALUES ( ?, ?, ?, ?) ";
     private static final String SQL_QUERY_SELECT = " SELECT id_unit, id_parent, code, label, description FROM unittree_unit WHERE id_unit = ? ";
     private static final String SQL_QUERY_SELECT_BY_CODE = " SELECT id_unit, id_parent, code, label, description FROM unittree_unit WHERE code = ? ";
 
@@ -98,42 +98,25 @@ public class UnitDAO implements IUnitDAO
      * {@inheritDoc}
      */
     @Override
-    public int newPrimaryKey( Plugin plugin )
-    {
-        int nKey = 1;
-        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PK, plugin ) )
-        {
-            daoUtil.executeQuery( );
-            if ( daoUtil.next( ) )
-            {
-                nKey = daoUtil.getInt( 1 ) + 1;
-            }
-        }
-        return nKey;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public synchronized int insert( Unit unit, Plugin plugin )
+    public int insert( Unit unit, Plugin plugin )
     {
         int nIndex = 1;
-        int nIdUnit = newPrimaryKey( plugin );
-        unit.setIdUnit( nIdUnit );
-
-        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, Statement.RETURN_GENERATED_KEYS, plugin ) )
         {
-            daoUtil.setInt( nIndex++, unit.getIdUnit( ) );
             daoUtil.setInt( nIndex++, unit.getIdParent( ) );
             daoUtil.setString( nIndex++, unit.getCode( ) );
             daoUtil.setString( nIndex++, unit.getLabel( ) );
             daoUtil.setString( nIndex, unit.getDescription( ) );
 
             daoUtil.executeUpdate( );
+            
+            if ( daoUtil.nextGeneratedKey( ) )
+            {
+            	unit.setIdUnit( daoUtil.getGeneratedKeyInt( 1 ) );
+            }
         }
 
-        return nIdUnit;
+        return unit.getIdUnit( );
     }
 
     /**

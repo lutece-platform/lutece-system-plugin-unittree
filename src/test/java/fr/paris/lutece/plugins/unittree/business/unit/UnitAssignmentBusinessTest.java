@@ -46,6 +46,10 @@ import fr.paris.lutece.test.LuteceTestCase;
 
 public class UnitAssignmentBusinessTest extends LuteceTestCase
 {
+	//Latency in milliseconds allowed between assignment date in UnitAssignment object and assignment date in database.
+	//As assignment date is generated automatically by the database, it cannot be exactly equal in UnitAssignment object and in database.
+	private static int ALLOWED_LATENCY_DURATION = 1000;
+	
 	@Test
     public void testCRUD( )
     {
@@ -63,7 +67,7 @@ public class UnitAssignmentBusinessTest extends LuteceTestCase
         assertEquals( 1, list.size( ) );
         assertEquals( assignment.getIdAssignedUnit( ), list.get( 0 ).getIdAssignedUnit( ) );
         assertEquals( assignment.getAssignmentType( ), list.get( 0 ).getAssignmentType( ) );
-        assertEquals( assignment.getAssignmentDate( ).getTime(), list.get( 0 ).getAssignmentDate( ).getTime() );
+        assertTrue( assignment.getAssignmentDate( ).getTime() - list.get( 0 ).getAssignmentDate( ).getTime( ) < ALLOWED_LATENCY_DURATION );
         assertTrue( list.get( 0 ).isActive( ) );
 
         UnitAssignmentHome.deactivate( assignment );
