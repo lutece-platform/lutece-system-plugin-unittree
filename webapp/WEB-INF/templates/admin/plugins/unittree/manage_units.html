@@ -10,24 +10,36 @@
 			<@columns xs=12 xl=4>
 				<@box>
 					<@boxHeader title='#i18n{unittree.manageUnits.labelUnits}'>
-						<#if listUnitActions?? && listUnitActions?has_content>
-							<#list listUnitActions as unitAction>
-								<#if unitAction.nameKey?? && unitAction.nameKey == 'unittree.unit.action.deleteUnit.name'>
-									<#assign aButtonColor = 'danger' />
-								<#else>
-									<#assign aButtonColor = 'primary' />
-								</#if>
-								<@aButton href='${unitAction.url!}?idUnit=${unit.idUnit!}' title='${unitAction.name!}' hideTitle=['all'] buttonIcon='${unitAction.icon!}' color=aButtonColor! size='sm' />
-							</#list>
-						</#if>
-						<@button type='button' style='card-control collapse' buttonTargetId='#tree' buttonIcon='minus' size='sm' />
+						<@btnToolbar>
+							<@btnGroup>
+							<#if listUnitActions?? && listUnitActions?has_content>
+								<#list listUnitActions as unitAction>
+									<#if unitAction.nameKey?? && unitAction.nameKey == 'unittree.unit.action.deleteUnit.name'>
+										<#assign aButtonColor = 'danger' />
+									<#else>
+										<#assign aButtonColor = 'primary' />
+									</#if>
+									<@aButton href='${unitAction.url!}?idUnit=${unit.idUnit!}' title='${unitAction.name!}' hideTitle=['all'] buttonIcon='${unitAction.icon!}' size='sm'  color=aButtonColor! />
+								</#list>
+							</#if>
+							<@button type='button' style='card-control collapse' buttonTargetId='#unit-tree' buttonIcon='minus' size='sm' />
+							</@btnGroup>	
+						</@btnToolbar>
 					</@boxHeader>
 					<@boxBody>
-						<div class="jstree-default" id="tree">
-							<ul>
-								 <@displaySubUnits treeUnit=unitTree />
-							</ul>
-						</div>
+						<@div class='lutece-tree' id='unit-tree'>
+						<@ul> 
+							<@displaySubUnits treeUnit=unitTree icon='folder-root' />
+						</@ul>
+						</@div>
+					</@boxBody>
+				</@box>
+				<@box>
+					<@boxHeader title='#i18n{portal.users.manage_users.search_users.buttonSearch}'>
+						<@button type='button' style='card-control collapse' buttonTargetId='#search-form' buttonIcon='minus' size='sm'  />
+					</@boxHeader>
+					<@boxBody>
+						<@searchAdminUsersForm urlAction="jsp/admin/plugins/unittree/ManageUnits.jsp" displayInDepthOption=true />
 					</@boxBody>
 				</@box>
 			</@columns>
@@ -44,14 +56,14 @@
 								</#list>
 							</#if>
 						</@tform>
-						<@button type='button' style='card-control collapse' buttonTargetId='#search-form' title='#i18n{portal.users.manage_users.search_users.buttonSearch}' hideTitle=['xs','sm'] size='sm' buttonIcon='search' />
+						<#-- <@button type='button' style='card-control collapse' buttonTargetId='#search-form' title='#i18n{portal.users.manage_users.search_users.buttonSearch}' hideTitle=['xs','sm'] size='sm' buttonIcon='search' /> -->
 					</@boxHeader>
 					<@boxBody>
-						<@searchAdminUsersForm urlAction="jsp/admin/plugins/unittree/ManageUnits.jsp" displayInDepthOption=true />
 						<#-- LIST ASSIGNED USERS -->
 						<@tform method='post' action='jsp/admin/plugins/unittree/ManageUnits.jsp'>
-							<@input type='hidden' name='idUnit' value='${unit.idUnit!}' />
-							<#assign additionnalAttribute="&session=session&idUnit=" + unit.idUnit! + sort_search_attribute!>
+						<@input type='hidden' name='idUnit' value='${unit.idUnit!}' />
+						<#assign additionnalAttribute="&session=session&idUnit=" + unit.idUnit! + sort_search_attribute!>
+						<#if listUsers?? && listUsers?has_content>
 							<@table>
 								<@tr>
 									<#if adminAvatar>
@@ -76,8 +88,7 @@
 									<@th>#i18n{${associatedUnitLabelKey}}</@th>
 									<@th>#i18n{unittree.manageUnits.labelActions}</@th>
 								</@tr>
-							<#if listUsers?? && listUsers?has_content>
-							<#list listUsers as user>
+								<#list listUsers as user>
 								<#if mapIdUserUnit[ "" + user.userId]??>
 									<#assign userUnit=mapIdUserUnit[ "" + user.userId]>
 								<#else>
@@ -86,7 +97,7 @@
 								<@tr>
 									<#if adminAvatar>
 									<@td>
-										<img class="direct-chat-img" src="servlet/plugins/adminavatar/avatar?id_user=${user.userId}" alt="Avatar" title="Avatar">
+										<@img class='direct-chat-img' url='servlet/plugins/adminavatar/avatar?id_user=${user.userId}' alt='Avatar' title='Avatar' />
 									</@td>
 									</#if>
 									<@td>${user.firstName!}</@td>
@@ -105,20 +116,24 @@
 									</@td>
 									<@td>
 										<#if listUnitUserActions?? && listUnitUserActions?has_content>
+										<@btnGroup>
 										<#list listUnitUserActions as unitUserAction>
 										<#if unitUserAction.nameKey?? && unitUserAction.nameKey == 'unittree.user.action.removeUser.name'>
 											<#assign aButtonColor='danger' />
 										<#else>
 											<#assign aButtonColor='primary' />
 										</#if>
-										<@aButton href='${unitUserAction.url!}?idUnit=${userUnit.idUnit!}&amp;idUser=${user.userId!}' title='${unitUserAction.name!}' hideTitle=['all'] buttonIcon='${unitUserAction.icon!}' color=aButtonColor size='sm' />
+											<@aButton href='${unitUserAction.url!}?idUnit=${userUnit.idUnit!}&amp;idUser=${user.userId!}' title='${unitUserAction.name!}' hideTitle=['all'] buttonIcon='${unitUserAction.icon!}' color=aButtonColor size='sm' />
 										</#list>
+										</@btnGroup>
 										</#if>
 									</@td>
 								</@tr>
-							</#list>
-							</#if>
+								</#list>
 							</@table>
+						<#else>
+						<@empty title='#i18n{unittree.manageUnits.noUsers}' subtitle='#i18n{unittree.manageUnits.btnNewUsers}' />
+						</#if>
 						</@tform>
 					</@boxBody>
 					<@boxFooter>
@@ -129,33 +144,12 @@
 		</@row>
     </@pageColumn>
 </@pageContainer>
-<link rel="stylesheet" href="js/admin/lib/jstree/themes/proton/style.min.css" >
-<script src="js/admin/lib/jstree/jstree.min.js"></script>
-<script>
-
-var selectedTree = 'node-${unit.idUnit!}'
-localStorage.setItem( 'unitTreeSelectedId', selectedTree );
-
-$('#tree').jstree({
-'core': {
-	'multiple' : false,
-	'themes': {
-		'name': 'proton',
-		'responsive': true
-	}
-},
-'plugins' : [  'search' , 'wholerow' ,'changed'  ]
-}).on('click', function( e ){
-	if( e.target.classList.contains('jstree-anchor') ){
-		window.location.replace( e.target.getAttributeNode('href').value );
-		selectedTree = e.target.parentElement.id;
-		localStorage.setItem( 'unitTreeSelectedId', selectedTree );
-	}
-});
-
-$('#tree').jstree( 'select_node', selectedTree );
-<#if selectedNodeOpen?? && selectedNodeOpen>
-$('#tree').jstree( 'open_node', selectedTree );
-</#if>
-
+<script type="module">
+import LuteceTree from './themes/shared/modules/luteceTree.js';
+const tree = document.querySelector("#unit-tree");
+const mapTree = new LuteceTree(tree); 
+const selectedTree = '${unit.idUnit!}';
+if ( selectedTree != '' && selectedTree != 'null' ) {
+<#noparse>mapTree.selectTreeNode( `#node-${selectedTree}` )</#noparse>
+}
 </script>
