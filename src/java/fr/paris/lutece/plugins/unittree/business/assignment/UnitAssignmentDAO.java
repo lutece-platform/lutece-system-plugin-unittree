@@ -52,8 +52,8 @@ public class UnitAssignmentDAO implements IUnitAssignmentDAO
     public static final String BEAN_NAME = "unittree.unitAssignmentDAO";
 
     private static final String SQL_QUERY_SELECTALL = "SELECT id, unittree_unit_assignment.id_resource, unittree_unit_assignment.resource_type, id_assignor_unit, id_assigned_unit, assignment_date, assignment_type, is_active,"
-            + " u_assignor.id_parent as id_parent_assignor_unit, u_assignor.label as label_assignor_unit, u_assignor.description as description_assignor_unit,"
-            + " u_assigned.id_parent as id_parent_assigned_unit, u_assigned.label as label_assigned_unit, u_assigned.description as description_assigned_unit"
+            + " u_assignor.id_parent as id_parent_assignor_unit, u_assignor.label as label_assignor_unit, u_assignor.code as code_assignor_unit, u_assignor.description as description_assignor_unit,"
+            + " u_assigned.id_parent as id_parent_assigned_unit, u_assigned.label as label_assigned_unit, u_assigned.code as code_assigned_unit, u_assigned.description as description_assigned_unit"
             + " FROM unittree_unit_assignment  LEFT JOIN  unittree_unit u_assignor on u_assignor.id_unit = unittree_unit_assignment.id_assignor_unit left JOIN unittree_unit u_assigned on u_assigned.id_unit = unittree_unit_assignment.id_assigned_unit  ";
     private static final String SQL_QUERY_SELECT_CURRENT = SQL_QUERY_SELECTALL
             + " WHERE id_resource = ? AND resource_type = ? AND is_active = 1 ORDER BY assignment_date DESC, id DESC";
@@ -368,12 +368,14 @@ public class UnitAssignmentDAO implements IUnitAssignmentDAO
         unitAssignor.setIdParent( daoUtil.getInt( "id_parent_assignor_unit" ) );
         unitAssignor.setLabel( daoUtil.getString( "label_assignor_unit" ) );
         unitAssignor.setDescription( daoUtil.getString( "description_assignor_unit" ) );
+        unitAssignor.setCode( daoUtil.getString( "code_assignor_unit" ) );
 
         Unit unitAssigned = unitAssignment.getAssignedUnit( );
         unitAssigned.setIdUnit( daoUtil.getInt( "id_assigned_unit" ) );
         unitAssigned.setIdParent( daoUtil.getInt( "id_parent_assigned_unit" ) );
         unitAssigned.setLabel( daoUtil.getString( "label_assigned_unit" ) );
         unitAssigned.setDescription( daoUtil.getString( "description_assigned_unit" ) );
+        unitAssigned.setCode( daoUtil.getString( "code_assigned_unit" ) );
 
         return unitAssignment;
     }
