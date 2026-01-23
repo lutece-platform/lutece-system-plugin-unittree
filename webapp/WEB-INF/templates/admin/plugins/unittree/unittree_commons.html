@@ -96,7 +96,11 @@
 	<#if treeUnit.subUnits?? >
 	<ul>
 	<#list treeUnit.subUnits as subTreeUnit >
-		<@displaySubUnits treeUnit=subTreeUnit />
+		<#if subTreeUnit.subUnits?? && subTreeUnit.subUnits?has_content>
+			<@displaySubUnits treeUnit=subTreeUnit icon='folder-plus' />
+		<#else>
+			<@displaySubUnits treeUnit=subTreeUnit icon='folder' />
+		</#if>
 	</#list>
 	</ul>
 	</#if>
