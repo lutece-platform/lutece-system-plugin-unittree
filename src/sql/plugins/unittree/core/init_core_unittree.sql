@@ -21,7 +21,7 @@ INSERT INTO core_admin_role (role_key,role_description) VALUES ('unittree_manage
 --
 -- Dumping data for table core_admin_role_resource
 --
-INSERT INTO core_admin_role_resource (rbac_id,role_key,resource_type,resource_id,permission) VALUES (210,'unittree_management','UNIT_TYPE','*','*');
+INSERT INTO core_admin_role_resource (role_key,resource_type,resource_id,permission) VALUES ('unittree_management','UNIT_TYPE','*','*');
 
 --
 -- Dumping data for table core_user_role
