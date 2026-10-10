@@ -372,7 +372,7 @@ public class UnitDAO implements IUnitDAO
      * {@inheritDoc}
      */
     @Override
-    public synchronized void addUserToUnit( int nIdUnit, int nIdUser, Plugin plugin )
+    public void addUserToUnit( int nIdUnit, int nIdUser, Plugin plugin )
     {
         int nIndex = 1;
         try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_ADD_USER_TO_UNIT, plugin ) )
