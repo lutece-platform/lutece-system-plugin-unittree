@@ -2,6 +2,7 @@
     <@pageColumn>
         <@pageHeader title='#i18n{unittree.moveUser.pageTitle} : <strong>${user.accessCode!}</strong>' />
 		<@tform method='post' action='jsp/admin/plugins/unittree/DoMoveUser.jsp' boxed=true>
+			<@input type='hidden' name='token' value='${token}' />
 			<@input type='hidden' name='idUnit' value='${unit.idUnit!}' />
 			<@input type='hidden' name='idUser' value='${user.userId!}' />
 			<#if unitParent??>

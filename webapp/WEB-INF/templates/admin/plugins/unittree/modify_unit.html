@@ -2,6 +2,7 @@
     <@pageColumn>
         <@pageHeader title='#i18n{unittree.modifyUnit.pageTitle}' />
 		<@tform method='post' action='jsp/admin/plugins/unittree/DoModifyUnit.jsp' boxed=true>
+			<@input type='hidden' name='token' value='${token}' />
 			<@input type='hidden' name='idUnit' value='${unit.idUnit!}' />
 			<#if parentUnit??>
 			<@formGroup labelFor='idParent' labelKey='#i18n{unittree.createUnit.labelParentUnit}'>

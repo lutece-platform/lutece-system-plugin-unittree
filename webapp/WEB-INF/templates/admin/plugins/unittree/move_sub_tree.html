@@ -2,6 +2,7 @@
     <@pageColumn>
         <@pageHeader title='#i18n{unittree.moveSubTree.pageTitle} : <strong>${unitToMove.label!}</strong>' />
 		<@tform method='post' action='jsp/admin/plugins/unittree/DoMoveSubTree.jsp' boxed=true>
+			<@input type='hidden' name='token' value='${token}' />
 			<@formGroup>
 				<@staticText>
 					<#if unit??>

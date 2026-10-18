@@ -9,6 +9,7 @@
 			</@columns>
 			<@columns xs=12 xl=8>
 				<@tform method='post' action='jsp/admin/plugins/unittree/DoAddUsers.jsp'>
+					<@input type='hidden' name='token' value='${token}' />
 				<#assign additionnalAttribute = "&session=session&idUnit=" + unit.idUnit! + sort_search_attribute! />
 				<@input type='hidden' name='idUnit' value='${unit.idUnit!}' />
 				<@box>

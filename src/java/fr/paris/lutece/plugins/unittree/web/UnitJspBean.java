@@ -64,6 +64,7 @@ import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.service.message.AdminMessage;
 import fr.paris.lutece.portal.service.message.AdminMessageService;
 import fr.paris.lutece.portal.service.plugin.PluginService;
+import fr.paris.lutece.portal.service.security.SecurityTokenService;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
 import fr.paris.lutece.portal.service.util.AppException;
 import fr.paris.lutece.portal.service.util.AppLogService;
@@ -166,6 +167,13 @@ public class UnitJspBean extends PluginAdminPageJspBean
     private static final String JSP_URL_DO_REMOVE_UNIT = "jsp/admin/plugins/unittree/DoRemoveUnit.jsp";
     private static final String JSP_URL_ADD_USERS = "jsp/admin/plugins/unittree/AddUsers.jsp";
     private static final String JSP_URL_DO_REMOVE_USER = "jsp/admin/plugins/unittree/DoRemoveUser.jsp";
+    private static final String JSP_URL_DO_CREATE_UNIT = "jsp/admin/plugins/unittree/DoCreateUnit.jsp";
+    private static final String JSP_URL_DO_MODIFY_UNIT = "jsp/admin/plugins/unittree/DoModifyUnit.jsp";
+    private static final String JSP_URL_DO_ADD_USERS = "jsp/admin/plugins/unittree/DoAddUsers.jsp";
+    private static final String JSP_URL_DO_MOVE_USER = "jsp/admin/plugins/unittree/DoMoveUser.jsp";
+    private static final String JSP_URL_DO_MOVE_SUB_TREE = "jsp/admin/plugins/unittree/DoMoveSubTree.jsp";
+
+    private static final String METHOD_POST = "POST";
 
     private static final String OPENNODE_ENABLED = "1";
 
@@ -311,6 +319,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
 
         Map<String, Object> model = new HashMap<>( );
         model.put( MARK_PARENT_UNIT, unitParent );
+        model.put( SecurityTokenService.MARK_TOKEN, getSecurityTokenService( ).getToken( request, JSP_URL_DO_CREATE_UNIT ) );
         UnitAttributeManager.fillModel( request, getUser( ), model, MARK_LIST_UNIT_ATTRIBUTES );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CREATE_UNIT, getLocale( ), model );
@@ -357,6 +366,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
         Map<String, Object> model = new HashMap<>( );
         model.put( MARK_UNIT, unit );
         model.put( MARK_PARENT_UNIT, parentUnit );
+        model.put( SecurityTokenService.MARK_TOKEN, getSecurityTokenService( ).getToken( request, JSP_URL_DO_MODIFY_UNIT ) );
         UnitAttributeManager.fillModel( request, getUser( ), model, MARK_LIST_UNIT_ATTRIBUTES );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MODIFY_UNIT, getLocale( ), model );
@@ -386,10 +396,12 @@ public class UnitJspBean extends PluginAdminPageJspBean
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, JSP_URL_MANAGE_UNITS, AdminMessage.TYPE_STOP );
         }
 
-        UrlItem url = new UrlItem( JSP_URL_DO_REMOVE_UNIT );
-        url.addParameter( PARAMETER_ID_UNIT, strIdUnit );
+        Map<String, Object> parameters = new HashMap<>( );
+        parameters.put( PARAMETER_ID_UNIT, strIdUnit );
+        parameters.put( SecurityTokenService.PARAMETER_TOKEN, getSecurityTokenService( ).getToken( request, JSP_URL_DO_REMOVE_UNIT ) );
 
-        return AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_REMOVE_UNIT, null, null, url.getUrl( ), null, AdminMessage.TYPE_CONFIRMATION, null, JSP_URL_MANAGE_UNITS );
+        return AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_REMOVE_UNIT, null, null, JSP_URL_DO_REMOVE_UNIT, null, AdminMessage.TYPE_CONFIRMATION,
+                parameters, JSP_URL_MANAGE_UNITS );
     }
 
     /**
@@ -445,6 +457,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
         model.put( MARK_MULTI_AFFECTATION_ENABLED, bMultiAffectationEnabled );
         model.put( MARK_FILTER_AFFECTED_USERS, !bIncludeMultiAffectedUsers );
         model.put( MARK_ADMIN_AVATAR, _bAdminAvatar );
+        model.put( SecurityTokenService.MARK_TOKEN, getSecurityTokenService( ).getToken( request, JSP_URL_DO_ADD_USERS ) );
         UnitUserAttributeManager.fillModel( request, getUser( ), model, MARK_LIST_UNIT_USER_ATTRIBUTES );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_ADD_USERS, getLocale( ), model );
@@ -530,6 +543,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
         model.put( MARK_UNIT_PARENT, unitParent );
         model.put( MARK_USER, user );
         model.put( MARK_LIST_SUB_UNITS, listSubUnits );
+        model.put( SecurityTokenService.MARK_TOKEN, getSecurityTokenService( ).getToken( request, JSP_URL_DO_MOVE_USER ) );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MOVE_USER, getLocale( ), model );
 
@@ -560,11 +574,13 @@ public class UnitJspBean extends PluginAdminPageJspBean
         	return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, JSP_URL_MANAGE_UNITS, AdminMessage.TYPE_STOP );
         }
 
-        UrlItem url = new UrlItem( JSP_URL_DO_REMOVE_USER );
-        url.addParameter( PARAMETER_ID_UNIT, strIdUnit );
-        url.addParameter( PARAMETER_ID_USER, strIdUser );
-        
-        return AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_REMOVE_USER, null, null, url.getUrl( ), null, AdminMessage.TYPE_CONFIRMATION, null, JSP_URL_MANAGE_UNITS );
+        Map<String, Object> parameters = new HashMap<>( );
+        parameters.put( PARAMETER_ID_UNIT, strIdUnit );
+        parameters.put( PARAMETER_ID_USER, strIdUser );
+        parameters.put( SecurityTokenService.PARAMETER_TOKEN, getSecurityTokenService( ).getToken( request, JSP_URL_DO_REMOVE_USER ) );
+
+        return AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_REMOVE_USER, null, null, JSP_URL_DO_REMOVE_USER, null, AdminMessage.TYPE_CONFIRMATION,
+                parameters, JSP_URL_MANAGE_UNITS );
     }
 
     // DO
@@ -575,8 +591,10 @@ public class UnitJspBean extends PluginAdminPageJspBean
      * @param request
      *            the HTTP request
      * @return the JSP return
+     * @throws AccessDeniedException
+     *             if the security token is invalid
      */
-    public String doCreateUnit( HttpServletRequest request )
+    public String doCreateUnit( HttpServletRequest request ) throws AccessDeniedException
     {
         String strCancel = request.getParameter( PARAMETER_CANCEL );
         String strIdParent = request.getParameter( PARAMETER_ID_PARENT );
@@ -589,6 +607,8 @@ public class UnitJspBean extends PluginAdminPageJspBean
 
             return url.getUrl( );
         }
+
+        checkSecurityToken( request, JSP_URL_DO_CREATE_UNIT );
 
         int nIdParent = Integer.parseInt( strIdParent );
 
@@ -655,8 +675,10 @@ public class UnitJspBean extends PluginAdminPageJspBean
      * @param request
      *            the HTTP request
      * @return the JSP return
+     * @throws AccessDeniedException
+     *             if the security token is invalid
      */
-    public String doModifyUnit( HttpServletRequest request )
+    public String doModifyUnit( HttpServletRequest request ) throws AccessDeniedException
     {
         String strCancel = request.getParameter( PARAMETER_CANCEL );
         String strIdUnit = request.getParameter( PARAMETER_ID_UNIT );
@@ -669,6 +691,8 @@ public class UnitJspBean extends PluginAdminPageJspBean
 
             return url.getUrl( );
         }
+
+        checkSecurityToken( request, JSP_URL_DO_MODIFY_UNIT );
 
         if ( StringUtils.isBlank( strIdUnit ) || !StringUtils.isNumeric( strIdUnit ) )
         {
@@ -741,9 +765,13 @@ public class UnitJspBean extends PluginAdminPageJspBean
      * @param request
      *            the HTTP request
      * @return the JSP return
+     * @throws AccessDeniedException
+     *             if the security token is invalid
      */
-    public String doRemoveUnit( HttpServletRequest request )
+    public String doRemoveUnit( HttpServletRequest request ) throws AccessDeniedException
     {
+        checkRemovalRequest( request, JSP_URL_DO_REMOVE_UNIT );
+
         String strIdUnit = request.getParameter( PARAMETER_ID_UNIT );
 
         if ( StringUtils.isBlank( strIdUnit ) || !StringUtils.isNumeric( strIdUnit ) )
@@ -810,8 +838,10 @@ public class UnitJspBean extends PluginAdminPageJspBean
      * @param request
      *            the HTTP request
      * @return the JSP return
+     * @throws AccessDeniedException
+     *             if the security token is invalid
      */
-    public String doAddUsers( HttpServletRequest request )
+    public String doAddUsers( HttpServletRequest request ) throws AccessDeniedException
     {
         String strCancel = request.getParameter( PARAMETER_CANCEL );
         String strIdUnit = request.getParameter( PARAMETER_ID_UNIT );
@@ -823,6 +853,8 @@ public class UnitJspBean extends PluginAdminPageJspBean
 
             return url.getUrl( );
         }
+
+        checkSecurityToken( request, JSP_URL_DO_ADD_USERS );
 
         if ( !_unitService.isAuthorized( strIdUnit, UnitResourceIdService.PERMISSION_ADD_USER, getUser( ), UnittreeRBACRecursiveType.PARENT_RECURSIVE ) )
         {
@@ -872,8 +904,10 @@ public class UnitJspBean extends PluginAdminPageJspBean
      * @param request
      *            the HTTP request
      * @return the JSP return
+     * @throws AccessDeniedException
+     *             if the security token is invalid
      */
-    public String doMoveUser( HttpServletRequest request )
+    public String doMoveUser( HttpServletRequest request ) throws AccessDeniedException
     {
         String strCancel = request.getParameter( PARAMETER_CANCEL );
         String strIdUnit = request.getParameter( PARAMETER_ID_UNIT );
@@ -894,6 +928,12 @@ public class UnitJspBean extends PluginAdminPageJspBean
                 || StringUtils.isBlank( strIdUser ) || !StringUtils.isNumeric( strIdUser ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
+        }
+
+        // The navigation in the sub units only displays the page again
+        if ( StringUtils.isBlank( request.getParameter( PARAMETER_SELECT_SUB_UNITS ) ) )
+        {
+            checkSecurityToken( request, JSP_URL_DO_MOVE_USER );
         }
 
         // Check permissions
@@ -969,9 +1009,13 @@ public class UnitJspBean extends PluginAdminPageJspBean
      * @param request
      *            the HTTP request
      * @return the JSP return
+     * @throws AccessDeniedException
+     *             if the security token is invalid
      */
-    public String doRemoveUser( HttpServletRequest request )
+    public String doRemoveUser( HttpServletRequest request ) throws AccessDeniedException
     {
+        checkRemovalRequest( request, JSP_URL_DO_REMOVE_USER );
+
         String strIdUnit = request.getParameter( PARAMETER_ID_UNIT );
         String strIdUser = request.getParameter( PARAMETER_ID_USER );
 
@@ -1083,6 +1127,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
         model.put( MARK_UNIT_TO_MOVE, unitToMove );
         model.put( MARK_UNIT, unit );
         model.put( MARK_LIST_SUB_UNITS, listSubUnits );
+        model.put( SecurityTokenService.MARK_TOKEN, getSecurityTokenService( ).getToken( request, JSP_URL_DO_MOVE_SUB_TREE ) );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MOVE_SUB_UNIT, getLocale( ), model );
 
@@ -1095,8 +1140,10 @@ public class UnitJspBean extends PluginAdminPageJspBean
      * @param request
      *            The request
      * @return The next URL to display
+     * @throws AccessDeniedException
+     *             if the security token is invalid
      */
-    public String doMoveSubTree( HttpServletRequest request )
+    public String doMoveSubTree( HttpServletRequest request ) throws AccessDeniedException
     {
         String strCancel = request.getParameter( PARAMETER_CANCEL );
         String strIdUnitToMove = request.getParameter( PARAMETER_ID_UNIT );
@@ -1109,8 +1156,11 @@ public class UnitJspBean extends PluginAdminPageJspBean
             return urlItem.getUrl( );
         }
 
+        checkSecurityToken( request, JSP_URL_DO_MOVE_SUB_TREE );
+
         String strIdUnitParent = request.getParameter( PARAMETER_ID_UNIT_PARENT );
-        if ( StringUtils.isBlank( strIdUnitParent ) )
+        if ( StringUtils.isBlank( strIdUnitParent ) || !StringUtils.isNumeric( strIdUnitParent ) || StringUtils.isBlank( strIdUnitToMove )
+                || !StringUtils.isNumeric( strIdUnitToMove ) )
         {
             return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_NO_UNIT_SELECTED, AdminMessage.TYPE_ERROR );
         }
@@ -1119,6 +1169,17 @@ public class UnitJspBean extends PluginAdminPageJspBean
         int nIdUnitParent = Integer.parseInt( strIdUnitParent );
         Unit unitToMove = _unitService.getUnit( nIdUnitToMove, false );
         Unit unitParent = _unitService.getUnit( nIdUnitParent, false );
+
+        if ( ( unitToMove == null ) || ( unitParent == null ) )
+        {
+            return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_UNIT_NOT_FOUND, AdminMessage.TYPE_STOP );
+        }
+
+        // Check permissions, as the move page does
+        if ( !_unitService.isAuthorized( unitToMove, UnitResourceIdService.PERMISSION_MOVE_UNIT, getUser( ), UnittreeRBACRecursiveType.PARENT_RECURSIVE ) )
+        {
+            return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP );
+        }
 
         if ( _unitService.moveSubTree( unitToMove, unitParent ) )
         {
@@ -1133,6 +1194,44 @@ public class UnitJspBean extends PluginAdminPageJspBean
     }
 
     // PRIVATE METHODS
+
+    /**
+     * Check the security token of an action
+     * 
+     * @param request
+     *            the HTTP request
+     * @param strAction
+     *            the action (key of the token)
+     * @throws AccessDeniedException
+     *             if the security token is invalid
+     */
+    private void checkSecurityToken( HttpServletRequest request, String strAction ) throws AccessDeniedException
+    {
+        if ( !getSecurityTokenService( ).validate( request, strAction ) )
+        {
+            throw new AccessDeniedException( ERROR_INVALID_TOKEN );
+        }
+    }
+
+    /**
+     * Check that a removal is posted from its confirmation page, with its security token
+     * 
+     * @param request
+     *            the HTTP request
+     * @param strAction
+     *            the action (key of the token)
+     * @throws AccessDeniedException
+     *             if the request is not a POST or if the security token is invalid
+     */
+    private void checkRemovalRequest( HttpServletRequest request, String strAction ) throws AccessDeniedException
+    {
+        if ( !METHOD_POST.equalsIgnoreCase( request.getMethod( ) ) )
+        {
+            throw new AccessDeniedException( ERROR_INVALID_TOKEN );
+        }
+
+        checkSecurityToken( request, strAction );
+    }
 
     /**
      * Reinit the search fields
