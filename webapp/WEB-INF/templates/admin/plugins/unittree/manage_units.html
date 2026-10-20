@@ -123,7 +123,7 @@
 										<#else>
 											<#assign aButtonColor='primary' />
 										</#if>
-											<@aButton href='${unitUserAction.url!}?idUnit=${userUnit.idUnit!}&amp;idUser=${user.userId!}' title='${unitUserAction.name!}' hideTitle=['all'] buttonIcon='${unitUserAction.icon!}' color=aButtonColor size='sm' />
+											<@aButton href='${unitUserAction.url!}?idUnit=${userUnit.idUnit!}&idUser=${user.userId!}' title='${unitUserAction.name!}' hideTitle=['all'] buttonIcon='${unitUserAction.icon!}' color=aButtonColor size='sm' />
 										</#list>
 										</@btnGroup>
 										</#if>
@@ -148,7 +148,7 @@
 import LuteceTree from './themes/shared/modules/luteceTree.js';
 const tree = document.querySelector("#unit-tree");
 const mapTree = new LuteceTree(tree); 
-const selectedTree = '${unit.idUnit!}';
+const selectedTree = '${(unit.idUnit?c)!}';
 if ( selectedTree != '' && selectedTree != 'null' ) {
 <#noparse>mapTree.selectTreeNode( `#node-${selectedTree}` )</#noparse>
 }

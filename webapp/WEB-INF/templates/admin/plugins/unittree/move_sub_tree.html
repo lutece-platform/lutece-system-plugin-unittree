@@ -1,13 +1,14 @@
 <@pageContainer>
     <@pageColumn>
-        <@pageHeader title='#i18n{unittree.moveSubTree.pageTitle} : <strong>${unitToMove.label!}</strong>' />
+        <#assign pageTitle>#i18n{unittree.moveSubTree.pageTitle} : <strong>${unitToMove.label!}</strong></#assign>
+        <@pageHeader title=pageTitle />
 		<@tform method='post' action='jsp/admin/plugins/unittree/DoMoveSubTree.jsp' boxed=true>
 			<@input type='hidden' name='token' value='${token}' />
 			<@formGroup>
 				<@staticText>
 					<#if unit??>
 						<#assign idParent = unit.idParent>
-						<@aButton href='jsp/admin/plugins/unittree/MoveSubTree.jsp?idUnit=${unitToMove.idUnit!}&amp;idUnitParent=${idParent}' title='#i18n{unittree.moveUser.labelMoveUp}' buttonIcon='folder' />
+						<@aButton href='jsp/admin/plugins/unittree/MoveSubTree.jsp?idUnit=${unitToMove.idUnit!}&idUnitParent=${idParent}' title='#i18n{unittree.moveUser.labelMoveUp}' buttonIcon='folder' />
 					<#else>
 						<#assign idParent = -1>
 					</#if>
@@ -18,9 +19,9 @@
 					<#list listSubUnits as subUnit>
 						<@div>
 							<#assign radioLabel>
-								<@link href='jsp/admin/plugins/unittree/MoveSubTree.jsp?idUnit=${unitToMove.idUnit!}&amp;idUnitParent=${subUnit.idUnit!}' title='#i18n{unittree.moveUser.labelAccessTo}'><@icon style='folder-open' /> ${subUnit.label!}</@link>
+								<@link href='jsp/admin/plugins/unittree/MoveSubTree.jsp?idUnit=${unitToMove.idUnit!}&idUnitParent=${subUnit.idUnit!}' title='#i18n{unittree.moveUser.labelAccessTo}'><@icon style='folder-open' /> ${subUnit.label!}</@link>
 							</#assign>
-							<@radioButton labelFor='idUnitParent' labelKey=radioLabel name='idUnitParent' value='${subUnit.idUnit!}' params='style="display:inline-block;"'/>
+							<@radioButton labelFor='idUnitParent' labelKey=radioLabel name='idUnitParent' value='${subUnit.idUnit!}' labelClass='d-inline-block' />
 						</@div>
 					</#list>
 				<#else>
