@@ -1,6 +1,7 @@
 <@pageContainer>
     <@pageColumn>
-        <@pageHeader title='#i18n{unittree.manageUnits.labelListUsers} #i18n{unittree.manageUnits.labelToAddToUnit} <strong>${unit.label!}</strong>' responsiveHeader=true />
+        <#assign pageTitle>#i18n{unittree.manageUnits.labelListUsers} #i18n{unittree.manageUnits.labelToAddToUnit} <strong>${unit.label!}</strong></#assign>
+        <@pageHeader title=pageTitle responsiveHeader=true />
 		<@row> 
 			<@columns xs=12 xl=4>
 				<@box title='#i18n{portal.users.manage_users.search_users.buttonSearch}'>
