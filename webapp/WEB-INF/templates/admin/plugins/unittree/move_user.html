@@ -1,6 +1,7 @@
 <@pageContainer>
     <@pageColumn>
-        <@pageHeader title='#i18n{unittree.moveUser.pageTitle} : <strong>${user.accessCode!}</strong>' />
+        <#assign pageTitle>#i18n{unittree.moveUser.pageTitle} : <strong>${user.accessCode!}</strong></#assign>
+        <@pageHeader title=pageTitle />
 		<@tform method='post' action='jsp/admin/plugins/unittree/DoMoveUser.jsp' boxed=true>
 			<@input type='hidden' name='token' value='${token}' />
 			<@input type='hidden' name='idUnit' value='${unit.idUnit!}' />
@@ -14,13 +15,13 @@
 				<#if listSubUnits?? && listSubUnits?has_content>
 					<#if unitParent??>
 						<#assign idParent = unitParent.idUnit>
-						<@aButton href='jsp/admin/plugins/unittree/DoMoveUser.jsp?selectSubUnits=selectSubUnits&amp;idUser=${user.userId!}&amp;idUnit=${unit.idUnit!}&amp;idSelectedUnit=${idParent!}' title='#i18n{unittree.moveUser.labelMoveUp}' buttonIcon='folder-open' />
+						<@aButton href='jsp/admin/plugins/unittree/DoMoveUser.jsp?selectSubUnits=selectSubUnits&idUser=${user.userId!}&idUnit=${unit.idUnit!}&idSelectedUnit=${idParent!}' title='#i18n{unittree.moveUser.labelMoveUp}' buttonIcon='folder-open' />
 					<#else>
 						<#assign idParent = -1>
 					</#if>
 					<#list listSubUnits as subUnit>
 						<#assign radioLabel>
-							<@link href='jsp/admin/plugins/unittree/DoMoveUser.jsp?selectSubUnits=selectSubUnits&amp;idUser=${user.userId!}&amp;idUnit=${unit.idUnit!}&amp;idSelectedUnit=${subUnit.idUnit!}'><@icon style='folder-open' /> ${subUnit.label!}</@link>
+							<@link href='jsp/admin/plugins/unittree/DoMoveUser.jsp?selectSubUnits=selectSubUnits&idUser=${user.userId!}&idUnit=${unit.idUnit!}&idSelectedUnit=${subUnit.idUnit!}'><@icon style='folder-open' /> ${subUnit.label!}</@link>
 						</#assign>
 						<@radioButton labelFor='idSelectedUnit' labelKey=radioLabel name='idSelectedUnit' value='${subUnit.idUnit!}' />								
 					</#list>
