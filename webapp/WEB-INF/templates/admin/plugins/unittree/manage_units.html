@@ -9,7 +9,7 @@
 		<@row> 
 			<@columns xs=12 xl=4>
 				<@box>
-					<@boxHeader title='#i18n{unittree.manageUnits.labelUnits}'>
+					<@boxHeader title='#i18n{unittree.manageUnits.labelUnits}' titleLevel='h2'>
 						<@btnToolbar>
 							<@btnGroup>
 							<#if listUnitActions?? && listUnitActions?has_content>
@@ -35,7 +35,7 @@
 					</@boxBody>
 				</@box>
 				<@box>
-					<@boxHeader title='#i18n{portal.users.manage_users.search_users.buttonSearch}'>
+					<@boxHeader title='#i18n{portal.users.manage_users.search_users.buttonSearch}' titleLevel='h2'>
 						<@button type='button' style='card-control collapse' buttonTargetId='#search-form' buttonIcon='minus' size='sm' title='#i18n{unittree.manageUnits.buttonToggleSearch}' hideTitle=['all'] params={'aria-expanded': 'true', 'aria-controls': 'search-form'} />
 					</@boxHeader>
 					<@boxBody>
