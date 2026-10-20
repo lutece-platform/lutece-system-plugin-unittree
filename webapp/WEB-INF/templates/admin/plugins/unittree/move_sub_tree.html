@@ -14,20 +14,20 @@
 					</#if>
 				</@staticText>
 			</@formGroup>
-			<@formGroup labelFor='' labelKey=''>
-				<#if listSubUnits?? && listSubUnits?has_content>
+			<#if listSubUnits?? && listSubUnits?has_content>
+			<@fieldSet legend='#i18n{unittree.moveSubTree.labelNewParentUnit}'>
 					<#list listSubUnits as subUnit>
-						<@div>
-							<#assign radioLabel>
-								<@link href='jsp/admin/plugins/unittree/MoveSubTree.jsp?idUnit=${unitToMove.idUnit!}&idUnitParent=${subUnit.idUnit!}' title='#i18n{unittree.moveUser.labelAccessTo}'><@icon style='folder-open' /> ${subUnit.label!}</@link>
-							</#assign>
-							<@radioButton labelFor='idUnitParent' labelKey=radioLabel name='idUnitParent' value='${subUnit.idUnit!}' labelClass='d-inline-block' />
+						<@div class='d-flex align-items-center gap-2'>
+							<@radioButton id='idUnitParent_${subUnit.idUnit!}' labelKey='${subUnit.label!}' name='idUnitParent' value='${subUnit.idUnit!}' labelClass='d-inline-block' />
+							<@aButton href='jsp/admin/plugins/unittree/MoveSubTree.jsp?idUnit=${unitToMove.idUnit!}&idUnitParent=${subUnit.idUnit!}' title=i18n( 'unittree.moveUser.labelShowSubUnits', subUnit.label! ) hideTitle=['all'] buttonIcon='folder-open' size='sm' color='link' />
 						</@div>
 					</#list>
-				<#else>
+			</@fieldSet>
+			<#else>
+			<@formGroup>
 					<@alert color='info'>#i18n{unittree.moveSubTree.labelNoSuUnit}</@alert>
-				</#if>
 			</@formGroup>
+			</#if>
 			<@formGroup>
 				<#if listSubUnits?? && listSubUnits?has_content>
 				<@input type='hidden' name='idUnit' value='${unitToMove.idUnit!}' />

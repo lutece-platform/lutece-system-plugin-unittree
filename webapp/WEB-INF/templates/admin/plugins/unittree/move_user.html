@@ -19,12 +19,14 @@
 					<#else>
 						<#assign idParent = -1>
 					</#if>
+					<@fieldSet legend='#i18n{unittree.moveUser.labelNewUnit}'>
 					<#list listSubUnits as subUnit>
-						<#assign radioLabel>
-							<@link href='jsp/admin/plugins/unittree/DoMoveUser.jsp?selectSubUnits=selectSubUnits&idUser=${user.userId!}&idUnit=${unit.idUnit!}&idSelectedUnit=${subUnit.idUnit!}'><@icon style='folder-open' /> ${subUnit.label!}</@link>
-						</#assign>
-						<@radioButton labelFor='idSelectedUnit' labelKey=radioLabel name='idSelectedUnit' value='${subUnit.idUnit!}' />								
+						<@div class='d-flex align-items-center gap-2'>
+							<@radioButton id='idSelectedUnit_${subUnit.idUnit!}' labelKey='${subUnit.label!}' name='idSelectedUnit' value='${subUnit.idUnit!}' labelClass='d-inline-block' />
+							<@aButton href='jsp/admin/plugins/unittree/DoMoveUser.jsp?selectSubUnits=selectSubUnits&idUser=${user.userId!}&idUnit=${unit.idUnit!}&idSelectedUnit=${subUnit.idUnit!}' title=i18n( 'unittree.moveUser.labelShowSubUnits', subUnit.label! ) hideTitle=['all'] buttonIcon='folder-open' size='sm' color='link' />
+						</@div>
 					</#list>
+					</@fieldSet>
 				</#if>
 			</@formGroup>
 			<@formGroup>

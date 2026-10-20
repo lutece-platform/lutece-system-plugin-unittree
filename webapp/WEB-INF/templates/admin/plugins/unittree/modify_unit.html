@@ -5,7 +5,7 @@
 			<@input type='hidden' name='token' value='${token}' />
 			<@input type='hidden' name='idUnit' value='${unit.idUnit!}' />
 			<#if parentUnit??>
-			<@formGroup labelFor='idParent' labelKey='#i18n{unittree.createUnit.labelParentUnit}'>
+			<@formGroup labelKey='#i18n{unittree.createUnit.labelParentUnit}'>
 				<@staticText>${parentUnit.label!}</@staticText>
 			</@formGroup>
 			</#if>

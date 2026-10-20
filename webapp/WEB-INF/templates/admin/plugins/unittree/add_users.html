@@ -16,16 +16,16 @@
 				<@box>
 					<@boxHeader title='#i18n{unittree.addUsers.labelListUsers}' titleAuto=false>
 						<!-- Check all button -->
-						<@button type='button' class='checkbox-toggle me-auto' buttonIcon='square' />
+						<@button type='button' class='checkbox-toggle me-auto' buttonIcon='square' title='#i18n{unittree.addUsers.buttonSelectAll}' hideTitle=['all'] params={'aria-pressed': 'false'} />
 						<@button type='submit' name='addUsers' class='ms-auto' value='#i18n{unittree.addUsers.btnAdd}' title='#i18n{unittree.addUsers.btnAdd}' buttonIcon='plus' />
 					</@boxHeader>
 					<@boxBody>
 						<@table class='mailbox-messages'>
 							<#-- LIST NON-ASSIGNED USERS -->
 							<@tr>
-								<@th></@th>
+								<@th><span class="visually-hidden">#i18n{unittree.addUsers.labelSelection}</span></@th>
 								<#if adminAvatar>
-								<@th></@th>
+								<@th><span class="visually-hidden">#i18n{unittree.addUsers.labelAvatar}</span></@th>
 								</#if>
 								<@th>
 									#i18n{unittree.addUsers.labelFirstName}
@@ -43,10 +43,10 @@
 							<#if listUsers?? && listUsers?has_content>
 							<#list listUsers as user>
 							<@tr>
-								<@td><@checkBox orientation='switch' name='idUsers' value='${user.userId!}' /></@td>
+								<@td><@checkBox orientation='switch' name='idUsers' id='idUsers_${user.userId!}' value='${user.userId!}' labelKey=i18n( 'unittree.addUsers.labelSelectUser', ( user.firstName! + ' ' + user.lastName! )?trim ) labelClass='visually-hidden' /></@td>
 								<#if adminAvatar>
 								<@td>
-									<img class="direct-chat-img" src="servlet/plugins/adminavatar/avatar?id_user=${user.userId}" alt="Avatar" title="Avatar">
+									<img class="direct-chat-img" src="servlet/plugins/adminavatar/avatar?id_user=${user.userId}" alt="">
 								</@td>
 								</#if>
 								<@td>${user.firstName!}</@td>
@@ -100,6 +100,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				}
 			}
 			isChecked = !isChecked;
+			this.setAttribute('aria-pressed', String(isChecked));
 		});
 	}
 });
