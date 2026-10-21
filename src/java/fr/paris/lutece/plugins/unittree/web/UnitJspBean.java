@@ -41,6 +41,7 @@ import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import fr.paris.lutece.plugins.unittree.business.action.UnitAction;
 import fr.paris.lutece.plugins.unittree.business.action.UnitUserAction;
@@ -164,6 +165,10 @@ public class UnitJspBean extends PluginAdminPageJspBean
     private static final String JSP_MANAGE_UNITS = "ManageUnits.jsp";
     private static final String JSP_MOVE_USER = "MoveUser.jsp";
     private static final String JSP_URL_MANAGE_UNITS = "jsp/admin/plugins/unittree/ManageUnits.jsp";
+    private static final String JSP_URL_CREATE_UNIT = "jsp/admin/plugins/unittree/CreateUnit.jsp";
+    private static final String JSP_URL_MODIFY_UNIT = "jsp/admin/plugins/unittree/ModifyUnit.jsp";
+    private static final String JSP_URL_MOVE_USER = "jsp/admin/plugins/unittree/MoveUser.jsp";
+    private static final String JSP_URL_MOVE_SUB_TREE = "jsp/admin/plugins/unittree/MoveSubTree.jsp";
     private static final String JSP_URL_DO_REMOVE_UNIT = "jsp/admin/plugins/unittree/DoRemoveUnit.jsp";
     private static final String JSP_URL_ADD_USERS = "jsp/admin/plugins/unittree/AddUsers.jsp";
     private static final String JSP_URL_DO_REMOVE_USER = "jsp/admin/plugins/unittree/DoRemoveUser.jsp";
@@ -616,7 +621,8 @@ public class UnitJspBean extends PluginAdminPageJspBean
         if ( !_unitService.isAuthorized( strIdParent, UnitResourceIdService.PERMISSION_CREATE, getUser( ), UnittreeRBACRecursiveType.PARENT_RECURSIVE )
                 || !_unitService.canCreateSubUnit( nIdParent ) )
         {
-            return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP );
+            return AdminMessageService.getMessageUrlReturningTo( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP,
+                    getJspOfUnit( request, JSP_URL_MANAGE_UNITS, nIdParent ) );
         }
 
         Unit unit = new Unit( );
@@ -630,7 +636,8 @@ public class UnitJspBean extends PluginAdminPageJspBean
         }
         catch( UnitErrorException ue )
         {
-            return AdminMessageService.getMessageUrl( request, ue.getI18nErrorMessage( ), AdminMessage.TYPE_STOP );
+            return AdminMessageService.getMessageUrlReturningTo( request, ue.getI18nErrorMessage( ), AdminMessage.TYPE_STOP,
+                    getJspOfUnit( request, JSP_URL_CREATE_UNIT, nIdParent ) );
         }
 
         // Check mandatory fields
@@ -638,13 +645,15 @@ public class UnitJspBean extends PluginAdminPageJspBean
 
         if ( CollectionUtils.isNotEmpty( constraintViolations ) )
         {
-            return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
+            return AdminMessageService.getMessageUrlReturningTo( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP,
+                    getJspOfUnit( request, JSP_URL_CREATE_UNIT, nIdParent ) );
         }
 
         Unit sameCodeUnit = _unitService.getUnitByCode( unit.getCode(), false );
         if ( sameCodeUnit != null )
         {
-            return AdminMessageService.getMessageUrl( request, MESSAGE_DUPLICATE_CODE, AdminMessage.TYPE_STOP );
+            return AdminMessageService.getMessageUrlReturningTo( request, MESSAGE_DUPLICATE_CODE, AdminMessage.TYPE_STOP,
+                    getJspOfUnit( request, JSP_URL_CREATE_UNIT, nIdParent ) );
         }
 
         try
@@ -658,7 +667,8 @@ public class UnitJspBean extends PluginAdminPageJspBean
             // Revert
             _unitService.removeUnit( unit.getIdUnit( ), request );
 
-            return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_GENERIC_MESSAGE, AdminMessage.TYPE_ERROR );
+            return AdminMessageService.getMessageUrlReturningTo( request, MESSAGE_ERROR_GENERIC_MESSAGE, AdminMessage.TYPE_ERROR,
+                    getJspOfUnit( request, JSP_URL_MANAGE_UNITS, nIdParent ) );
         }
 
         initTreeUnit( request );
@@ -696,7 +706,8 @@ public class UnitJspBean extends PluginAdminPageJspBean
 
         if ( StringUtils.isBlank( strIdUnit ) || !StringUtils.isNumeric( strIdUnit ) )
         {
-            return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
+            return AdminMessageService.getMessageUrlReturningTo( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP,
+                    AppPathService.getBaseUrl( request ) + JSP_URL_MANAGE_UNITS );
         }
 
         int nIdUnit = Integer.parseInt( strIdUnit );
@@ -705,13 +716,15 @@ public class UnitJspBean extends PluginAdminPageJspBean
 
         if ( unit == null )
         {
-            return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_UNIT_NOT_FOUND, AdminMessage.TYPE_STOP );
+            return AdminMessageService.getMessageUrlReturningTo( request, MESSAGE_ERROR_UNIT_NOT_FOUND, AdminMessage.TYPE_STOP,
+                    AppPathService.getBaseUrl( request ) + JSP_URL_MANAGE_UNITS );
         }
 
         // Check permissions
         if ( !_unitService.isAuthorized( unit, UnitResourceIdService.PERMISSION_MODIFY, getUser( ), UnittreeRBACRecursiveType.PARENT_RECURSIVE ) )
         {
-            return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP );
+            return AdminMessageService.getMessageUrlReturningTo( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP,
+                    getJspOfUnit( request, JSP_URL_MANAGE_UNITS, nIdUnit ) );
         }
 
         // Populate the bean
@@ -723,7 +736,8 @@ public class UnitJspBean extends PluginAdminPageJspBean
         }
         catch( UnitErrorException ue )
         {
-            return AdminMessageService.getMessageUrl( request, ue.getI18nErrorMessage( ), AdminMessage.TYPE_STOP );
+            return AdminMessageService.getMessageUrlReturningTo( request, ue.getI18nErrorMessage( ), AdminMessage.TYPE_STOP,
+                    getJspOfUnit( request, JSP_URL_MODIFY_UNIT, nIdUnit ) );
         }
 
         // Check mandatory fields
@@ -731,13 +745,15 @@ public class UnitJspBean extends PluginAdminPageJspBean
 
         if ( CollectionUtils.isNotEmpty( constraintViolations ) )
         {
-            return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
+            return AdminMessageService.getMessageUrlReturningTo( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP,
+                    getJspOfUnit( request, JSP_URL_MODIFY_UNIT, nIdUnit ) );
         }
 
         Unit sameCodeUnit = _unitService.getUnitByCode( unit.getCode(), false );
         if ( sameCodeUnit !=null && sameCodeUnit.getIdUnit() != unit.getIdUnit() )
         {
-            return AdminMessageService.getMessageUrl( request, MESSAGE_DUPLICATE_CODE, AdminMessage.TYPE_STOP );
+            return AdminMessageService.getMessageUrlReturningTo( request, MESSAGE_DUPLICATE_CODE, AdminMessage.TYPE_STOP,
+                    getJspOfUnit( request, JSP_URL_MODIFY_UNIT, nIdUnit ) );
         }
 
         try
@@ -749,7 +765,8 @@ public class UnitJspBean extends PluginAdminPageJspBean
             // Something wrong happened... a database check might be needed
             AppLogService.error( "{} when modifying an unit ", ex.getMessage( ), ex );
 
-            return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_GENERIC_MESSAGE, AdminMessage.TYPE_ERROR );
+            return AdminMessageService.getMessageUrlReturningTo( request, MESSAGE_ERROR_GENERIC_MESSAGE, AdminMessage.TYPE_ERROR,
+                    getJspOfUnit( request, JSP_URL_MANAGE_UNITS, nIdUnit ) );
         }
 
         initTreeUnit( request );
@@ -927,7 +944,8 @@ public class UnitJspBean extends PluginAdminPageJspBean
                 || ( !StringUtils.isNumeric( strIdSelectedUnit ) && !Integer.toString( Unit.ID_NULL ).equals( strIdSelectedUnit ) )
                 || StringUtils.isBlank( strIdUser ) || !StringUtils.isNumeric( strIdUser ) )
         {
-            return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
+            return AdminMessageService.getMessageUrlReturningTo( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP,
+                    getJspOfUnit( request, JSP_URL_MANAGE_UNITS, strIdUnit ) );
         }
 
         // The navigation in the sub units only displays the page again
@@ -939,7 +957,8 @@ public class UnitJspBean extends PluginAdminPageJspBean
         // Check permissions
         if ( !_unitService.isAuthorized( strIdUnit, UnitResourceIdService.PERMISSION_MOVE_USER, getUser( ), UnittreeRBACRecursiveType.PARENT_RECURSIVE ) )
         {
-            return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP );
+            return AdminMessageService.getMessageUrlReturningTo( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP,
+                    getJspOfUnit( request, JSP_URL_MANAGE_UNITS, strIdUnit ) );
         }
 
         // Check if the user has clicked on "selectSubUnits" => display the same page with the sub units
@@ -953,7 +972,8 @@ public class UnitJspBean extends PluginAdminPageJspBean
 
             if ( ( listSubUnits == null ) || listSubUnits.isEmpty( ) )
             {
-                return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_NO_SUB_UNITS, AdminMessage.TYPE_STOP );
+                return AdminMessageService.getMessageUrlReturningTo( request, MESSAGE_ERROR_NO_SUB_UNITS, AdminMessage.TYPE_STOP,
+                        getJspMoveUser( request, strIdUser, strIdUnit ) );
             }
 
             UrlItem url = new UrlItem( JSP_MOVE_USER );
@@ -968,7 +988,8 @@ public class UnitJspBean extends PluginAdminPageJspBean
         if ( !_unitService.isAuthorized( strIdSelectedUnit, UnitResourceIdService.PERMISSION_MOVE_USER, getUser( ),
                 UnittreeRBACRecursiveType.PARENT_RECURSIVE ) )
         {
-            return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP );
+            return AdminMessageService.getMessageUrlReturningTo( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP,
+                    getJspOfUnit( request, JSP_URL_MANAGE_UNITS, strIdUnit ) );
         }
 
         int nIdUser = Integer.parseInt( strIdUser );
@@ -993,7 +1014,8 @@ public class UnitJspBean extends PluginAdminPageJspBean
                 // Something wrong happened... a database check might be needed
                 AppLogService.error( "{} when moving a user ", ex.getMessage( ), ex );
 
-                return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_GENERIC_MESSAGE, AdminMessage.TYPE_ERROR );
+                return AdminMessageService.getMessageUrlReturningTo( request, MESSAGE_ERROR_GENERIC_MESSAGE, AdminMessage.TYPE_ERROR,
+                        getJspOfUnit( request, JSP_URL_MANAGE_UNITS, nIdUnit ) );
             }
         }
 
@@ -1162,7 +1184,8 @@ public class UnitJspBean extends PluginAdminPageJspBean
         if ( StringUtils.isBlank( strIdUnitParent ) || !StringUtils.isNumeric( strIdUnitParent ) || StringUtils.isBlank( strIdUnitToMove )
                 || !StringUtils.isNumeric( strIdUnitToMove ) )
         {
-            return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_NO_UNIT_SELECTED, AdminMessage.TYPE_ERROR );
+            return AdminMessageService.getMessageUrlReturningTo( request, MESSAGE_ERROR_NO_UNIT_SELECTED, AdminMessage.TYPE_ERROR,
+                    getJspOfUnit( request, JSP_URL_MOVE_SUB_TREE, strIdUnitToMove ) );
         }
 
         int nIdUnitToMove = Integer.parseInt( strIdUnitToMove );
@@ -1172,13 +1195,15 @@ public class UnitJspBean extends PluginAdminPageJspBean
 
         if ( ( unitToMove == null ) || ( unitParent == null ) )
         {
-            return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_UNIT_NOT_FOUND, AdminMessage.TYPE_STOP );
+            return AdminMessageService.getMessageUrlReturningTo( request, MESSAGE_ERROR_UNIT_NOT_FOUND, AdminMessage.TYPE_STOP,
+                    getJspOfUnit( request, JSP_URL_MANAGE_UNITS, nIdUnitToMove ) );
         }
 
         // Check permissions, as the move page does
         if ( !_unitService.isAuthorized( unitToMove, UnitResourceIdService.PERMISSION_MOVE_UNIT, getUser( ), UnittreeRBACRecursiveType.PARENT_RECURSIVE ) )
         {
-            return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP );
+            return AdminMessageService.getMessageUrlReturningTo( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP,
+                    getJspOfUnit( request, JSP_URL_MANAGE_UNITS, nIdUnitToMove ) );
         }
 
         if ( _unitService.moveSubTree( unitToMove, unitParent ) )
@@ -1190,10 +1215,73 @@ public class UnitJspBean extends PluginAdminPageJspBean
             return AdminMessageService.getMessageUrl( request, MESSAGE_SUB_TREE_MOVED, urlItem.getUrl( ), AdminMessage.TYPE_INFO );
         }
 
-        return AdminMessageService.getMessageUrl( request, MESSAGE_CANT_MOVE_SUB_TREE_TO_CHILD, AdminMessage.TYPE_ERROR );
+        return AdminMessageService.getMessageUrlReturningTo( request, MESSAGE_CANT_MOVE_SUB_TREE_TO_CHILD, AdminMessage.TYPE_ERROR,
+                getJspOfUnit( request, JSP_URL_MOVE_SUB_TREE, nIdUnitToMove ) );
     }
 
     // PRIVATE METHODS
+
+    /**
+     * Return the url of a jsp of a unit
+     * 
+     * @param request
+     *            the HTTP request
+     * @param strJspUrl
+     *            the url of the jsp, relative to the webapp
+     * @param nIdUnit
+     *            the id of the unit
+     * @return the url of the jsp of the unit
+     */
+    private String getJspOfUnit( HttpServletRequest request, String strJspUrl, int nIdUnit )
+    {
+        UrlItem url = new UrlItem( AppPathService.getBaseUrl( request ) + strJspUrl );
+        url.addParameter( PARAMETER_ID_UNIT, nIdUnit );
+
+        return url.getUrl( );
+    }
+
+    /**
+     * Return the url of a jsp of a unit, or of the jsp manage units when the id of the unit is not a number
+     * 
+     * @param request
+     *            the HTTP request
+     * @param strJspUrl
+     *            the url of the jsp, relative to the webapp
+     * @param strIdUnit
+     *            the id of the unit
+     * @return the url of the jsp of the unit
+     */
+    private String getJspOfUnit( HttpServletRequest request, String strJspUrl, String strIdUnit )
+    {
+        int nIdUnit = NumberUtils.toInt( strIdUnit, Unit.ID_NULL );
+
+        if ( nIdUnit == Unit.ID_NULL )
+        {
+            return AppPathService.getBaseUrl( request ) + JSP_URL_MANAGE_UNITS;
+        }
+
+        return getJspOfUnit( request, strJspUrl, nIdUnit );
+    }
+
+    /**
+     * Return the url of the jsp move user
+     * 
+     * @param request
+     *            the HTTP request
+     * @param strIdUser
+     *            the id of the user
+     * @param strIdUnit
+     *            the id of the unit of the user
+     * @return the url of the jsp move user
+     */
+    private String getJspMoveUser( HttpServletRequest request, String strIdUser, String strIdUnit )
+    {
+        UrlItem url = new UrlItem( AppPathService.getBaseUrl( request ) + JSP_URL_MOVE_USER );
+        url.addParameter( PARAMETER_ID_USER, NumberUtils.toInt( strIdUser, Unit.ID_NULL ) );
+        url.addParameter( PARAMETER_ID_UNIT, NumberUtils.toInt( strIdUnit, Unit.ID_NULL ) );
+
+        return url.getUrl( );
+    }
 
     /**
      * Check the security token of an action
