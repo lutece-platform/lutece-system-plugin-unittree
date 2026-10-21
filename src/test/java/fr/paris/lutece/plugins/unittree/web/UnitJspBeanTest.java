@@ -35,6 +35,7 @@ package fr.paris.lutece.plugins.unittree.web;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,9 +43,12 @@ import org.junit.jupiter.api.Test;
 
 import fr.paris.lutece.plugins.unittree.business.unit.Unit;
 import fr.paris.lutece.plugins.unittree.business.unit.UnitHome;
+import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.portal.service.admin.AccessDeniedException;
+import fr.paris.lutece.portal.service.message.AdminMessageService;
 import fr.paris.lutece.portal.service.security.ISecurityTokenService;
 import fr.paris.lutece.portal.service.security.SecurityTokenService;
+import fr.paris.lutece.test.AdminUserUtils;
 import fr.paris.lutece.test.LuteceTestCase;
 import fr.paris.lutece.test.mocks.MockHttpServletRequest;
 import jakarta.inject.Inject;
@@ -55,6 +59,8 @@ import jakarta.inject.Inject;
 public class UnitJspBeanTest extends LuteceTestCase
 {
     private static final String JSP_URL_DO_REMOVE_UNIT = "jsp/admin/plugins/unittree/DoRemoveUnit.jsp";
+    private static final String JSP_URL_DO_MODIFY_UNIT = "jsp/admin/plugins/unittree/DoModifyUnit.jsp";
+    private static final String JSP_URL_DO_MOVE_SUB_TREE = "jsp/admin/plugins/unittree/DoMoveSubTree.jsp";
     private static final String PARAMETER_ID_UNIT = "idUnit";
 
     private @Inject UnitJspBean _bean;
@@ -179,5 +185,49 @@ public class UnitJspBeanTest extends LuteceTestCase
         request.setParameter( "idSelectedUnit", Integer.toString( Unit.ID_ROOT ) );
 
         assertThrows( AccessDeniedException.class, ( ) -> _bean.doMoveUser( request ) );
+    }
+
+    @Test
+    public void testDoModifyUnknownUnitReturnsToTheUnitTree( ) throws AccessDeniedException
+    {
+        MockHttpServletRequest request = new MockHttpServletRequest( );
+        request.setMethod( "POST" );
+        request.setParameter( PARAMETER_ID_UNIT, "999999" );
+        request.setParameter( SecurityTokenService.PARAMETER_TOKEN, _securityTokenService.getToken( request, JSP_URL_DO_MODIFY_UNIT ) );
+
+        String strUrl = _bean.doModifyUnit( request );
+
+        assertTrue( strUrl.endsWith( AdminMessageService.getMessageRelativeUrl( ) ), strUrl );
+        String strBackUrl = AdminMessageService.getMessage( request ).getBackUrl( );
+        assertTrue( strBackUrl.endsWith( "jsp/admin/plugins/unittree/ManageUnits.jsp" ), strBackUrl );
+    }
+
+    @Test
+    public void testDoMoveSubTreeIntoItselfReturnsToTheMoveScreen( ) throws AccessDeniedException
+    {
+        MockHttpServletRequest request = getRemoveUnitRequest( "POST" );
+        AdminUserUtils.registerAdminUserWithRight( request, new AdminUser( ), UnitJspBean.RIGHT_MANAGE_UNITS );
+        _bean.init( request, UnitJspBean.RIGHT_MANAGE_UNITS );
+        request.setParameter( "idUnitParent", Integer.toString( _nIdUnit ) );
+        request.setParameter( SecurityTokenService.PARAMETER_TOKEN, _securityTokenService.getToken( request, JSP_URL_DO_MOVE_SUB_TREE ) );
+
+        String strUrl = _bean.doMoveSubTree( request );
+
+        assertTrue( strUrl.endsWith( AdminMessageService.getMessageRelativeUrl( ) ), strUrl );
+        String strBackUrl = AdminMessageService.getMessage( request ).getBackUrl( );
+        assertTrue( strBackUrl.endsWith( "jsp/admin/plugins/unittree/MoveSubTree.jsp?idUnit=" + _nIdUnit ), strBackUrl );
+    }
+
+    @Test
+    public void testDoMoveSubTreeWithoutParentReturnsToTheMoveScreen( ) throws AccessDeniedException
+    {
+        MockHttpServletRequest request = getRemoveUnitRequest( "POST" );
+        request.setParameter( SecurityTokenService.PARAMETER_TOKEN, _securityTokenService.getToken( request, JSP_URL_DO_MOVE_SUB_TREE ) );
+
+        String strUrl = _bean.doMoveSubTree( request );
+
+        assertTrue( strUrl.endsWith( AdminMessageService.getMessageRelativeUrl( ) ), strUrl );
+        String strBackUrl = AdminMessageService.getMessage( request ).getBackUrl( );
+        assertTrue( strBackUrl.endsWith( "jsp/admin/plugins/unittree/MoveSubTree.jsp?idUnit=" + _nIdUnit ), strBackUrl );
     }
 }
