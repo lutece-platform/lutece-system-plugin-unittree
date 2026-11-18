@@ -250,7 +250,13 @@ public class UnitJspBean extends PluginAdminPageJspBean
         Map<String, Unit> mapIdUserUnit = new HashMap<>( );
         _unitUserSearchFields.setInDepthSearch( request );
 
-        List<AdminUser> listUsers = _unitUserService.getUsers( unit.getIdUnit( ), mapIdUserUnit, _unitUserSearchFields.isInDepthSearch( ) );
+        // The users of a unit are listed only to a user allowed to see the unit (a unit of the tree may be displayed only as the path to a visible unit)
+        List<AdminUser> listUsers = new ArrayList<>( );
+
+        if ( _unitService.isAuthorized( unit, UnitResourceIdService.PERMISSION_SEE_UNIT, getUser( ), UnittreeRBACRecursiveType.PARENT_RECURSIVE ) )
+        {
+            listUsers = _unitUserService.getUsers( unit.getIdUnit( ), mapIdUserUnit, _unitUserSearchFields.isInDepthSearch( ) );
+        }
         String strBaseUrl = AppPathService.getBaseUrl( request ) + JSP_URL_MANAGE_UNITS;
         _unitUserSearchFields.fillModelForUserSearchForm( listUsers, strBaseUrl, request, model, unit );
         
