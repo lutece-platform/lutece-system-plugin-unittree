@@ -116,6 +116,12 @@ public class UnitUserSearchFields extends DefaultUnitSearchFields
     {
         if ( _user == null )
         {
+            // Search fields of a new session, built without request: the first request may keep the parameter "session"
+            _user = AdminUserService.getAdminUser( request );
+        }
+
+        if ( _user == null )
+        {
             String strErrorMessage = I18nService.getLocalizedString( MESSAGE_ERROR_USER_NOT_LOGGED, request.getLocale( ) );
             throw new AccessDeniedException( strErrorMessage );
         }
