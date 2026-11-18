@@ -249,4 +249,34 @@ public class UnitJspBeanTest extends LuteceTestCase
         e = assertThrows( UnitErrorException.class, ( ) -> _bean.getMoveSubTree( new MockHttpServletRequest( ) ) );
         assertEquals( "unittree.message.error.unitNotFound", e.getI18nErrorMessage( ) );
     }
+
+    @Test
+    public void testCancelOfRemoveConfirmationReturnsToTheUnit( ) throws AccessDeniedException
+    {
+        MockHttpServletRequest request = getRemoveUnitRequest( "GET" );
+        AdminUserUtils.registerAdminUserWithRight( request, new AdminUser( ), UnitJspBean.RIGHT_MANAGE_UNITS );
+        _bean.init( request, UnitJspBean.RIGHT_MANAGE_UNITS );
+
+        _bean.getConfirmRemoveUnit( request );
+
+        String strBackUrl = AdminMessageService.getMessage( request ).getBackUrl( );
+        assertTrue( strBackUrl.endsWith( "jsp/admin/plugins/unittree/ManageUnits.jsp?idUnit=" + _nIdUnit ), strBackUrl );
+    }
+
+    @Test
+    public void testCancelOfMoveScreenReturnsToTheUnit( ) throws AccessDeniedException
+    {
+        MockHttpServletRequest request = getRemoveUnitRequest( "POST" );
+        request.setParameter( "cancel", "cancel" );
+
+        String strUrl = _bean.doMoveSubTree( request );
+        assertTrue( strUrl.endsWith( "jsp/admin/plugins/unittree/ManageUnits.jsp?idUnit=" + _nIdUnit ), strUrl );
+
+        request = new MockHttpServletRequest( );
+        request.setMethod( "POST" );
+        request.setParameter( "cancel", "cancel" );
+
+        strUrl = _bean.doMoveSubTree( request );
+        assertTrue( strUrl.endsWith( "jsp/admin/plugins/unittree/ManageUnits.jsp" ), strUrl );
+    }
 }

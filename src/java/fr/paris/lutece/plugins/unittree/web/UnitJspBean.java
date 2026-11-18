@@ -411,8 +411,9 @@ public class UnitJspBean extends PluginAdminPageJspBean
         parameters.put( PARAMETER_ID_UNIT, strIdUnit );
         parameters.put( SecurityTokenService.PARAMETER_TOKEN, getSecurityTokenService( ).getToken( request, JSP_URL_DO_REMOVE_UNIT ) );
 
+        // Cancel returns to the unit
         return AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_REMOVE_UNIT, null, null, JSP_URL_DO_REMOVE_UNIT, null, AdminMessage.TYPE_CONFIRMATION,
-                parameters, JSP_URL_MANAGE_UNITS );
+                parameters, getJspOfUnit( request, JSP_URL_MANAGE_UNITS, strIdUnit ) );
     }
 
     /**
@@ -594,8 +595,9 @@ public class UnitJspBean extends PluginAdminPageJspBean
         parameters.put( PARAMETER_ID_USER, strIdUser );
         parameters.put( SecurityTokenService.PARAMETER_TOKEN, getSecurityTokenService( ).getToken( request, JSP_URL_DO_REMOVE_USER ) );
 
+        // Cancel returns to the unit
         return AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_REMOVE_USER, null, null, JSP_URL_DO_REMOVE_USER, null, AdminMessage.TYPE_CONFIRMATION,
-                parameters, JSP_URL_MANAGE_UNITS );
+                parameters, getJspOfUnit( request, JSP_URL_MANAGE_UNITS, strIdUnit ) );
     }
 
     // DO
@@ -1187,10 +1189,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
 
         if ( StringUtils.isNotEmpty( strCancel ) )
         {
-            UrlItem urlItem = new UrlItem( AppPathService.getBaseUrl( request ) + JSP_URL_MANAGE_UNITS );
-            urlItem.addParameter( PARAMETER_ID_UNIT, strIdUnitToMove );
-
-            return urlItem.getUrl( );
+            return getJspOfUnit( request, JSP_URL_MANAGE_UNITS, strIdUnitToMove );
         }
 
         checkSecurityToken( request, JSP_URL_DO_MOVE_SUB_TREE );

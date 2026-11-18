@@ -29,8 +29,8 @@
 			</@formGroup>
 			</#if>
 			<@formGroup>
-				<#if listSubUnits?? && listSubUnits?has_content>
 				<@input type='hidden' name='idUnit' value='${unitToMove.idUnit!}' />
+				<#if listSubUnits?? && listSubUnits?has_content>
 				<@button type='submit' name='move' value='#i18n{unittree.moveUser.btnMove}' buttonIcon='check' title='#i18n{unittree.moveUser.btnMove}' />
 				</#if>
 				<@button type='submit' name='cancel' value='#i18n{portal.util.labelCancel}' buttonIcon='times' title='#i18n{portal.util.labelCancel}' cancel=true />
