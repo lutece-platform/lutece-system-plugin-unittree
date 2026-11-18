@@ -241,10 +241,8 @@ public class UnitJspBean extends PluginAdminPageJspBean
             reInitSearchFields( request );
         }
 
-        if ( _fullUnitTree == null )
-        {
-            initTreeUnit( request );
-        }
+        // Build the tree at each display: the units and the permissions may have been changed by another administrator
+        initTreeUnit( request );
 
         Map<String, Object> model = new HashMap<>( );
 
