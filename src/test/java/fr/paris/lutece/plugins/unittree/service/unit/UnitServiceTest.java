@@ -34,13 +34,22 @@
 package fr.paris.lutece.plugins.unittree.service.unit;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
 import fr.paris.lutece.plugins.unittree.business.unit.MockUnit;
+import fr.paris.lutece.plugins.unittree.business.unit.TreeUnit;
 import fr.paris.lutece.plugins.unittree.business.unit.Unit;
 import fr.paris.lutece.plugins.unittree.business.unit.UnitHome;
+import fr.paris.lutece.portal.business.rbac.RBAC;
+import fr.paris.lutece.portal.business.rbac.RBACHome;
+import fr.paris.lutece.portal.business.rbac.RBACRole;
+import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.test.LuteceTestCase;
 import jakarta.inject.Inject;
 
@@ -182,5 +191,78 @@ public class UnitServiceTest extends LuteceTestCase
         List<Unit> listSubUnits = _unitService.getAllSubUnits( unitChild2, false );
 
         assertThatSubUnitListsAreEqual( listSubUnits, unitChild2_1, unitChild2_1_1, unitChild2_2 );
+    }
+
+    /**
+     * A permission given on a unit is valid for its sub units: the tree of a user holding a role on a unit shows the unit, its sub units and the path to it
+     */
+    @Test
+    public void testTreeOfUserWithPermissionOnUnits( )
+    {
+        Unit unitA = insertUnitInDatabase( );
+        Unit unitA1 = insertUnitInDatabase( );
+        Unit unitA1a = insertUnitInDatabase( );
+        Unit unitB = insertUnitInDatabase( );
+        Unit unitB1 = insertUnitInDatabase( );
+        Unit unitB1a = insertUnitInDatabase( );
+        Unit unitB2 = insertUnitInDatabase( );
+        setParentUnit( unitA1, unitA );
+        setParentUnit( unitA1a, unitA1 );
+        setParentUnit( unitB1, unitB );
+        setParentUnit( unitB1a, unitB1 );
+        setParentUnit( unitB2, unitB );
+
+        String strRoleKey = "unittree_tree_test_" + System.currentTimeMillis( );
+        RBAC rbacA = createRBAC( strRoleKey, unitA, RBAC.WILDCARD_PERMISSIONS_KEY );
+        RBAC rbacB1 = createRBAC( strRoleKey, unitB1, UnitResourceIdService.PERMISSION_SEE_UNIT );
+
+        AdminUser user = new AdminUser( );
+        user.setUserLevel( 1 );
+        Map<String, RBACRole> mapRoles = new HashMap<>( );
+        mapRoles.put( strRoleKey, new RBACRole( strRoleKey, strRoleKey ) );
+        user.setRoles( mapRoles );
+
+        try
+        {
+            TreeUnit treeUnit = new TreeUnit( _unitService.getRootUnit( false ) );
+            _unitService.populateTreeUnit( treeUnit, user, false );
+
+            Set<Integer> setIdUnitsOfTree = new HashSet<>( );
+            collectIdUnits( treeUnit, setIdUnitsOfTree );
+
+            assertTrue( setIdUnitsOfTree.contains( unitA.getIdUnit( ) ) );
+            assertTrue( setIdUnitsOfTree.contains( unitA1.getIdUnit( ) ) );
+            assertTrue( setIdUnitsOfTree.contains( unitA1a.getIdUnit( ) ) );
+            assertTrue( setIdUnitsOfTree.contains( unitB.getIdUnit( ) ) );
+            assertTrue( setIdUnitsOfTree.contains( unitB1.getIdUnit( ) ) );
+            assertTrue( setIdUnitsOfTree.contains( unitB1a.getIdUnit( ) ) );
+            assertFalse( setIdUnitsOfTree.contains( unitB2.getIdUnit( ) ) );
+        }
+        finally
+        {
+            RBACHome.remove( rbacA.getRBACId( ) );
+            RBACHome.remove( rbacB1.getRBACId( ) );
+        }
+    }
+
+    private RBAC createRBAC( String strRoleKey, Unit unit, String strPermission )
+    {
+        RBAC rbac = new RBAC( );
+        rbac.setRoleKey( strRoleKey );
+        rbac.setResourceTypeKey( Unit.RESOURCE_TYPE );
+        rbac.setResourceId( String.valueOf( unit.getIdUnit( ) ) );
+        rbac.setPermissionKey( strPermission );
+
+        return RBACHome.create( rbac );
+    }
+
+    private void collectIdUnits( TreeUnit treeUnit, Set<Integer> setIdUnits )
+    {
+        setIdUnits.add( treeUnit.getUnitNode( ).getIdUnit( ) );
+
+        for ( TreeUnit subTreeUnit : treeUnit.getSubUnits( ) )
+        {
+            collectIdUnits( subTreeUnit, setIdUnits );
+        }
     }
 }

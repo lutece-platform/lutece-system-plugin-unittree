@@ -35,8 +35,10 @@ package fr.paris.lutece.plugins.unittree.service.unit;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -349,12 +351,29 @@ public class UnitService implements IUnitService
             return;
         }
 
+        // An administrator sees every unit (null = no filter)
+        Set<Integer> setIdVisibleUnits = user.isAdmin( ) ? null : getIdVisibleUnits( user );
+        populateTreeUnit( treeUnit, setIdVisibleUnits, bGetAdditionnalInfos );
+    }
+
+    /**
+     * Populate a TreeUnit with the visible sub units (recursive)
+     *
+     * @param treeUnit
+     *            the treeUnit
+     * @param setIdVisibleUnits
+     *            the ids of the visible units, or {@code null} if every unit is visible
+     * @param bGetAdditionnalInfos
+     *            if true, populate the tree units with additionnal infos
+     */
+    private void populateTreeUnit( TreeUnit treeUnit, Set<Integer> setIdVisibleUnits, boolean bGetAdditionnalInfos )
+    {
         List<Unit> subUnits = getSubUnits( treeUnit.getUnitNode( ).getIdUnit( ), bGetAdditionnalInfos );
 
         // set sub units
         for ( Unit subUnit : subUnits )
         {
-            if ( isAuthorized( subUnit, UnitResourceIdService.PERMISSION_SEE_UNIT, user, UnittreeRBACRecursiveType.NOT_RECURSIVE ) )
+            if ( setIdVisibleUnits == null || setIdVisibleUnits.contains( subUnit.getIdUnit( ) ) )
             {
                 treeUnit.addSubUnit( subUnit );
             }
@@ -363,9 +382,65 @@ public class UnitService implements IUnitService
         // recursive search to get the complete tree
         for ( TreeUnit subTreeUnit : treeUnit.getSubUnits( ) )
         {
-            populateTreeUnit( subTreeUnit, user, bGetAdditionnalInfos );
+            populateTreeUnit( subTreeUnit, setIdVisibleUnits, bGetAdditionnalInfos );
+        }
+    }
+
+    /**
+     * Get the ids of the units a user sees in the tree: the units on which he has the permission SEE_UNIT, their sub units (a permission given on a unit
+     * is valid for its sub units) and their parents (the path to reach them in the tree)
+     *
+     * @param user
+     *            the admin user
+     * @return the ids of the visible units
+     */
+    private Set<Integer> getIdVisibleUnits( AdminUser user )
+    {
+        List<Unit> listAllUnits = UnitHome.findAll( );
+        Map<Integer, Unit> mapIdUnit = new HashMap<>( );
+        Map<Integer, List<Unit>> mapIdParentSubUnits = new HashMap<>( );
+
+        for ( Unit unit : listAllUnits )
+        {
+            mapIdUnit.put( unit.getIdUnit( ), unit );
+            mapIdParentSubUnits.computeIfAbsent( unit.getIdParent( ), k -> new ArrayList<>( ) ).add( unit );
         }
 
+        Set<Integer> setIdVisibleUnits = new HashSet<>( );
+        // The units whose whole sub tree is already visible
+        Set<Integer> setIdVisibleSubTrees = new HashSet<>( );
+
+        for ( Unit unit : listAllUnits )
+        {
+            if ( !setIdVisibleSubTrees.contains( unit.getIdUnit( ) )
+                    && isAuthorized( unit, UnitResourceIdService.PERMISSION_SEE_UNIT, user, UnittreeRBACRecursiveType.NOT_RECURSIVE ) )
+            {
+                // The parents
+                Unit parentUnit = mapIdUnit.get( unit.getIdParent( ) );
+
+                while ( parentUnit != null && setIdVisibleUnits.add( parentUnit.getIdUnit( ) ) )
+                {
+                    parentUnit = mapIdUnit.get( parentUnit.getIdParent( ) );
+                }
+
+                // The unit and its sub units
+                Deque<Unit> stackUnits = new ArrayDeque<>( );
+                stackUnits.push( unit );
+
+                while ( !stackUnits.isEmpty( ) )
+                {
+                    Unit currentUnit = stackUnits.pop( );
+
+                    if ( setIdVisibleSubTrees.add( currentUnit.getIdUnit( ) ) )
+                    {
+                        setIdVisibleUnits.add( currentUnit.getIdUnit( ) );
+                        mapIdParentSubUnits.getOrDefault( currentUnit.getIdUnit( ), new ArrayList<>( ) ).forEach( stackUnits::push );
+                    }
+                }
+            }
+        }
+
+        return setIdVisibleUnits;
     }
 
     /**
