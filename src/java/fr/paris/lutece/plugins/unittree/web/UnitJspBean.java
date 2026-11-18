@@ -194,6 +194,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
     // INSTANCE VARS
     private boolean _bAdminAvatar = PluginService.isPluginEnable( "adminavatar" );
     private TreeUnit _fullUnitTree;
+    private boolean _bFilterAffectedUsers;
 
     /**
      * Get manage units
@@ -445,12 +446,14 @@ public class UnitJspBean extends PluginAdminPageJspBean
         if ( request.getParameter( PARAMETER_SESSION ) == null )
         {
             reInitSearchFields( request );
+            // The filter is kept, like the other search criteria, for the sort and the pagination
+            _bFilterAffectedUsers = Boolean.parseBoolean( request.getParameter( PARAMETER_FILTER_AFFECTED_USERS ) );
         }
 
         Map<String, Object> model = new HashMap<>( );
 
         boolean bMultiAffectationEnabled = _unitUserService.isMultiAffectationEnabled( );
-        boolean bIncludeMultiAffectedUsers = bMultiAffectationEnabled && !Boolean.valueOf( request.getParameter( PARAMETER_FILTER_AFFECTED_USERS ) );
+        boolean bIncludeMultiAffectedUsers = bMultiAffectationEnabled && !_bFilterAffectedUsers;
         List<AdminUser> listAvailableUsers = _unitUserService.getAvailableUsers( getUser( ), unit.getIdUnit( ), bIncludeMultiAffectedUsers );
         String strBaseUrl = AppPathService.getBaseUrl( request ) + JSP_URL_ADD_USERS;
 
