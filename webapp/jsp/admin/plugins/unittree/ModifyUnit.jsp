@@ -3,6 +3,7 @@
 <%@page import="fr.paris.lutece.portal.web.constants.Messages"%>
 <%@page import="fr.paris.lutece.portal.service.message.AdminMessage"%>
 <%@page import="fr.paris.lutece.plugins.unittree.web.UnitJspBean"%>
+<%@page import="fr.paris.lutece.plugins.unittree.service.UnitErrorException"%>
 <%@page import="jakarta.el.ELException" %>
 
 ${ unitJspBean.init( pageContext.request, UnitJspBean.RIGHT_MANAGE_UNITS ) }
@@ -18,6 +19,10 @@ ${ unitJspBean.init( pageContext.request, UnitJspBean.RIGHT_MANAGE_UNITS ) }
 		if ( AccessDeniedException.class.getCanonicalName(  ).equals( el.getCause( ).getClass( ).getCanonicalName( ) ) )
         {
 			response.sendRedirect( AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP ) );
+        }
+        else if ( el.getCause( ) instanceof UnitErrorException )
+        {
+			response.sendRedirect( AdminMessageService.getMessageUrl( request, ( (UnitErrorException) el.getCause( ) ).getI18nErrorMessage( ), "jsp/admin/plugins/unittree/ManageUnits.jsp", AdminMessage.TYPE_STOP ) );
         }
         else
         {

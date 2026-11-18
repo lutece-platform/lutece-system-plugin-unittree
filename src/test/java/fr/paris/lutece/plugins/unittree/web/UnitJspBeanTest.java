@@ -33,6 +33,7 @@
  */
 package fr.paris.lutece.plugins.unittree.web;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -43,6 +44,7 @@ import org.junit.jupiter.api.Test;
 
 import fr.paris.lutece.plugins.unittree.business.unit.Unit;
 import fr.paris.lutece.plugins.unittree.business.unit.UnitHome;
+import fr.paris.lutece.plugins.unittree.service.UnitErrorException;
 import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.portal.service.admin.AccessDeniedException;
 import fr.paris.lutece.portal.service.message.AdminMessageService;
@@ -229,5 +231,22 @@ public class UnitJspBeanTest extends LuteceTestCase
         assertTrue( strUrl.endsWith( AdminMessageService.getMessageRelativeUrl( ) ), strUrl );
         String strBackUrl = AdminMessageService.getMessage( request ).getBackUrl( );
         assertTrue( strBackUrl.endsWith( "jsp/admin/plugins/unittree/MoveSubTree.jsp?idUnit=" + _nIdUnit ), strBackUrl );
+    }
+
+    @Test
+    public void testScreensOfUnknownUnitAnswerUnitNotFound( )
+    {
+        MockHttpServletRequest request = new MockHttpServletRequest( );
+        request.setParameter( PARAMETER_ID_UNIT, "999999" );
+        request.setParameter( "idUser", "1" );
+
+        UnitErrorException e = assertThrows( UnitErrorException.class, ( ) -> _bean.getModifyUnit( request ) );
+        assertEquals( "unittree.message.error.unitNotFound", e.getI18nErrorMessage( ) );
+        e = assertThrows( UnitErrorException.class, ( ) -> _bean.getMoveUser( request ) );
+        assertEquals( "unittree.message.error.unitNotFound", e.getI18nErrorMessage( ) );
+        e = assertThrows( UnitErrorException.class, ( ) -> _bean.getMoveSubTree( request ) );
+        assertEquals( "unittree.message.error.unitNotFound", e.getI18nErrorMessage( ) );
+        e = assertThrows( UnitErrorException.class, ( ) -> _bean.getMoveSubTree( new MockHttpServletRequest( ) ) );
+        assertEquals( "unittree.message.error.unitNotFound", e.getI18nErrorMessage( ) );
     }
 }

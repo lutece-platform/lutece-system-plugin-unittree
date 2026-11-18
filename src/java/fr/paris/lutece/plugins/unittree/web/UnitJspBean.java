@@ -67,7 +67,6 @@ import fr.paris.lutece.portal.service.message.AdminMessageService;
 import fr.paris.lutece.portal.service.plugin.PluginService;
 import fr.paris.lutece.portal.service.security.SecurityTokenService;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
-import fr.paris.lutece.portal.service.util.AppException;
 import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.web.admin.PluginAdminPageJspBean;
@@ -339,8 +338,10 @@ public class UnitJspBean extends PluginAdminPageJspBean
      * @return the HTML code
      * @throws AccessDeniedException
      *             exception if the user does not have the permission
+     * @throws UnitErrorException
+     *             if the unit does not exist
      */
-    public String getModifyUnit( HttpServletRequest request ) throws AccessDeniedException
+    public String getModifyUnit( HttpServletRequest request ) throws AccessDeniedException, UnitErrorException
     {
         setPageTitleProperty( PROPERTY_MODIFY_UNIT_PAGE_TITLE );
 
@@ -355,7 +356,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
 
         if ( unit == null )
         {
-            throw new AppException( );
+            throw new UnitErrorException( MESSAGE_ERROR_UNIT_NOT_FOUND );
         }
 
         // Check permissions
@@ -479,8 +480,10 @@ public class UnitJspBean extends PluginAdminPageJspBean
      * @return the HTML code
      * @throws AccessDeniedException
      *             exception if the user does not have the permission
+     * @throws UnitErrorException
+     *             if the unit or the user does not exist, or if the user is not in the unit
      */
-    public String getMoveUser( HttpServletRequest request ) throws AccessDeniedException
+    public String getMoveUser( HttpServletRequest request ) throws AccessDeniedException, UnitErrorException
     {
         setPageTitleProperty( PROPERTY_MOVE_USER_PAGE_TITLE );
 
@@ -502,7 +505,7 @@ public class UnitJspBean extends PluginAdminPageJspBean
 
         if ( ( unit == null ) || ( user == null ) || !_unitUserService.isUserInUnit( nIdUser, unit.getIdUnit( ) ) )
         {
-            throw new AppException( );
+            throw new UnitErrorException( MESSAGE_ERROR_UNIT_NOT_FOUND );
         }
 
         // Check permissions
@@ -1089,24 +1092,29 @@ public class UnitJspBean extends PluginAdminPageJspBean
      * @return The HTML code to display
      * @throws AccessDeniedException
      *             if the user is not allowed to access the feature
+     * @throws UnitErrorException
+     *             if the unit to move does not exist
      */
-    public String getMoveSubTree( HttpServletRequest request ) throws AccessDeniedException
+    public String getMoveSubTree( HttpServletRequest request ) throws AccessDeniedException, UnitErrorException
     {
         setPageTitleProperty( PROPERTY_MOVE_UNIT_PAGE_TITLE );
 
         String strIdUnitToMove = request.getParameter( PARAMETER_ID_UNIT );
         String strIdUnit = request.getParameter( PARAMETER_ID_UNIT_PARENT );
-        Unit unitToMove = _unitService.getUnit( Integer.parseInt( strIdUnitToMove ), false );
-        int nIdUnit;
+        Unit unitToMove = null;
 
-        if ( StringUtils.isNotBlank( strIdUnit ) )
+        if ( StringUtils.isNotBlank( strIdUnitToMove ) && StringUtils.isNumeric( strIdUnitToMove ) )
         {
-            nIdUnit = Integer.parseInt( strIdUnit );
+            unitToMove = _unitService.getUnit( Integer.parseInt( strIdUnitToMove ), false );
         }
-        else
+
+        if ( unitToMove == null )
         {
-            nIdUnit = unitToMove.getIdParent( );
+            throw new UnitErrorException( MESSAGE_ERROR_UNIT_NOT_FOUND );
         }
+
+        // The parent displayed, by default the parent of the unit to move
+        int nIdUnit = NumberUtils.toInt( strIdUnit, unitToMove.getIdParent( ) );
 
         Unit unit = _unitService.getUnit( nIdUnit, false );
 
